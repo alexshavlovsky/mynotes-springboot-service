@@ -18,7 +18,7 @@ public class Notebook {
     @JsonIgnore
     private List<Note> notes;
 
-    private Notebook() {
+    public Notebook() {
         id = UUID.randomUUID();
         notes = new ArrayList<>();
     }

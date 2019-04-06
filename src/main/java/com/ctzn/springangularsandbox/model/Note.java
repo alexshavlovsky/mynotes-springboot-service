@@ -19,7 +19,7 @@ public class Note {
 
     private Date lastModifiedOn;
 
-    private Note() {
+    public Note() {
         id = UUID.randomUUID();
         lastModifiedOn = new Date();
     }
