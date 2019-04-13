@@ -1,6 +1,6 @@
 package com.ctzn.springangularsandbox.components.email;
 
-
+import com.ctzn.springangularsandbox.dto.FeedbackDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,12 +18,12 @@ public class FeedbackSenderImpl implements FeedbackSender {
     }
 
     @Override
-    public void send(String from, String name, String text) {
+    public void send(FeedbackDTO feedbackDTO) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailTo);
-        message.setSubject("Feedback from " + name);
-        message.setText(text);
-        message.setFrom(from);
+        message.setSubject("Feedback from " + feedbackDTO.getName());
+        message.setText(feedbackDTO.getText());
+        message.setFrom(feedbackDTO.getFrom());
         mailSender.send(message);
     }
 }
