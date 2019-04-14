@@ -45,10 +45,11 @@ public class FeedbackSenderImplIntegrationTest {
 
     @Test
     public void shouldSendSingleMail() throws MessagingException {
-        FeedbackDTO feedbackDTO = new FeedbackDTO();
-        feedbackDTO.setFrom("user123@mail.com");
-        feedbackDTO.setName(GreenMailUtil.random(10));
-        feedbackDTO.setText(GreenMailUtil.random(50));
+        FeedbackDTO feedbackDTO = new FeedbackDTO(
+                "user123@mail.com",
+                GreenMailUtil.random(10),
+                GreenMailUtil.random(50)
+        );
         feedbackSender.send(feedbackDTO);
         MimeMessage[] emails = greenMail.getReceivedMessages();
         assertEquals(1, emails.length);
