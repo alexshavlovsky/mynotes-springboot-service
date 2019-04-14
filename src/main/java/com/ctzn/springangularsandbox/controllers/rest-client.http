@@ -1,0 +1,12 @@
+### FEEDBACK CONTROLLER
+
+POST {{host-url}}//feedback
+Content-Type: application/json
+
+{
+  "name": "Alex",
+  "from": "alex@gmail.com",
+  "text": "Hello world"
+}
+
+###

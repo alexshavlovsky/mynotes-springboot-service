@@ -39,4 +39,13 @@ public class FeedbackDTO {
     public void setText(String text) {
         this.text = text;
     }
+
+    @Override
+    public String toString() {
+        return "FeedbackDTO{" +
+                "from='" + from + '\'' +
+                ", name='" + name + '\'' +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }
