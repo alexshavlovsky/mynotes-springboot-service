@@ -1,8 +1,9 @@
-package com.ctzn.springangularsandbox.repositories;
+package com.ctzn.springangularsandbox.components;
 
-import com.ctzn.springangularsandbox.components.email.FeedbackSender;
 import com.ctzn.springangularsandbox.model.Note;
 import com.ctzn.springangularsandbox.model.Notebook;
+import com.ctzn.springangularsandbox.repositories.NoteRepository;
+import com.ctzn.springangularsandbox.repositories.NotebookRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -10,18 +11,17 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(name = "app.db.bootstrap", havingValue = "true")
 public class Bootstrap implements CommandLineRunner {
+
     private NotebookRepository notebookRepository;
     private NoteRepository noteRepository;
-    private FeedbackSender feedbackSender;
 
-    public Bootstrap(NotebookRepository notebookRepository, NoteRepository noteRepository, FeedbackSender feedbackSender) {
+    public Bootstrap(NotebookRepository notebookRepository, NoteRepository noteRepository) {
         this.notebookRepository = notebookRepository;
         this.noteRepository = noteRepository;
-        this.feedbackSender = feedbackSender;
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Notebook nb1 = new Notebook("Default");
         Notebook nb2 = new Notebook("Quotes");
         notebookRepository.save(nb1);
@@ -29,6 +29,5 @@ public class Bootstrap implements CommandLineRunner {
         noteRepository.save(new Note("Note 1", "Hello World", nb1));
         noteRepository.save(new Note("Hamlet", "To be or not to be", nb2));
         noteRepository.save(new Note("Terminator", "I'll be back", nb2));
-        //feedbackSender.send("dado@mail.ru", "Dado", "Hello world!!!");
     }
 }

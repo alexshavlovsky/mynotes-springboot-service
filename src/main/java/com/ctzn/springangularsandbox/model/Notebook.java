@@ -3,15 +3,14 @@ package com.ctzn.springangularsandbox.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 
 public class Notebook {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String name;
 
     @OneToMany(mappedBy = "notebook", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -19,29 +18,33 @@ public class Notebook {
     private List<Note> notes;
 
     public Notebook() {
-        id = UUID.randomUUID();
-        notes = new ArrayList<>();
     }
 
     public Notebook(String name) {
-        this();
         this.name = name;
     }
 
-    public Notebook(String id, String name) {
-        this(name);
-        if (id != null) this.id = UUID.fromString(id);
+    public Long getId() {
+        return id;
     }
 
-    public UUID getId() {
-        return id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<Note> getNotes() {
         return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 }

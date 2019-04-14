@@ -11,14 +11,14 @@ import javax.validation.Valid;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 class BadRequest extends RuntimeException {
-    public BadRequest(String message) {
+    BadRequest(String message) {
         super(message);
     }
 }
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "/api/feedback")
+@RequestMapping(path = "api/feedback")
 public class FeedbackController {
     private FeedbackSender feedbackSender;
     private Logger logger;
