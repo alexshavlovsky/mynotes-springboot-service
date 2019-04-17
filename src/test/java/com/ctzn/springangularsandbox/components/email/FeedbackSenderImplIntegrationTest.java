@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 public class FeedbackSenderImplIntegrationTest {
     @Rule
-    public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.SMTP);
+    public GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.SMTP);
 
     @Value("${spring.mail.username}")
     private String userName;
@@ -50,9 +51,13 @@ public class FeedbackSenderImplIntegrationTest {
                 GreenMailUtil.random(10),
                 GreenMailUtil.random(50)
         );
+
         feedbackSender.send(feedbackDTO);
+
         MimeMessage[] emails = greenMail.getReceivedMessages();
         assertEquals(1, emails.length);
+        assertEquals(mailTo, emails[0].getRecipients(Message.RecipientType.TO)[0].toString());
+        assertEquals(feedbackDTO.getFrom(), emails[0].getFrom()[0].toString());
         assertEquals("Feedback from " + feedbackDTO.getName(), emails[0].getSubject());
         assertEquals(feedbackDTO.getText(), GreenMailUtil.getBody(emails[0]));
     }

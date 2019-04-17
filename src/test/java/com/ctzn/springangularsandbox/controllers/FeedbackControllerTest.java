@@ -2,7 +2,6 @@ package com.ctzn.springangularsandbox.controllers;
 
 import com.ctzn.springangularsandbox.components.email.FeedbackSender;
 import com.ctzn.springangularsandbox.dto.FeedbackDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,21 +11,18 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static com.ctzn.springangularsandbox.controllers.RestTestUtil.mockPostRequest;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 public class FeedbackControllerTest {
 
-    FeedbackController feedbackController;
+    private static final String API_PATH = "/api/feedback/";
 
     @Mock
     FeedbackSender feedbackSender;
@@ -34,61 +30,39 @@ public class FeedbackControllerTest {
     @Mock
     Logger logger;
 
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
+
+    private FeedbackDTO feedbackDTO;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        feedbackController = new FeedbackController(feedbackSender, logger);
-        mockMvc = MockMvcBuilders.standaloneSetup(feedbackController).build();
-    }
-
-    @Test
-    public void mustPostFeedback() throws Exception {
-        FeedbackDTO feedbackDTO = new FeedbackDTO(
+        mockMvc = MockMvcBuilders.standaloneSetup(new FeedbackController(feedbackSender, logger)).build();
+        feedbackDTO = new FeedbackDTO(
                 "user123@mail.com",
                 GreenMailUtil.random(10),
                 GreenMailUtil.random(50)
         );
+    }
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/feedback")
-                .content(asJsonString(feedbackDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()
-                );
+    @Test
+    public void shouldPostFeedback() throws Exception {
+        mockPostRequest(mockMvc, API_PATH, feedbackDTO, status().isOk(), null);
 
         ArgumentCaptor<FeedbackDTO> feedbackDTOCaptor = ArgumentCaptor.forClass(FeedbackDTO.class);
         verify(feedbackSender, times(1)).send(feedbackDTOCaptor.capture());
+        verifyNoMoreInteractions(feedbackSender);
         Assert.assertEquals(feedbackDTO, feedbackDTOCaptor.getValue());
     }
 
     @Test
-    public void mustRejectInvalidFeedback() throws Exception {
-        FeedbackDTO feedbackDTO = new FeedbackDTO(
-                "user123_mail.com",
-                GreenMailUtil.random(10),
-                GreenMailUtil.random(50)
-        );
+    public void shouldRejectInvalidFeedback() throws Exception {
+        // invalid mail address
+        feedbackDTO.setFrom("user123_mail.com");
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/feedback")
-                .content(asJsonString(feedbackDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-        ;
+        mockPostRequest(mockMvc, API_PATH, feedbackDTO, status().isBadRequest(), null);
 
-        verify(feedbackSender, times(0)).send(any());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        verifyNoMoreInteractions(feedbackSender);
     }
 
 }
