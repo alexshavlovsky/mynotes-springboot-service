@@ -14,7 +14,7 @@ Content-Type: application/json
 ### NOTEBOOK CONTROLLER ###
 
 ### Get all
-GET {{host-url}}/notebooks/all
+GET {{host-url}}/notebooks/
 Accept: application/json
 
 ### Get by id

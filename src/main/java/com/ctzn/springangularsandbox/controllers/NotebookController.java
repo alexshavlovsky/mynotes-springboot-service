@@ -2,17 +2,11 @@ package com.ctzn.springangularsandbox.controllers;
 
 import com.ctzn.springangularsandbox.model.Notebook;
 import com.ctzn.springangularsandbox.repositories.NotebookRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-class NotFound extends RuntimeException {
-    NotFound() {
-        super("Notebook not found");
-    }
-}
+import static com.ctzn.springangularsandbox.controllers.HttpExceptions.*;
 
 @RestController
 @CrossOrigin
@@ -25,32 +19,34 @@ public class NotebookController {
         this.notebookRepository = notebookRepository;
     }
 
-    @GetMapping("all")
+    @GetMapping()
     public List<Notebook> getAll() {
         return notebookRepository.findAll();
     }
 
     @GetMapping("{id}")
     public Notebook getOne(@PathVariable("id") long id) {
-        return notebookRepository.findById(id).orElseThrow(NotFound::new);
+        return notebookRepository.findById(id).orElseThrow(() -> ENTITY_NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping() // create only
     public Notebook create(@RequestBody Notebook notebook) {
+        if (notebook.getId() != null) throw ENTITY_ID_SHOULD_BE_NULL;
         return notebookRepository.save(notebook);
     }
 
-    @PutMapping("{id}")
-    public Notebook updateStudent(@RequestBody Notebook notebook, @PathVariable long id) {
-        if (!notebookRepository.existsById(id)) throw new NotFound();
+    @PutMapping("{id}") // update only
+    public Notebook update(@RequestBody Notebook notebook, @PathVariable long id) {
+        if (!notebookRepository.existsById(id)) throw ENTITY_NOT_FOUND;
+        if (notebook.getId() != null && notebook.getId() != id) throw ENTITY_ID_IS_WRONG;
         notebook.setId(id);
         notebookRepository.save(notebook);
         return notebook;
     }
 
     @DeleteMapping("{id}")
-    public void deleteStudent(@PathVariable long id) {
-        if (!notebookRepository.existsById(id)) throw new NotFound();
+    public void delete(@PathVariable long id) {
+        if (!notebookRepository.existsById(id)) throw ENTITY_NOT_FOUND;
         notebookRepository.deleteById(id);
     }
 

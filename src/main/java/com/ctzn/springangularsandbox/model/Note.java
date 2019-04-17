@@ -2,6 +2,7 @@ package com.ctzn.springangularsandbox.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Note {
@@ -62,5 +63,18 @@ public class Note {
 
     public void setLastModifiedOn(Date lastModifiedOn) {
         this.lastModifiedOn = lastModifiedOn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note note = (Note) o;
+        return Objects.equals(id, note.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
