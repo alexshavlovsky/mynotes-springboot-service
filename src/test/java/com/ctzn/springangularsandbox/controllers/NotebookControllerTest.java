@@ -61,9 +61,7 @@ public class NotebookControllerTest {
     public void getOne() throws Exception {
         final Long Id = 1L;
 
-        final String notebookName = "Notebook from repo";
-
-        final Notebook notebookRepo = new Notebook(notebookName);
+        final Notebook notebookRepo = new Notebook("Notebook from repo");
         notebookRepo.setId(Id);
 
         // should return entity

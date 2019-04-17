@@ -5,8 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 class RestTestUtil {
@@ -25,8 +25,7 @@ class RestTestUtil {
 
     static void mockGetRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status, Object expected) throws Exception {
         String fullPath = id == null ? path : path + id;
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get(fullPath)
+        MockHttpServletRequestBuilder requestBuilder = get(fullPath)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
         if (expected == null)
@@ -36,8 +35,7 @@ class RestTestUtil {
     }
 
     static void mockPostRequest(MockMvc mockMvc, String path, Object DTO, ResultMatcher status, Object expected) throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post(path)
+        MockHttpServletRequestBuilder requestBuilder = post(path)
                 .content(asJsonString(DTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
@@ -48,8 +46,7 @@ class RestTestUtil {
     }
 
     static void mockPutRequest(MockMvc mockMvc, String path, Long id, Object DTO, ResultMatcher status, Object expected) throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put(path + id)
+        MockHttpServletRequestBuilder requestBuilder = put(path + id)
                 .content(asJsonString(DTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
@@ -60,8 +57,7 @@ class RestTestUtil {
     }
 
     static void mockDeleteRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status) throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .delete(path + id)
+        mockMvc.perform(delete(path + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status);

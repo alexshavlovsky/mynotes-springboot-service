@@ -40,8 +40,7 @@ public class NotebookController {
         if (!notebookRepository.existsById(id)) throw ENTITY_NOT_FOUND;
         if (notebook.getId() != null && notebook.getId() != id) throw ENTITY_ID_IS_WRONG;
         notebook.setId(id);
-        notebookRepository.save(notebook);
-        return notebook;
+        return notebookRepository.save(notebook);
     }
 
     @DeleteMapping("{id}")
