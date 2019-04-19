@@ -1,22 +1,30 @@
 package com.ctzn.springangularsandbox.controllers;
 
 import com.ctzn.springangularsandbox.model.Note;
+import com.ctzn.springangularsandbox.model.Notebook;
 import com.ctzn.springangularsandbox.repositories.NoteRepository;
+import com.ctzn.springangularsandbox.repositories.NotebookRepository;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-import static com.ctzn.springangularsandbox.controllers.HttpExceptions.*;
+import static com.ctzn.springangularsandbox.controllers.RequestValidator.*;
 
 @RestController
 @CrossOrigin
 @RequestMapping("api/notes")
 public class NoteController {
 
-    private NoteRepository noteRepository;
+    private static final String NOTEBOOK_OBJECT_NAME = Notebook.getLogObjectName();
+    private static final String NOTE_OBJECT_NAME = Note.getLogObjectName();
 
-    public NoteController(NoteRepository noteRepository) {
+    private NoteRepository noteRepository;
+    private NotebookRepository notebookRepository;
+
+    public NoteController(NoteRepository noteRepository, NotebookRepository notebookRepository) {
         this.noteRepository = noteRepository;
+        this.notebookRepository = notebookRepository;
     }
 
     @GetMapping()
@@ -26,26 +34,29 @@ public class NoteController {
 
     @GetMapping("{id}")
     public Note getOne(@PathVariable("id") long id) {
-        return noteRepository.findById(id).orElseThrow(() -> ENTITY_NOT_FOUND);
+        return validateObjectExists(noteRepository.findById(id), NOTE_OBJECT_NAME);
     }
 
     @PostMapping() // create only
-    public Note create(@RequestBody Note note) {
-        if (note.getId() != null) throw ENTITY_ID_SHOULD_BE_NULL;
+    public Note create(@Valid @RequestBody Note note) {
+        validateIdIsNull(note.getId(), NOTE_OBJECT_NAME);
+        validateIdNotNull(note.getNotebook().getId(), NOTEBOOK_OBJECT_NAME);
+        validateObjectExists(notebookRepository.existsById(note.getNotebook().getId()), NOTEBOOK_OBJECT_NAME);
         return noteRepository.save(note);
     }
 
     @PutMapping("{id}") // update only
-    public Note update(@RequestBody Note note, @PathVariable long id) {
-        if (!noteRepository.existsById(id)) throw ENTITY_NOT_FOUND;
-        if (note.getId() != null && note.getId() != id) throw ENTITY_ID_IS_WRONG;
-        note.setId(id);
+    public Note update(@Valid @RequestBody Note note, @PathVariable Long id) {
+        validateObjectExists(noteRepository.existsById(id), NOTE_OBJECT_NAME);
+        validateIdNotNullAndEqual(note.getId(), id, NOTE_OBJECT_NAME);
+        validateIdNotNull(note.getNotebook().getId(), NOTEBOOK_OBJECT_NAME);
+        validateObjectExists(notebookRepository.existsById(note.getNotebook().getId()), NOTEBOOK_OBJECT_NAME);
         return noteRepository.save(note);
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable long id) {
-        if (!noteRepository.existsById(id)) throw ENTITY_NOT_FOUND;
+        validateObjectExists(noteRepository.existsById(id), NOTE_OBJECT_NAME);
         noteRepository.deleteById(id);
     }
 

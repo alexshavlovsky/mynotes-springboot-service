@@ -11,11 +11,11 @@ public class FeedbackDTO {
     private String from;
 
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 50)
     private String name;
 
     @NotNull
-    @Size(min = 10, max = 1000)
+    @Size(min = 1, max = 500)
     private String text;
 
     public FeedbackDTO() {

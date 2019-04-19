@@ -3,16 +3,18 @@ package com.ctzn.springangularsandbox.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-
 public class Notebook {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank
     private String name;
 
     @OneToMany(mappedBy = "notebook", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -61,5 +63,9 @@ public class Notebook {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    static public String getLogObjectName() {
+        return "Notebook";
     }
 }

@@ -1,17 +1,33 @@
 package com.ctzn.springangularsandbox.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank
     private String title;
+
+    @NotNull
     private String text;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @NotNull
     private Notebook notebook;
 
     private Date lastModifiedOn = new Date();
@@ -76,5 +92,9 @@ public class Note {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    static public String getLogObjectName() {
+        return "Note";
     }
 }

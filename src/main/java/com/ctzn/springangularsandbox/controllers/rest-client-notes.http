@@ -1,0 +1,40 @@
+### Get all
+GET {{api-url}}/notes/
+Accept: application/json
+
+### Get by id
+GET {{api-url}}/notes/3
+Accept: application/json
+
+### Create
+POST {{api-url}}/notes/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "New note",
+  "text": "Some text",
+  "notebook": {
+    "id": "1"
+  }
+}
+
+### Update by id
+PUT {{api-url}}/notes/3
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": 3,
+  "title": "Renamed note",
+  "text": "Another text",
+  "notebook": {
+    "id": "2"
+  }
+}
+
+### Delete by id
+DELETE {{api-url}}/notes/3
+Accept: application/json
+
+###

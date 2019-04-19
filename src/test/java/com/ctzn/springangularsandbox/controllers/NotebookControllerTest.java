@@ -117,72 +117,83 @@ public class NotebookControllerTest {
 
     @Test
     public void update() throws Exception {
-        final Long notebookRepoId = 1L;
-        final Long notebookNotExistId = 2L;
+        final Long repoId = 1L;
         final String updatedNotebookName = "Updated notebook";
 
         final Notebook updatedNotebook = new Notebook(updatedNotebookName);
-        updatedNotebook.setId(notebookRepoId);
+        updatedNotebook.setId(repoId);
 
         final Notebook notebookDtoNullId = new Notebook(updatedNotebookName);
 
-        final Notebook notebookDtoNotNullId = new Notebook(updatedNotebookName);
-        notebookDtoNotNullId.setId(notebookNotExistId);
+        final Notebook notebookDto = new Notebook(updatedNotebookName);
+        notebookDto.setId(repoId);
+
+        final Notebook notebookDtoIdNotMatch = new Notebook(updatedNotebookName);
+        notebookDtoIdNotMatch.setId(2L);
 
         // should update entity
         reset(notebookRepository);
-        when(notebookRepository.existsById(notebookRepoId)).thenReturn(true);
+        when(notebookRepository.existsById(repoId)).thenReturn(true);
         when(notebookRepository.save(any())).thenReturn(updatedNotebook);
 
-        mockPutRequest(mockMvc, API_PATH, notebookRepoId, notebookDtoNullId, status().isOk(), updatedNotebook);
+        mockPutRequest(mockMvc, API_PATH, repoId, notebookDto, status().isOk(), updatedNotebook);
 
         ArgumentCaptor<Notebook> notebookArgumentCaptor = ArgumentCaptor.forClass(Notebook.class);
-        verify(notebookRepository, times(1)).existsById(notebookRepoId);
+        verify(notebookRepository, times(1)).existsById(repoId);
         verify(notebookRepository, times(1)).save(notebookArgumentCaptor.capture());
         verifyNoMoreInteractions(notebookRepository);
-        Assert.assertEquals(notebookRepoId, notebookArgumentCaptor.getValue().getId());
+        Assert.assertEquals(repoId, notebookArgumentCaptor.getValue().getId());
         Assert.assertEquals(updatedNotebookName, notebookArgumentCaptor.getValue().getName());
 
         // should return "not fond" if entity does not exist
         reset(notebookRepository);
-        when(notebookRepository.existsById(notebookNotExistId)).thenReturn(false);
+        when(notebookRepository.existsById(repoId)).thenReturn(false);
 
-        mockPutRequest(mockMvc, API_PATH, notebookNotExistId, notebookDtoNullId, status().isNotFound(), null);
+        mockPutRequest(mockMvc, API_PATH, repoId, notebookDto, status().isNotFound(), null);
 
-        verify(notebookRepository, times(1)).existsById(notebookNotExistId);
+        verify(notebookRepository, times(1)).existsById(repoId);
         verifyNoMoreInteractions(notebookRepository);
 
-        // should return "bad request" if dto.id != path.id
+        // should return "bad request" if id is null
         reset(notebookRepository);
-        when(notebookRepository.existsById(notebookRepoId)).thenReturn(true);
+        when(notebookRepository.existsById(repoId)).thenReturn(true);
 
-        mockPutRequest(mockMvc, API_PATH, notebookRepoId, notebookDtoNotNullId, status().isBadRequest(), null);
+        mockPutRequest(mockMvc, API_PATH, repoId, notebookDtoNullId, status().isBadRequest(), null);
 
-        verify(notebookRepository, times(1)).existsById(notebookRepoId);
+        verify(notebookRepository, times(1)).existsById(repoId);
+        verifyNoMoreInteractions(notebookRepository);
+
+        // should return "bad request" if object id does not match path id
+        reset(notebookRepository);
+        when(notebookRepository.existsById(repoId)).thenReturn(true);
+
+        mockPutRequest(mockMvc, API_PATH, repoId, notebookDtoIdNotMatch, status().isBadRequest(), null);
+
+        verify(notebookRepository, times(1)).existsById(repoId);
         verifyNoMoreInteractions(notebookRepository);
     }
 
     @Test
     public void delete() throws Exception {
-        final Long Id = 1L;
+        final Long id = 1L;
 
         // should delete entity
         reset(notebookRepository);
-        when(notebookRepository.existsById(Id)).thenReturn(true);
+        when(notebookRepository.existsById(id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, API_PATH, Id, status().isOk());
+        mockDeleteRequest(mockMvc, API_PATH, id, status().isOk());
 
-        verify(notebookRepository, times(1)).existsById(Id);
-        verify(notebookRepository, times(1)).deleteById(Id);
+        verify(notebookRepository, times(1)).existsById(id);
+        verify(notebookRepository, times(1)).deleteById(id);
         verifyNoMoreInteractions(notebookRepository);
 
         // should return "not fond" if entity does not exist
         reset(notebookRepository);
-        when(notebookRepository.existsById(Id)).thenReturn(false);
+        when(notebookRepository.existsById(id)).thenReturn(false);
 
-        mockDeleteRequest(mockMvc, API_PATH, Id, status().isNotFound());
+        mockDeleteRequest(mockMvc, API_PATH, id, status().isNotFound());
 
-        verify(notebookRepository, times(1)).existsById(Id);
+        verify(notebookRepository, times(1)).existsById(id);
         verifyNoMoreInteractions(notebookRepository);
     }
 

@@ -1,0 +1,12 @@
+### Send feedback
+POST {{api-url}}//feedback
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "User",
+  "from": "user@gmail.com",
+  "text": "Hello world"
+}
+
+###

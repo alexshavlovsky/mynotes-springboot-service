@@ -3,6 +3,7 @@ package com.ctzn.springangularsandbox.controllers;
 import com.ctzn.springangularsandbox.model.Note;
 import com.ctzn.springangularsandbox.model.Notebook;
 import com.ctzn.springangularsandbox.repositories.NoteRepository;
+import com.ctzn.springangularsandbox.repositories.NotebookRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,9 @@ public class NoteControllerTest {
     @Mock
     private NoteRepository noteRepository;
 
+    @Mock
+    private NotebookRepository notebookRepository;
+
     private MockMvc mockMvc;
 
     private Notebook someNotebook;
@@ -37,7 +41,7 @@ public class NoteControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new NoteController(noteRepository)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new NoteController(noteRepository, notebookRepository)).build();
 
         someNotebook = new Notebook("Some notebook");
         someNotebook.setId(255L);
@@ -91,6 +95,7 @@ public class NoteControllerTest {
 
     @Test
     public void create() throws Exception {
+        //TODO implement this test case
         final String noteTitle = "New note";
         final String noteText = "Some text";
 
@@ -125,6 +130,7 @@ public class NoteControllerTest {
 
     @Test
     public void update() throws Exception {
+        //TODO implement this test case
         final Long noteRepoId = 1L;
         final Long noteNotExistId = 2L;
         final String updatedNoteTitle = "Updated note";
