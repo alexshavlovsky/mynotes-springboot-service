@@ -9,8 +9,10 @@ import javax.validation.Valid;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "api/feedback")
+@RequestMapping(path = FeedbackController.BASE_PATH)
 public class FeedbackController {
+
+    static final String BASE_PATH = "/api/feedback/";
 
     private FeedbackSender feedbackSender;
 

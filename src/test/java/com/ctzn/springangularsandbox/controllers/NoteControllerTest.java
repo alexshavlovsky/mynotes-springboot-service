@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.ctzn.springangularsandbox.controllers.RestTestUtil.*;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class NoteControllerTest {
 
-    private static final String API_PATH = "/api/notes/";
+    private static final String BASE_PATH = NoteController.BASE_PATH;
 
     @Mock
     private NoteRepository noteRepository;
@@ -36,6 +37,7 @@ public class NoteControllerTest {
 
     private MockMvc mockMvc;
 
+    private Long someNotebookId;
     private Notebook someNotebook;
 
     @Before
@@ -43,8 +45,9 @@ public class NoteControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(new NoteController(noteRepository, notebookRepository)).build();
 
+        someNotebookId = 255L;
         someNotebook = new Notebook("Some notebook");
-        someNotebook.setId(255L);
+        someNotebook.setId(someNotebookId);
     }
 
     @Test
@@ -61,7 +64,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.findAll()).thenReturn(noteList);
 
-        mockGetRequest(mockMvc, API_PATH, null, status().isOk(), noteList);
+        mockGetRequest(mockMvc, BASE_PATH, null, status().isOk(), noteList);
 
         verify(noteRepository, times(1)).findAll();
         verifyNoMoreInteractions(noteRepository);
@@ -78,7 +81,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.findById(Id)).thenReturn(java.util.Optional.of(noteRepo));
 
-        mockGetRequest(mockMvc, API_PATH, Id, status().isOk(), noteRepo);
+        mockGetRequest(mockMvc, BASE_PATH, Id, status().isOk(), noteRepo);
 
         verify(noteRepository, times(1)).findById(Id);
         verifyNoMoreInteractions(noteRepository);
@@ -87,7 +90,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.findById(Id)).thenReturn(Optional.empty());
 
-        mockGetRequest(mockMvc, API_PATH, Id, status().isNotFound(), null);
+        mockGetRequest(mockMvc, BASE_PATH, Id, status().isNotFound(), null);
 
         verify(noteRepository, times(1)).findById(Id);
         verifyNoMoreInteractions(noteRepository);
@@ -95,87 +98,147 @@ public class NoteControllerTest {
 
     @Test
     public void create() throws Exception {
-        //TODO implement this test case
+        Long noteRepoId = 1L;
+        Long someId = 101L;
+
         final String noteTitle = "New note";
         final String noteText = "Some text";
 
         final Note noteRepo = new Note(noteTitle, noteText, someNotebook);
-        noteRepo.setId(1L);
+        noteRepo.setId(noteRepoId);
 
-        final Note noteDtoNullId = new Note(noteTitle, noteText, someNotebook);
-
-        final Note noteDtoNotNullId = new Note(noteTitle, noteText, someNotebook);
-        noteDtoNotNullId.setId(2L);
+        Map noteDTO = Map.of(
+                "title", noteTitle,
+                "text", noteText,
+                "notebook", Map.of("id", someNotebookId)
+        );
 
         // should save entity
-        reset(noteRepository);
+        reset(noteRepository, notebookRepository);
         when(noteRepository.save(any())).thenReturn(noteRepo);
+        when(notebookRepository.existsById(someNotebookId)).thenReturn(true);
 
-        mockPostRequest(mockMvc, API_PATH, noteDtoNullId, status().isOk(), noteRepo);
+        mockPostRequest(mockMvc, BASE_PATH, noteDTO, status().isOk(), noteRepo);
 
         ArgumentCaptor<Note> noteArgumentCaptor = ArgumentCaptor.forClass(Note.class);
         verify(noteRepository, times(1)).save(noteArgumentCaptor.capture());
-        verifyNoMoreInteractions(noteRepository);
         Assert.assertNull(noteArgumentCaptor.getValue().getId());
         Assert.assertEquals(noteTitle, noteArgumentCaptor.getValue().getTitle());
         Assert.assertEquals(noteText, noteArgumentCaptor.getValue().getText());
+        Assert.assertEquals(someNotebookId, noteArgumentCaptor.getValue().getNotebook().getId());
+        verify(notebookRepository, times(1)).existsById(someNotebookId);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
 
-        // should return "bad request" if id is not null
-        reset(noteRepository);
+        // should return "bad request" if note id is not null
+        reset(noteRepository, notebookRepository);
 
-        mockPostRequest(mockMvc, API_PATH, noteDtoNotNullId, status().isBadRequest(), null);
+        mockPostRequest(mockMvc, BASE_PATH, Map.of(
+                "id", someId,
+                "title", noteTitle,
+                "text", noteText,
+                "notebook", Map.of("id", someNotebookId)
+        ), status().isBadRequest(), null);
 
-        verifyNoMoreInteractions(noteRepository);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
+
+        // should return "bad request" if notebook id is null
+        reset(noteRepository, notebookRepository);
+
+        mockPostRequest(mockMvc, BASE_PATH, Map.of(
+                "title", noteTitle,
+                "text", noteText,
+                "notebook", Map.of("id", "")
+        ), status().isBadRequest(), null);
+
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
+
+        // should return "not found" if notebook does not exist
+        reset(noteRepository, notebookRepository);
+        when(notebookRepository.existsById(someNotebookId)).thenReturn(false);
+
+        mockPostRequest(mockMvc, BASE_PATH, noteDTO, status().isNotFound(), null);
+
+        verify(notebookRepository, times(1)).existsById(someNotebookId);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
     }
 
     @Test
     public void update() throws Exception {
-        //TODO implement this test case
         final Long noteRepoId = 1L;
-        final Long noteNotExistId = 2L;
-        final String updatedNoteTitle = "Updated note";
-        final String updatedNoteText = "Some text";
+        final Long someId = 101L;
+        final String noteTitle = "Updated note";
+        final String noteText = "Some text";
 
-        final Note updatedNote = new Note(updatedNoteTitle, updatedNoteText, someNotebook);
-        updatedNote.setId(noteRepoId);
+        final Note noteRepo = new Note(noteTitle, noteText, someNotebook);
+        noteRepo.setId(noteRepoId);
 
-        final Note noteDtoNullId = new Note(updatedNoteTitle, updatedNoteText, someNotebook);
-
-        final Note noteDtoNotNullId = new Note(updatedNoteTitle, updatedNoteText, someNotebook);
-        noteDtoNotNullId.setId(noteNotExistId);
+        Map noteDTO = Map.of(
+                "id", noteRepoId,
+                "title", noteTitle,
+                "text", noteText,
+                "notebook", Map.of("id", someNotebookId)
+        );
 
         // should update entity
-        reset(noteRepository);
+        reset(noteRepository, notebookRepository);
         when(noteRepository.existsById(noteRepoId)).thenReturn(true);
-        when(noteRepository.save(any())).thenReturn(updatedNote);
+        when(noteRepository.save(any())).thenReturn(noteRepo);
+        when(notebookRepository.existsById(someNotebookId)).thenReturn(true);
 
-        mockPutRequest(mockMvc, API_PATH, noteRepoId, noteDtoNullId, status().isOk(), updatedNote);
+        mockPutRequest(mockMvc, BASE_PATH, noteRepoId, noteDTO, status().isOk(), noteRepo);
 
         ArgumentCaptor<Note> noteArgumentCaptor = ArgumentCaptor.forClass(Note.class);
         verify(noteRepository, times(1)).existsById(noteRepoId);
         verify(noteRepository, times(1)).save(noteArgumentCaptor.capture());
-        verifyNoMoreInteractions(noteRepository);
         Assert.assertEquals(noteRepoId, noteArgumentCaptor.getValue().getId());
-        Assert.assertEquals(updatedNoteTitle, noteArgumentCaptor.getValue().getTitle());
-        Assert.assertEquals(updatedNoteText, noteArgumentCaptor.getValue().getText());
+        Assert.assertEquals(noteTitle, noteArgumentCaptor.getValue().getTitle());
+        Assert.assertEquals(noteText, noteArgumentCaptor.getValue().getText());
+        Assert.assertEquals(someNotebookId, noteArgumentCaptor.getValue().getNotebook().getId());
+        verify(notebookRepository, times(1)).existsById(someNotebookId);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
 
-        // should return "not fond" if entity does not exist
-        reset(noteRepository);
-        when(noteRepository.existsById(noteNotExistId)).thenReturn(false);
+        // should return "not fount" if note id is not exist
+        reset(noteRepository, notebookRepository);
+        when(noteRepository.existsById(noteRepoId)).thenReturn(false);
 
-        mockPutRequest(mockMvc, API_PATH, noteNotExistId, noteDtoNullId, status().isNotFound(), null);
-
-        verify(noteRepository, times(1)).existsById(noteNotExistId);
-        verifyNoMoreInteractions(noteRepository);
-
-        // should return "bad request" if dto.id != path.id
-        reset(noteRepository);
-        when(noteRepository.existsById(noteRepoId)).thenReturn(true);
-
-        mockPutRequest(mockMvc, API_PATH, noteRepoId, noteDtoNotNullId, status().isBadRequest(), null);
+        mockPutRequest(mockMvc, BASE_PATH, noteRepoId, noteDTO, status().isNotFound(), null);
 
         verify(noteRepository, times(1)).existsById(noteRepoId);
-        verifyNoMoreInteractions(noteRepository);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
+
+        // should return "bad request" if note id does not match path id
+        reset(noteRepository, notebookRepository);
+        when(noteRepository.existsById(someId)).thenReturn(true);
+
+        mockPutRequest(mockMvc, BASE_PATH, someId, noteDTO, status().isBadRequest(), null);
+
+        verify(noteRepository, times(1)).existsById(someId);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
+
+        // should return "bad request" if notebook id is null
+        reset(noteRepository, notebookRepository);
+        when(noteRepository.existsById(noteRepoId)).thenReturn(true);
+
+        mockPutRequest(mockMvc, BASE_PATH, noteRepoId, Map.of(
+                "id", noteRepoId,
+                "title", noteTitle,
+                "text", noteText,
+                "notebook", Map.of()
+        ), status().isBadRequest(), null);
+
+        verify(noteRepository, times(1)).existsById(noteRepoId);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
+
+        // should return "not found" if notebook does not exist
+        reset(noteRepository, notebookRepository);
+        when(noteRepository.existsById(noteRepoId)).thenReturn(true);
+        when(notebookRepository.existsById(someNotebookId)).thenReturn(false);
+
+        mockPutRequest(mockMvc, BASE_PATH, noteRepoId, noteDTO, status().isNotFound(), null);
+
+        verify(noteRepository, times(1)).existsById(noteRepoId);
+        verify(notebookRepository, times(1)).existsById(someNotebookId);
+        verifyNoMoreInteractions(noteRepository, notebookRepository);
     }
 
     @Test
@@ -186,7 +249,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.existsById(Id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, API_PATH, Id, status().isOk());
+        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isOk());
 
         verify(noteRepository, times(1)).existsById(Id);
         verify(noteRepository, times(1)).deleteById(Id);
@@ -196,7 +259,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.existsById(Id)).thenReturn(false);
 
-        mockDeleteRequest(mockMvc, API_PATH, Id, status().isNotFound());
+        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isNotFound());
 
         verify(noteRepository, times(1)).existsById(Id);
         verifyNoMoreInteractions(noteRepository);

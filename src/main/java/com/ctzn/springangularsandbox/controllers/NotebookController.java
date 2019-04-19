@@ -11,8 +11,10 @@ import static com.ctzn.springangularsandbox.controllers.RequestValidator.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("api/notebooks")
+@RequestMapping(NotebookController.BASE_PATH)
 public class NotebookController {
+
+    static final String BASE_PATH = "/api/notebooks/";
 
     private static final String NOTEBOOK_OBJECT_NAME = Notebook.getLogObjectName();
 

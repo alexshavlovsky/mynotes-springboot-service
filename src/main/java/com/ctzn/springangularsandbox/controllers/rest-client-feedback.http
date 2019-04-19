@@ -1,5 +1,5 @@
 ### Send feedback
-POST {{api-url}}//feedback
+POST {{api-url}}/feedback/
 Accept: application/json
 Content-Type: application/json
 

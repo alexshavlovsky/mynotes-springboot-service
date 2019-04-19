@@ -1,5 +1,5 @@
 ### Get all
-GET {{api-url}}/notebooks
+GET {{api-url}}/notebooks/
 Accept: application/json
 
 ### Get by id

@@ -17,7 +17,7 @@ public class Notebook {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "notebook", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "notebook", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Note> notes = new ArrayList<>();
 

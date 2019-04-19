@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class FeedbackControllerTest {
 
-    private static final String API_PATH = "/api/feedback/";
+    private static final String BASE_PATH = FeedbackController.BASE_PATH;
 
     @Mock
     FeedbackSender feedbackSender;
@@ -47,7 +47,7 @@ public class FeedbackControllerTest {
 
     @Test
     public void shouldPostFeedback() throws Exception {
-        mockPostRequest(mockMvc, API_PATH, feedbackDTO, status().isOk(), null);
+        mockPostRequest(mockMvc, BASE_PATH, feedbackDTO, status().isOk(), null);
 
         ArgumentCaptor<FeedbackDTO> feedbackDTOCaptor = ArgumentCaptor.forClass(FeedbackDTO.class);
         verify(feedbackSender, times(1)).send(feedbackDTOCaptor.capture());
@@ -60,7 +60,7 @@ public class FeedbackControllerTest {
         // invalid mail address
         feedbackDTO.setFrom("user123_mail.com");
 
-        mockPostRequest(mockMvc, API_PATH, feedbackDTO, status().isBadRequest(), null);
+        mockPostRequest(mockMvc, BASE_PATH, feedbackDTO, status().isBadRequest(), null);
 
         verifyNoMoreInteractions(feedbackSender);
     }

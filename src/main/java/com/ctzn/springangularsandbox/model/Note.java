@@ -27,7 +27,6 @@ public class Note {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @NotNull
     private Notebook notebook;
 
     private Date lastModifiedOn = new Date();
