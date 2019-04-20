@@ -4,9 +4,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "User",
-  "from": "user@gmail.com",
-  "text": "Hello world"
+  "senderName": "User",
+  "senderEmail": "user@gmail.com",
+  "feedbackText": "Hello world"
 }
 
 ###
