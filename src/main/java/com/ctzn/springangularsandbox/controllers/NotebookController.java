@@ -25,23 +25,23 @@ public class NotebookController {
     }
 
     @GetMapping()
-    public List<Notebook> getAll() {
+    public List<Notebook> getAllNotebooks() {
         return notebookRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public Notebook getOne(@PathVariable("id") long id) {
+    public Notebook getNotebook(@PathVariable("id") long id) {
         return validateObjectExists(notebookRepository.findById(id), NOTEBOOK_OBJECT_NAME);
     }
 
     @PostMapping() // create only
-    public Notebook create(@Valid @RequestBody Notebook notebook) {
+    public Notebook saveNotebook(@Valid @RequestBody Notebook notebook) {
         validateIdIsNull(notebook.getId(), NOTEBOOK_OBJECT_NAME);
         return notebookRepository.save(notebook);
     }
 
     @PutMapping("{id}") // update only
-    public Notebook update(@Valid @RequestBody Notebook notebook, @PathVariable Long id) {
+    public Notebook updateNotebook(@Valid @RequestBody Notebook notebook, @PathVariable Long id) {
         validateObjectExists(notebookRepository.existsById(id), NOTEBOOK_OBJECT_NAME);
         validateIdNotNullAndEqual(notebook.getId(), id, NOTEBOOK_OBJECT_NAME);
         notebook.setId(id);
@@ -49,7 +49,7 @@ public class NotebookController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable long id) {
+    public void deleteNotebook(@PathVariable long id) {
         validateObjectExists(notebookRepository.existsById(id), NOTEBOOK_OBJECT_NAME);
         notebookRepository.deleteById(id);
     }

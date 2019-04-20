@@ -21,9 +21,9 @@ public class FeedbackSenderImpl implements FeedbackSender {
     public void send(FeedbackDTO feedbackDTO) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailTo);
-        message.setSubject("Feedback from " + feedbackDTO.getName());
-        message.setText(feedbackDTO.getText());
-        message.setFrom(feedbackDTO.getFrom());
+        message.setSubject("Feedback from " + feedbackDTO.getSenderName());
+        message.setText(feedbackDTO.getFeedbackText());
+        message.setFrom(feedbackDTO.getSenderEmail());
         mailSender.send(message);
     }
 }

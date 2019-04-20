@@ -58,7 +58,7 @@ public class FeedbackControllerTest {
     @Test
     public void shouldRejectInvalidFeedback() throws Exception {
         // invalid mail address
-        feedbackDTO.setFrom("user123_mail.com");
+        feedbackDTO.setSenderEmail("user123_mail.com");
 
         mockPostRequest(mockMvc, BASE_PATH, feedbackDTO, status().isBadRequest(), null);
 

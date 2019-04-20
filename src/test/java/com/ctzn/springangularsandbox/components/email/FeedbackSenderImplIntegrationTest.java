@@ -57,9 +57,9 @@ public class FeedbackSenderImplIntegrationTest {
         MimeMessage[] emails = greenMail.getReceivedMessages();
         assertEquals(1, emails.length);
         assertEquals(mailTo, emails[0].getRecipients(Message.RecipientType.TO)[0].toString());
-        assertEquals(feedbackDTO.getFrom(), emails[0].getFrom()[0].toString());
-        assertEquals("Feedback from " + feedbackDTO.getName(), emails[0].getSubject());
-        assertEquals(feedbackDTO.getText(), GreenMailUtil.getBody(emails[0]));
+        assertEquals(feedbackDTO.getSenderEmail(), emails[0].getFrom()[0].toString());
+        assertEquals("Feedback from " + feedbackDTO.getSenderName(), emails[0].getSubject());
+        assertEquals(feedbackDTO.getFeedbackText(), GreenMailUtil.getBody(emails[0]));
     }
 
 }

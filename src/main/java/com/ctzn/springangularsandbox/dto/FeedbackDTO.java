@@ -8,55 +8,55 @@ import java.util.Objects;
 public class FeedbackDTO {
     @NotNull
     @Email
-    private String from;
+    private String senderEmail;
 
     @NotNull
     @Size(min = 1, max = 50)
-    private String name;
+    private String senderName;
 
     @NotNull
     @Size(min = 1, max = 500)
-    private String text;
+    private String feedbackText;
 
     public FeedbackDTO() {
     }
 
-    public String getFrom() {
-        return from;
+    public String getSenderEmail() {
+        return senderEmail;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
     }
 
-    public String getName() {
-        return name;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
-    public String getText() {
-        return text;
+    public String getFeedbackText() {
+        return feedbackText;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setFeedbackText(String feedbackText) {
+        this.feedbackText = feedbackText;
     }
 
-    public FeedbackDTO(String from, String name, String text) {
-        this.from = from;
-        this.name = name;
-        this.text = text;
+    public FeedbackDTO(String senderEmail, String senderName, String feedbackText) {
+        this.senderEmail = senderEmail;
+        this.senderName = senderName;
+        this.feedbackText = feedbackText;
     }
 
     @Override
     public String toString() {
         return "FeedbackDTO{" +
-                "from='" + from + '\'' +
-                ", name='" + name + '\'' +
-                ", text='" + text + '\'' +
+                "senderEmail='" + senderEmail + '\'' +
+                ", senderName='" + senderName + '\'' +
+                ", feedbackText='" + feedbackText + '\'' +
                 '}';
     }
 
@@ -65,13 +65,13 @@ public class FeedbackDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FeedbackDTO that = (FeedbackDTO) o;
-        return from.equals(that.from) &&
-                name.equals(that.name) &&
-                text.equals(that.text);
+        return senderEmail.equals(that.senderEmail) &&
+                senderName.equals(that.senderName) &&
+                feedbackText.equals(that.feedbackText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(from, name, text);
+        return Objects.hash(senderEmail, senderName, feedbackText);
     }
 }

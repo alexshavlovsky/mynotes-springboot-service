@@ -30,17 +30,17 @@ public class NoteController {
     }
 
     @GetMapping()
-    public List<Note> getAll() {
+    public List<Note> getAllNotes() {
         return noteRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public Note getOne(@PathVariable("id") long id) {
+    public Note getNote(@PathVariable("id") long id) {
         return validateObjectExists(noteRepository.findById(id), NOTE_OBJECT_NAME);
     }
 
     @PostMapping() // create only
-    public Note create(@Valid @RequestBody Note note) {
+    public Note saveNote(@Valid @RequestBody Note note) {
         validateIdIsNull(note.getId(), NOTE_OBJECT_NAME);
         validateIdNotNull(note.getNotebook().getId(), NOTEBOOK_OBJECT_NAME);
         validateObjectExists(notebookRepository.existsById(note.getNotebook().getId()), NOTEBOOK_OBJECT_NAME);
@@ -48,7 +48,7 @@ public class NoteController {
     }
 
     @PutMapping("{id}") // update only
-    public Note update(@Valid @RequestBody Note note, @PathVariable Long id) {
+    public Note updateNote(@Valid @RequestBody Note note, @PathVariable Long id) {
         validateObjectExists(noteRepository.existsById(id), NOTE_OBJECT_NAME);
         validateIdNotNullAndEqual(note.getId(), id, NOTE_OBJECT_NAME);
         validateIdNotNull(note.getNotebook().getId(), NOTEBOOK_OBJECT_NAME);
@@ -57,7 +57,7 @@ public class NoteController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable long id) {
+    public void deleteNote(@PathVariable long id) {
         validateObjectExists(noteRepository.existsById(id), NOTE_OBJECT_NAME);
         noteRepository.deleteById(id);
     }
