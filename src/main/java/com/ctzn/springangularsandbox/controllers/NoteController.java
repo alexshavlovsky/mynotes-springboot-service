@@ -4,6 +4,7 @@ import com.ctzn.springangularsandbox.model.Note;
 import com.ctzn.springangularsandbox.model.Notebook;
 import com.ctzn.springangularsandbox.repositories.NoteRepository;
 import com.ctzn.springangularsandbox.repositories.NotebookRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,6 +41,7 @@ public class NoteController {
     }
 
     @PostMapping() // create only
+    @ResponseStatus(HttpStatus.CREATED)
     public Note saveNote(@Valid @RequestBody Note note) {
         validateIdIsNull(note.getId(), NOTE_OBJECT_NAME);
         validateIdNotNull(note.getNotebook().getId(), NOTEBOOK_OBJECT_NAME);
@@ -57,9 +59,11 @@ public class NoteController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteNote(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String deleteNote(@PathVariable long id) {
         validateObjectExists(noteRepository.existsById(id), NOTE_OBJECT_NAME);
         noteRepository.deleteById(id);
+        return NOTE_OBJECT_NAME + " deleted";
     }
 
 }

@@ -2,6 +2,7 @@ package com.ctzn.springangularsandbox.controllers;
 
 import com.ctzn.springangularsandbox.model.Notebook;
 import com.ctzn.springangularsandbox.repositories.NotebookRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,6 +36,7 @@ public class NotebookController {
     }
 
     @PostMapping() // create only
+    @ResponseStatus(HttpStatus.CREATED)
     public Notebook saveNotebook(@Valid @RequestBody Notebook notebook) {
         validateIdIsNull(notebook.getId(), NOTEBOOK_OBJECT_NAME);
         return notebookRepository.save(notebook);
@@ -49,9 +51,11 @@ public class NotebookController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteNotebook(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String deleteNotebook(@PathVariable long id) {
         validateObjectExists(notebookRepository.existsById(id), NOTEBOOK_OBJECT_NAME);
         notebookRepository.deleteById(id);
+        return NOTEBOOK_OBJECT_NAME + " deleted";
     }
 
 }

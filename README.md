@@ -7,37 +7,49 @@ Component         | Technology
 ---               | ---
 Build tool        | Maven
 Server            | SpringBoot WEB (Tomcat)
+Security          | SSL
 Database          | SpringBoot JPA (Hibernate), H2         
 Email             | SpringBoot MAIL
 REST data mapping | Jackson, Bean Validation API
 Testing           | Junit, Mockito, MockMvc, GreenMail
 REST Documentation| SpringFox Swagger2
 
-## API description
+## API specification
 
-Feedback Email Controller
+Default base API URL: https://localhost:8443/api/
 
-Method  |Endpoint           |Action
----     |---                |---
-POST    |/api/feedback/     |sendFeedback
+Feedback Email queue endpoint:
+                       
+Method  |URI           |Operation
+---     |---           |---
+POST    |/feedback/    |accept
 
-Note CRUD Controller
+Note resource endpoints:
 
-Method  |Endpoint           |Action
----     |---                |---
-GET     |/api/notes/        |getAllNotes
-POST    |/api/notes/        |saveNote
-GET     |/api/notes/{id}    |getNote
-PUT     |/api/notes/{id}    |updateNote
-DELETE  |/api/notes/{id}    |deleteNote
+Method  |URI           |Operation
+---     |---           |---
+GET     |/notes/       |read all
+POST    |/notes/       |create
+GET     |/notes/:id    |read
+PUT     |/notes/:id    |update
+DELETE  |/notes/:id    |delete
 
-Notebook CRUD Controller
+Notebook resource endpoints:
 
-Method  |Endpoint           |Action
----     |---                |---
-GET     |/api/notebooks/    |getAllNotebooks
-POST    |/api/notebooks/    |saveNotebook
-GET     |/api/notebooks/{id}|getNotebook
-PUT     |/api/notebooks/{id}|updateNotebook
-DELETE  |/api/notebooks/{id}|deleteNotebook
+Method  |URI            |Operation
+---     |---            |---
+GET     |/notebooks/    |read all
+POST    |/notebooks/    |create
+GET     |/notebooks/:id |read
+PUT     |/notebooks/:id |update
+DELETE  |/notebooks/:id |delete
 
+Status code conventions:
+
+Method         |Success status code
+---            |---
+GET            |200 OK
+POST           |201 Created
+POST feedback  |202 Accepted
+PUT            |200 OK
+DELETE         |204 No Content
