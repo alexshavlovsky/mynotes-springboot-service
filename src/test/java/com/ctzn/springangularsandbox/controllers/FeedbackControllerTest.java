@@ -47,7 +47,7 @@ public class FeedbackControllerTest {
 
     @Test
     public void shouldPostFeedback() throws Exception {
-        mockPostRequest(mockMvc, BASE_PATH, feedbackDTO, status().isOk(), null);
+        mockPostRequest(mockMvc, BASE_PATH, feedbackDTO, status().isAccepted(), null);
 
         ArgumentCaptor<FeedbackDTO> feedbackDTOCaptor = ArgumentCaptor.forClass(FeedbackDTO.class);
         verify(feedbackSender, times(1)).send(feedbackDTOCaptor.capture());

@@ -118,7 +118,7 @@ public class NoteControllerTest {
         when(noteRepository.save(any())).thenReturn(noteRepo);
         when(notebookRepository.existsById(someNotebookId)).thenReturn(true);
 
-        mockPostRequest(mockMvc, BASE_PATH, noteDTO, status().isOk(), noteRepo);
+        mockPostRequest(mockMvc, BASE_PATH, noteDTO, status().isCreated(), noteRepo);
 
         ArgumentCaptor<Note> noteArgumentCaptor = ArgumentCaptor.forClass(Note.class);
         verify(noteRepository, times(1)).save(noteArgumentCaptor.capture());
@@ -249,7 +249,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.existsById(Id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isOk());
+        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isNoContent());
 
         verify(noteRepository, times(1)).existsById(Id);
         verify(noteRepository, times(1)).deleteById(Id);

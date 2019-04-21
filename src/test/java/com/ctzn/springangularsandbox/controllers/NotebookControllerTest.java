@@ -99,7 +99,7 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.save(any())).thenReturn(notebookRepo);
 
-        mockPostRequest(mockMvc, BASE_PATH, notebookDtoNullId, status().isOk(), notebookRepo);
+        mockPostRequest(mockMvc, BASE_PATH, notebookDtoNullId, status().isCreated(), notebookRepo);
 
         ArgumentCaptor<Notebook> notebookArgumentCaptor = ArgumentCaptor.forClass(Notebook.class);
         verify(notebookRepository, times(1)).save(notebookArgumentCaptor.capture());
@@ -181,7 +181,7 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.existsById(id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isOk());
+        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNoContent());
 
         verify(notebookRepository, times(1)).existsById(id);
         verify(notebookRepository, times(1)).deleteById(id);
