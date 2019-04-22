@@ -4,7 +4,6 @@ import com.ctzn.springangularsandbox.dto.FeedbackDTO;
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,11 +33,6 @@ public class FeedbackSenderImplIntegrationTest {
     @Value("${spring.mail.password}")
     private String userPassword;
 
-    @Before
-    public void setUp() {
-        greenMail.setUser(userName, userPassword);
-    }
-
     @Autowired
     private FeedbackSender feedbackSender;
 
@@ -45,21 +40,31 @@ public class FeedbackSenderImplIntegrationTest {
     private String mailTo;
 
     @Test
-    public void shouldSendSingleMail() throws MessagingException {
-        FeedbackDTO feedbackDTO = new FeedbackDTO(
-                "user123@mail.com",
-                GreenMailUtil.random(10),
-                GreenMailUtil.random(50)
-        );
+    public void shouldSendMails() throws MessagingException {
+        greenMail.setUser(userName, userPassword);
 
-        feedbackSender.send(feedbackDTO);
+        int MAIL_COUNT = 3;
+        ArrayList<FeedbackDTO> feedbackList = new ArrayList<>();
+        for (int i = 0; i < MAIL_COUNT; i++) {
+            FeedbackDTO feedbackDTO = new FeedbackDTO(
+                    "user123@mail.com",
+                    GreenMailUtil.random(10),
+                    GreenMailUtil.random(20)
+            );
+            feedbackList.add(feedbackDTO);
+            feedbackSender.sendAsync(feedbackDTO);
+        }
+
+        greenMail.waitForIncomingEmail(MAIL_COUNT);
 
         MimeMessage[] emails = greenMail.getReceivedMessages();
-        assertEquals(1, emails.length);
-        assertEquals(mailTo, emails[0].getRecipients(Message.RecipientType.TO)[0].toString());
-        assertEquals(feedbackDTO.getSenderEmail(), emails[0].getFrom()[0].toString());
-        assertEquals("Feedback from " + feedbackDTO.getSenderName(), emails[0].getSubject());
-        assertEquals(feedbackDTO.getFeedbackText(), GreenMailUtil.getBody(emails[0]));
+        assertEquals(MAIL_COUNT, emails.length);
+        for (int i = 0; i < MAIL_COUNT; i++) {
+            assertEquals(mailTo, emails[i].getRecipients(Message.RecipientType.TO)[0].toString());
+            assertEquals(feedbackList.get(i).getSenderEmail(), emails[i].getFrom()[0].toString());
+            assertEquals("Feedback from " + feedbackList.get(i).getSenderName(), emails[i].getSubject());
+            assertEquals(feedbackList.get(i).getFeedbackText(), GreenMailUtil.getBody(emails[i]));
+        }
     }
 
 }

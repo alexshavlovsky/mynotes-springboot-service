@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,9 +26,6 @@ public class FeedbackControllerTest {
     @Mock
     FeedbackSender feedbackSender;
 
-    @Mock
-    Logger logger;
-
     private MockMvc mockMvc;
 
     private FeedbackDTO feedbackDTO;
@@ -37,7 +33,7 @@ public class FeedbackControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new FeedbackController(feedbackSender, logger)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new FeedbackController(feedbackSender)).build();
         feedbackDTO = new FeedbackDTO(
                 "user123@mail.com",
                 GreenMailUtil.random(10),
@@ -50,7 +46,7 @@ public class FeedbackControllerTest {
         mockPostRequest(mockMvc, BASE_PATH, feedbackDTO, status().isAccepted(), null);
 
         ArgumentCaptor<FeedbackDTO> feedbackDTOCaptor = ArgumentCaptor.forClass(FeedbackDTO.class);
-        verify(feedbackSender, times(1)).send(feedbackDTOCaptor.capture());
+        verify(feedbackSender, times(1)).sendAsync(feedbackDTOCaptor.capture());
         verifyNoMoreInteractions(feedbackSender);
         Assert.assertEquals(feedbackDTO, feedbackDTOCaptor.getValue());
     }
