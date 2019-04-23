@@ -10,6 +10,7 @@ Server            | SpringBoot WEB (Tomcat)
 Security          | SSL
 Database          | SpringBoot JPA (Hibernate), H2         
 Email             | SpringBoot MAIL
+Async tasks       | ThreadPoolTaskExecutor
 REST data mapping | Jackson, Bean Validation API
 Testing           | Junit, Mockito, MockMvc, GreenMail
 REST Documentation| SpringFox Swagger2

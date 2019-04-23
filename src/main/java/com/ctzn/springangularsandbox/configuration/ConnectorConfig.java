@@ -9,12 +9,12 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+// redirect HTTP to HTTPS
 @Configuration
 public class ConnectorConfig {
 
     @Bean
     public ServletWebServerFactory servletContainer() {
-        // Enable SSL Traffic
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
             @Override
             protected void postProcessContext(Context context) {
