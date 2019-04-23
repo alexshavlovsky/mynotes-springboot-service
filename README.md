@@ -53,4 +53,4 @@ GET            |200 OK
 POST           |201 Created
 POST feedback  |202 Accepted
 PUT            |200 OK
-DELETE         |204 No Content
+DELETE         |200 OK

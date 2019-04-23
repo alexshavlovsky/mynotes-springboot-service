@@ -50,12 +50,11 @@ public class NotebookController {
         return notebookRepository.save(notebook);
     }
 
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String deleteNotebook(@PathVariable long id) {
+    @DeleteMapping(path = "{id}")
+    public Object deleteNotebook(@PathVariable long id) {
         validateObjectExists(notebookRepository.existsById(id), NOTEBOOK_OBJECT_NAME);
         notebookRepository.deleteById(id);
-        return NOTEBOOK_OBJECT_NAME + " deleted";
+        return customJsonMessage(NOTEBOOK_OBJECT_NAME + " deleted");
     }
 
 }

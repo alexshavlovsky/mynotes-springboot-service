@@ -58,12 +58,11 @@ public class NoteController {
         return noteRepository.save(note);
     }
 
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String deleteNote(@PathVariable long id) {
+    @DeleteMapping(path = "{id}")
+    public Object deleteNote(@PathVariable long id) {
         validateObjectExists(noteRepository.existsById(id), NOTE_OBJECT_NAME);
         noteRepository.deleteById(id);
-        return NOTE_OBJECT_NAME + " deleted";
+        return customJsonMessage(NOTE_OBJECT_NAME + " deleted");
     }
 
 }

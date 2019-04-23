@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.ctzn.springangularsandbox.controllers.RequestValidator.customJsonMessage;
+
 @RestController
 @CrossOrigin
 @RequestMapping(path = FeedbackController.BASE_PATH)
@@ -26,10 +28,10 @@ public class FeedbackController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String sendFeedback(@Valid @RequestBody FeedbackDTO feedbackDTO) {
+    public Object sendFeedback(@Valid @RequestBody FeedbackDTO feedbackDTO) {
         feedbackSender.sendAsync(feedbackDTO);
         logger.debug("Accepted {}", feedbackDTO);
-        return "Feedback accepted";
+        return customJsonMessage("Feedback accepted");
     }
 
 }

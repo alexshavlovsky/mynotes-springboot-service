@@ -28,5 +28,6 @@ Content-Type: application/json
 ### Delete by id
 DELETE {{api-url}}/notebooks/1
 Accept: application/json
+Content-Type: application/json
 
 ###

@@ -249,7 +249,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.existsById(Id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isNoContent());
+        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isOk());
 
         verify(noteRepository, times(1)).existsById(Id);
         verify(noteRepository, times(1)).deleteById(Id);

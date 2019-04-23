@@ -181,7 +181,7 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.existsById(id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNoContent());
+        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isOk());
 
         verify(notebookRepository, times(1)).existsById(id);
         verify(notebookRepository, times(1)).deleteById(id);

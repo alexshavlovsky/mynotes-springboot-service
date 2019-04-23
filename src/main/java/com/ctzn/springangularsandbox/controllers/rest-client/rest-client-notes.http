@@ -36,5 +36,6 @@ Content-Type: application/json
 ### Delete by id
 DELETE {{api-url}}/notes/3
 Accept: application/json
+Content-Type: application/json
 
 ###

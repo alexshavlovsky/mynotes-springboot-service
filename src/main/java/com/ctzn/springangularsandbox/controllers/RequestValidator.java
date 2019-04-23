@@ -3,6 +3,7 @@ package com.ctzn.springangularsandbox.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Map;
 import java.util.Optional;
 
 class RequestValidator {
@@ -42,4 +43,9 @@ class RequestValidator {
         if (!objectId.equals(pathId))
             throw new BadRequest(String.format("%s {id=%s} does not match path {id=%s}", objectName, objectId, pathId));
     }
+
+    static Map customJsonMessage(String text) {
+        return Map.of("message", text);
+    }
+
 }
