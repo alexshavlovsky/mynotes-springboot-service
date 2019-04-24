@@ -17,7 +17,7 @@ import static com.ctzn.springangularsandbox.controllers.RequestValidator.*;
 @RequestMapping(NoteController.BASE_PATH)
 public class NoteController {
 
-    static final String BASE_PATH = "/api/notes/";
+    static final String BASE_PATH = "/api/notes";
 
     private static final String NOTEBOOK_OBJECT_NAME = Notebook.getLogObjectName();
     private static final String NOTE_OBJECT_NAME = Note.getLogObjectName();

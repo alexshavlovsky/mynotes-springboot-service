@@ -24,7 +24,7 @@ class RestTestUtil {
     }
 
     static void mockGetRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status, Object expected) throws Exception {
-        String fullPath = id == null ? path : path + id;
+        String fullPath = id == null ? path : joinPath(path, id);
         MockHttpServletRequestBuilder requestBuilder = get(fullPath)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
@@ -46,7 +46,7 @@ class RestTestUtil {
     }
 
     static void mockPutRequest(MockMvc mockMvc, String path, Long id, Object DTO, ResultMatcher status, Object expected) throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = put(path + id)
+        MockHttpServletRequestBuilder requestBuilder = put(joinPath(path, id))
                 .content(asJsonString(DTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
@@ -57,10 +57,14 @@ class RestTestUtil {
     }
 
     static void mockDeleteRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status) throws Exception {
-        mockMvc.perform(delete(path + id)
+        mockMvc.perform(delete(joinPath(path, id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status);
+    }
+
+    private static String joinPath(String path, Long id) {
+        return String.join("/", path, id.toString());
     }
 
 }

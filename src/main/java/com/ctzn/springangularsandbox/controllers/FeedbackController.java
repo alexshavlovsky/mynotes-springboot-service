@@ -18,7 +18,7 @@ public class FeedbackController {
 
     private static final Logger logger = LoggerFactory.getLogger(FeedbackController.class);
 
-    static final String BASE_PATH = "/api/feedback/";
+    static final String BASE_PATH = "/api/feedback";
 
     private FeedbackSender feedbackSender;
 
