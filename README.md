@@ -7,7 +7,7 @@ Component         | Technology
 ---               | ---
 Build tool        | Maven
 Server            | SpringBoot WEB (Tomcat)
-Security          | SSL
+Security          | SSL, basic auth
 Database          | SpringBoot JPA (Hibernate), H2         
 Email             | SpringBoot MAIL
 Async tasks       | ThreadPoolTaskExecutor
@@ -23,14 +23,14 @@ Feedback Email queue endpoint:
                        
 Method  |URI           |Operation
 ---     |---           |---
-POST    |/feedback/    |accept
+POST    |/feedback     |accept
 
 Note resource endpoints:
 
 Method  |URI           |Operation
 ---     |---           |---
-GET     |/notes/       |read all
-POST    |/notes/       |create
+GET     |/notes        |read all
+POST    |/notes        |create
 GET     |/notes/:id    |read
 PUT     |/notes/:id    |update
 DELETE  |/notes/:id    |delete
@@ -39,8 +39,8 @@ Notebook resource endpoints:
 
 Method  |URI            |Operation
 ---     |---            |---
-GET     |/notebooks/    |read all
-POST    |/notebooks/    |create
+GET     |/notebooks     |read all
+POST    |/notebooks     |create
 GET     |/notebooks/:id |read
 PUT     |/notebooks/:id |update
 DELETE  |/notebooks/:id |delete
