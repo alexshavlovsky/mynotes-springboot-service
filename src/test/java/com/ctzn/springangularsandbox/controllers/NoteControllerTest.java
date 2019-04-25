@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.ctzn.springangularsandbox.Util.mapOf;
 import static com.ctzn.springangularsandbox.controllers.RestTestUtil.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -107,10 +108,10 @@ public class NoteControllerTest {
         final Note noteRepo = new Note(noteTitle, noteText, someNotebook);
         noteRepo.setId(noteRepoId);
 
-        Map noteDTO = Map.of(
+        Map noteDTO = mapOf(
                 "title", noteTitle,
                 "text", noteText,
-                "notebook", Map.of("id", someNotebookId)
+                "notebook", mapOf("id", someNotebookId)
         );
 
         // should save entity
@@ -132,11 +133,11 @@ public class NoteControllerTest {
         // should return "bad request" if note id is not null
         reset(noteRepository, notebookRepository);
 
-        mockPostRequest(mockMvc, BASE_PATH, Map.of(
+        mockPostRequest(mockMvc, BASE_PATH, mapOf(
                 "id", someId,
                 "title", noteTitle,
                 "text", noteText,
-                "notebook", Map.of("id", someNotebookId)
+                "notebook", mapOf("id", someNotebookId)
         ), status().isBadRequest(), null);
 
         verifyNoMoreInteractions(noteRepository, notebookRepository);
@@ -144,10 +145,10 @@ public class NoteControllerTest {
         // should return "bad request" if notebook id is null
         reset(noteRepository, notebookRepository);
 
-        mockPostRequest(mockMvc, BASE_PATH, Map.of(
+        mockPostRequest(mockMvc, BASE_PATH, mapOf(
                 "title", noteTitle,
                 "text", noteText,
-                "notebook", Map.of("id", "")
+                "notebook", mapOf("id", "")
         ), status().isBadRequest(), null);
 
         verifyNoMoreInteractions(noteRepository, notebookRepository);
@@ -172,11 +173,11 @@ public class NoteControllerTest {
         final Note noteRepo = new Note(noteTitle, noteText, someNotebook);
         noteRepo.setId(noteRepoId);
 
-        Map noteDTO = Map.of(
+        Map noteDTO = mapOf(
                 "id", noteRepoId,
                 "title", noteTitle,
                 "text", noteText,
-                "notebook", Map.of("id", someNotebookId)
+                "notebook", mapOf("id", someNotebookId)
         );
 
         // should update entity
@@ -219,11 +220,11 @@ public class NoteControllerTest {
         reset(noteRepository, notebookRepository);
         when(noteRepository.existsById(noteRepoId)).thenReturn(true);
 
-        mockPutRequest(mockMvc, BASE_PATH, noteRepoId, Map.of(
+        mockPutRequest(mockMvc, BASE_PATH, noteRepoId, mapOf(
                 "id", noteRepoId,
                 "title", noteTitle,
                 "text", noteText,
-                "notebook", Map.of()
+                "notebook", mapOf()
         ), status().isBadRequest(), null);
 
         verify(noteRepository, times(1)).existsById(noteRepoId);

@@ -8,8 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
-import static com.ctzn.springangularsandbox.controllers.RequestValidator.customJsonMessage;
+import static com.ctzn.springangularsandbox.Util.customMessage;
 
 @RestController
 @CrossOrigin
@@ -28,10 +29,10 @@ public class FeedbackController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Object sendFeedback(@Valid @RequestBody FeedbackDTO feedbackDTO) {
+    public Map sendFeedback(@Valid @RequestBody FeedbackDTO feedbackDTO) {
         feedbackSender.sendAsync(feedbackDTO);
         logger.debug("Accepted {}", feedbackDTO);
-        return customJsonMessage("Feedback accepted");
+        return customMessage("Feedback accepted");
     }
 
 }

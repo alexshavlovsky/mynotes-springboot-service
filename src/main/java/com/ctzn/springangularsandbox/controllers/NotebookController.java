@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
+import static com.ctzn.springangularsandbox.Util.customMessage;
 import static com.ctzn.springangularsandbox.controllers.RequestValidator.*;
 
 @RestController
@@ -51,10 +53,10 @@ public class NotebookController {
     }
 
     @DeleteMapping(path = "{id}")
-    public Object deleteNotebook(@PathVariable long id) {
+    public Map deleteNotebook(@PathVariable long id) {
         validateObjectExists(notebookRepository.existsById(id), NOTEBOOK_OBJECT_NAME);
         notebookRepository.deleteById(id);
-        return customJsonMessage(NOTEBOOK_OBJECT_NAME + " deleted");
+        return customMessage(NOTEBOOK_OBJECT_NAME + " deleted");
     }
 
 }
