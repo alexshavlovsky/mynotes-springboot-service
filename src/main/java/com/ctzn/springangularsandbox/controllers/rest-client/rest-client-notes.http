@@ -1,15 +1,18 @@
 ### Get all
 GET {{api-url}}/notes/
 Accept: application/json
+Authorization: Basic {{auth-enc}}
 
 ### Get by id
 GET {{api-url}}/notes/3
 Accept: application/json
+Authorization: Basic {{auth-enc}}
 
 ### Create
 POST {{api-url}}/notes/
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic {{auth-enc}}
 
 {
   "title": "New note",
@@ -23,6 +26,7 @@ Content-Type: application/json
 PUT {{api-url}}/notes/3
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic {{auth-enc}}
 
 {
   "id": 3,
@@ -37,5 +41,6 @@ Content-Type: application/json
 DELETE {{api-url}}/notes/3
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic {{auth-enc}}
 
 ###

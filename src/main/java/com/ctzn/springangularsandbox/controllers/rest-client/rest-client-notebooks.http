@@ -1,15 +1,18 @@
 ### Get all
 GET {{api-url}}/notebooks/
 Accept: application/json
+Authorization: Basic {{auth-enc}}
 
 ### Get by id
 GET {{api-url}}/notebooks/1
 Accept: application/json
+Authorization: Basic {{auth-enc}}
 
 ### Create
 POST {{api-url}}/notebooks/
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic {{auth-enc}}
 
 {
   "name": "New notebook"
@@ -19,6 +22,7 @@ Content-Type: application/json
 PUT {{api-url}}/notebooks/1
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic {{auth-enc}}
 
 {
   "id": 1,
@@ -29,5 +33,6 @@ Content-Type: application/json
 DELETE {{api-url}}/notebooks/1
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic {{auth-enc}}
 
 ###
