@@ -16,29 +16,19 @@ class RestTestUtil {
     }
 
     static void mockGetRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status, Object expected) throws Exception {
-        performWithStatusAndExpected(mockMvc,
-                setMediaTypes(get(joinPath(path, id))),
-                status, expected);
+        perform(mockMvc, get(joinPath(path, id)), status, expected);
     }
 
     static void mockPostRequest(MockMvc mockMvc, String path, Object DTO, ResultMatcher status, Object expected) throws Exception {
-        performWithStatusAndExpected(mockMvc,
-                setMediaTypes(post(path).content(asJsonString(DTO))),
-                status, expected);
+        perform(mockMvc, post(path).content(asJsonString(DTO)), status, expected);
     }
 
     static void mockPutRequest(MockMvc mockMvc, String path, Long id, Object DTO, ResultMatcher status, Object expected) throws Exception {
-        performWithStatusAndExpected(mockMvc,
-                setMediaTypes(put(joinPath(path, id)).content(asJsonString(DTO))),
-                status, expected);
+        perform(mockMvc, put(joinPath(path, id)).content(asJsonString(DTO)), status, expected);
     }
 
     static void mockDeleteRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status) throws Exception {
-        performWithStatusAndExpected(mockMvc,
-                setMediaTypes(put(joinPath(path, id))),
-                status, null);
-
-        mockMvc.perform(setMediaTypes(delete(joinPath(path, id)))).andExpect(status);
+        perform(mockMvc, delete(joinPath(path, id)), status, null);
     }
 
     private static String asJsonString(final Object obj) {
@@ -53,11 +43,8 @@ class RestTestUtil {
         return id == null ? path : String.join("/", path, id.toString());
     }
 
-    private static MockHttpServletRequestBuilder setMediaTypes(MockHttpServletRequestBuilder builder) {
-        return builder.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
-    }
-
-    private static void performWithStatusAndExpected(MockMvc mockMvc, MockHttpServletRequestBuilder requestBuilder, ResultMatcher status, Object expected) throws Exception {
+    private static void perform(MockMvc mockMvc, MockHttpServletRequestBuilder requestBuilder, ResultMatcher status, Object expected) throws Exception {
+        requestBuilder.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
         if (expected == null)
             mockMvc.perform(requestBuilder).andExpect(status);
         else
