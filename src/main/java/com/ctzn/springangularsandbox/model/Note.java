@@ -1,9 +1,6 @@
 package com.ctzn.springangularsandbox.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -12,7 +9,6 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,8 +23,10 @@ public class Note {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     private Notebook notebook;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastModifiedOn = new Date();
 
     public Note() {
