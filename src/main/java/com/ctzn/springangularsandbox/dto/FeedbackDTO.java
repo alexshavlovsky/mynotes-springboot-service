@@ -1,21 +1,22 @@
 package com.ctzn.springangularsandbox.dto;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class FeedbackDTO {
-    @NotNull
+    @NotBlank
     @Email
+    @Size(min = 5, max = 50)
     private String senderEmail;
 
-    @NotNull
-    @Size(min = 1, max = 50)
+    @NotBlank
+    @Size(max = 50)
     private String senderName;
 
-    @NotNull
-    @Size(min = 1, max = 500)
+    @NotBlank
+    @Size(max = 500)
     private String feedbackText;
 
     public FeedbackDTO() {
