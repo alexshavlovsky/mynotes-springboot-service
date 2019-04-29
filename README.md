@@ -2,9 +2,12 @@
 
 Basic SpringBoot database service with REST API.
 
+Frontend client for this project: [Angular REST client](https://github.com/alexshavlovsky/ng-client).
+
 ## Technology Stack
 Component         | Technology
 ---               | ---
+Runtime           | Java 8
 Build tool        | Maven
 Server            | SpringBoot WEB (Tomcat)
 Security          | SSL, basic auth
