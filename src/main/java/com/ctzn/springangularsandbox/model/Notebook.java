@@ -1,5 +1,6 @@
 package com.ctzn.springangularsandbox.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -20,6 +21,11 @@ public class Notebook {
     @OneToMany(mappedBy = "notebook", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Note> notes = new ArrayList<>();
+
+    @JsonGetter
+    public int size() {
+        return notes.size();
+    }
 
     public Notebook() {
     }
