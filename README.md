@@ -1,8 +1,8 @@
-# SpringBoot REST service
+# MyNotes SpringBoot Service
 
 Basic SpringBoot database service with REST API.
 
-Frontend client for this project: [Angular REST client](https://github.com/alexshavlovsky/ng-client).
+Frontend client for this project: [MyNotes Angular Client](https://github.com/alexshavlovsky/mynotes-ng-client.git).
 
 ## Technology Stack
 Component         | Technology
