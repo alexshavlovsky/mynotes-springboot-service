@@ -1,6 +1,5 @@
 package com.ctzn.springangularsandbox.controllers;
 
-import com.ctzn.springangularsandbox.Util;
 import com.ctzn.springangularsandbox.model.Note;
 import com.ctzn.springangularsandbox.model.Notebook;
 import com.ctzn.springangularsandbox.repositories.NoteRepository;
@@ -34,8 +33,13 @@ public class NoteController {
     }
 
     @GetMapping()
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll();
+    public List<Note> getAllNotesByNotebook(@RequestParam(required = false) Long nbId) {
+        if (nbId == null) {
+            return noteRepository.findAll();
+        } else {
+            // TODO: create tests for this case
+            return noteRepository.findAllByNotebook(validateObjectExists(notebookRepository.findById(nbId), NOTEBOOK_OBJECT_NAME));
+        }
     }
 
     @GetMapping("{id}")

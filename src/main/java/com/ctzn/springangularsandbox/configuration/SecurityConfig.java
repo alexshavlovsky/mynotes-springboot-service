@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();
         http.httpBasic().realmName(realmName);
         http.csrf().disable();
+        //http.headers().frameOptions().disable(); // to enable h2-console traffic
     }
 
     @Bean

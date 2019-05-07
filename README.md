@@ -40,13 +40,14 @@ DELETE  |/notes/:id    |delete
 
 Notebook resource endpoints:
 
-Method  |URI            |Operation
----     |---            |---
-GET     |/notebooks     |read all
-POST    |/notebooks     |create
-GET     |/notebooks/:id |read
-PUT     |/notebooks/:id |update
-DELETE  |/notebooks/:id |delete
+Method  |URI                  |Operation
+---     |---                  |---
+GET     |/notebooks           |read all
+GET     |/notebooks?nbId=:id  |read by notebook id
+POST    |/notebooks           |create
+GET     |/notebooks/:id       |read
+PUT     |/notebooks/:id       |update
+DELETE  |/notebooks/:id       |delete
 
 Status code conventions:
 
