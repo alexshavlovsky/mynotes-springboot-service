@@ -28,14 +28,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
+        http
                 .authorizeRequests()
                 .antMatchers("/**").authenticated()
-                .and()
-                .httpBasic();
-        http.httpBasic().realmName(realmName);
-        http.csrf().disable();
-        //http.headers().frameOptions().disable(); // to enable h2-console traffic
+                .and().httpBasic().realmName(realmName)
+                .and().cors()
+                .and().csrf().disable()
+                .headers().frameOptions().sameOrigin();
     }
 
     @Bean
