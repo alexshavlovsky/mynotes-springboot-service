@@ -4,6 +4,8 @@ import com.ctzn.springangularsandbox.model.Note;
 import com.ctzn.springangularsandbox.model.Notebook;
 import com.ctzn.springangularsandbox.repositories.NoteRepository;
 import com.ctzn.springangularsandbox.repositories.NotebookRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,8 @@ import java.util.Random;
 @Component
 public class DbSeeder implements CommandLineRunner {
 
+    private static final Logger logger = LoggerFactory.getLogger(DbSeeder.class);
+
     private NotebookRepository notebookRepository;
     private NoteRepository noteRepository;
 
@@ -23,7 +27,6 @@ public class DbSeeder implements CommandLineRunner {
     }
 
     private void generateRandomDb(int nbNum, int notesPerNbMin, int notesPerNbMax) {
-        if (notebookRepository.count() > 0) return; // put random data to db if db is empty
         noteRepository.deleteAll();
         notebookRepository.deleteAll();
         Random rnd = new Random();
@@ -45,6 +48,10 @@ public class DbSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        generateRandomDb(12, 3, 40);
+        // put random data to db if db is empty
+        if (notebookRepository.count() == 0 || (args.length == 1 && "force".equals(args[0]))) {
+            generateRandomDb(12, 3, 40);
+            logger.debug("Random database generated");
+        }
     }
 }
