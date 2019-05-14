@@ -1,6 +1,9 @@
 package com.ctzn.springangularsandbox.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -26,7 +29,6 @@ public class Note {
     @JsonIgnoreProperties({"hibernateLazyInitializer"})
     private Notebook notebook;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastModifiedOn = new Date();
 
     public Note() {
