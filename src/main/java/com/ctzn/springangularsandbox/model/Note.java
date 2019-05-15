@@ -20,6 +20,8 @@ public class Note {
     @NotBlank
     private String title;
 
+    @Column(columnDefinition="CLOB NOT NULL")
+    @Lob
     @NotNull
     private String text;
 
