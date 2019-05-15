@@ -4,6 +4,26 @@ Basic SpringBoot database service with REST API.
 
 Frontend client for this project: [MyNotes Angular Client](https://github.com/alexshavlovsky/mynotes-ng-client.git).
 
+## Embedded frontend client
+
+Prebuilt Angular client is included and served at `https://localhost:8443`
+<br>
+Default username: usr1
+<br>
+Default password: pwd1
+
+## Build and run instructions
+
+Tested on Maven 3.0.5 and Java 1.8.0_212:
+```
+git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
+cd mynotes-springboot-service
+mvn package
+cd target
+java -jar spring-angular-sandbox-0.0.1-SNAPSHOT.jar
+firefox https://localhost:8443
+```
+
 ## Technology Stack
 Component         | Technology
 ---               | ---
@@ -27,6 +47,12 @@ Feedback Email queue endpoint:
 Method  |URI           |Operation
 ---     |---           |---
 POST    |/feedback     |accept
+
+Admin command controller endpoint:
+                       
+Method  |URI           |Operation
+---     |---           |---
+POST    |/command      |accept
 
 Note resource endpoints:
 
@@ -54,7 +80,8 @@ Status code conventions:
 Method         |Success status code
 ---            |---
 GET            |200 OK
-POST           |201 Created
+POST resource  |201 Created
 POST feedback  |202 Accepted
+POST command   |202 Accepted
 PUT            |200 OK
 DELETE         |200 OK
