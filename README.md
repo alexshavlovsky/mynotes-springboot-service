@@ -24,7 +24,23 @@ java -jar spring-angular-sandbox-0.0.1-SNAPSHOT.jar
 firefox https://localhost:8443
 ```
 
+In Windows create a .cmd file and execute it from any folder:
+```
+git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
+call mvn package -f mynotes-springboot-service\pom.xml --log-file maven.log
+start cmd.exe /c java -jar .\mynotes-springboot-service\target\spring-angular-sandbox-0.0.1-SNAPSHOT.jar
+timeout 15
+start firefox https://localhost:8443
+```
+
+## Screenshot
+
+<p align="center">
+  <img src="screenshots/desktop.png?raw=true"/>
+</p>
+
 ## Technology Stack
+
 Component         | Technology
 ---               | ---
 Runtime           | Java 8
