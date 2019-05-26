@@ -1,0 +1,15 @@
+spring:
+  profiles: h2mem
+  datasource.url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+---
+spring:
+  profiles: h2file
+  datasource.url: jdbc:h2:file:./database
+---
+spring:
+  profiles: mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/mynotes?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+    username: user123
+    password: pass123
+  jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
