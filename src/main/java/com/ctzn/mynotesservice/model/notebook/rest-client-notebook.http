@@ -1,0 +1,37 @@
+### Get all
+GET {{api-url}}/notebooks/
+Accept: application/json
+Authorization: Basic {{auth-enc}}
+
+### Get by id
+GET {{api-url}}/notebooks/1
+Accept: application/json
+Authorization: Basic {{auth-enc}}
+
+### Create
+POST {{api-url}}/notebooks/
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{auth-enc}}
+
+{
+  "name": "New notebook"
+}
+
+### Update by id
+PUT {{api-url}}/notebooks/1
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{auth-enc}}
+
+{
+  "name": "Renamed notebook"
+}
+
+### Delete by id
+DELETE {{api-url}}/notebooks/1
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{auth-enc}}
+
+###

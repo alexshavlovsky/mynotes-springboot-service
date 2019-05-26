@@ -1,0 +1,11 @@
+### Send command
+POST {{api-url}}/command
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{auth-enc}}
+
+{
+  "command": "fill database"
+}
+
+###
