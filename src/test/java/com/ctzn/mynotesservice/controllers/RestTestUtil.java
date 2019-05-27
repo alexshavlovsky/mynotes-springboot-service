@@ -27,8 +27,8 @@ class RestTestUtil {
         perform(mockMvc, put(joinPath(path, id)).content(asJsonString(request)), status, expected);
     }
 
-    static void mockDeleteRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status) throws Exception {
-        perform(mockMvc, delete(joinPath(path, id)), status, null);
+    static void mockDeleteRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, delete(joinPath(path, id)), status, expected);
     }
 
     private static String asJsonString(final Object obj) {

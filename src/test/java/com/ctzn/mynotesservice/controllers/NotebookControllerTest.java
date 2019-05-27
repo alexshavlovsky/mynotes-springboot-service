@@ -2,6 +2,8 @@ package com.ctzn.mynotesservice.controllers;
 
 import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
+import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
+import com.ctzn.mynotesservice.model.apimessage.TimestampSource;
 import com.ctzn.mynotesservice.model.note.NoteEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookController;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
@@ -44,6 +46,7 @@ public class NotebookControllerTest {
                 .standaloneSetup(new NotebookController(notebookRepository, new DomainMapper()))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
+        TimestampSource.setFixed(true);
     }
 
     private List<NotebookEntity> getNotebookList() {
@@ -99,7 +102,9 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.findById(id)).thenReturn(Optional.empty());
 
-        mockGetRequest(mockMvc, BASE_PATH, id, status().isNotFound(), null);
+        ApiMessage expected = new ApiMessage("Notebook with id=" + id + " not found");
+
+        mockGetRequest(mockMvc, BASE_PATH, id, status().isNotFound(), expected);
 
         verify(notebookRepository, times(1)).findById(id);
         verifyNoMoreInteractions(notebookRepository);
@@ -174,7 +179,7 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.existsById(id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isOk());
+        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isOk(), new ApiMessage("Notebook deleted"));
 
         verify(notebookRepository, times(1)).existsById(id);
         verify(notebookRepository, times(1)).deleteById(id);
@@ -184,7 +189,7 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.existsById(id)).thenReturn(false);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNotFound());
+        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNotFound(), null);
 
         verify(notebookRepository, times(1)).existsById(id);
         verifyNoMoreInteractions(notebookRepository);

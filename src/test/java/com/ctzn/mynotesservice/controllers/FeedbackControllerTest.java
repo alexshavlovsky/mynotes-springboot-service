@@ -1,8 +1,11 @@
 package com.ctzn.mynotesservice.controllers;
 
 import com.ctzn.mynotesservice.components.email.FeedbackSender;
-import com.ctzn.mynotesservice.model.feedback.FeedbackRequest;
+import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
+import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
+import com.ctzn.mynotesservice.model.apimessage.TimestampSource;
 import com.ctzn.mynotesservice.model.feedback.FeedbackController;
+import com.ctzn.mynotesservice.model.feedback.FeedbackRequest;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,7 +37,11 @@ public class FeedbackControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new FeedbackController(feedbackSender)).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new FeedbackController(feedbackSender))
+                .setControllerAdvice(new ApiExceptionHandler())
+                .build();
+        TimestampSource.setFixed(true);
         feedbackRequest = new FeedbackRequest(
                 "user123@mail.com",
                 GreenMailUtil.random(10),
@@ -44,7 +51,9 @@ public class FeedbackControllerTest {
 
     @Test
     public void shouldPostFeedback() throws Exception {
-        mockPostRequest(mockMvc, BASE_PATH, feedbackRequest, status().isAccepted(), null);
+        ApiMessage expected = new ApiMessage("Feedback accepted");
+
+        mockPostRequest(mockMvc, BASE_PATH, feedbackRequest, status().isAccepted(), expected);
 
         ArgumentCaptor<FeedbackRequest> captor = ArgumentCaptor.forClass(FeedbackRequest.class);
         verify(feedbackSender, times(1)).sendAsync(captor.capture());

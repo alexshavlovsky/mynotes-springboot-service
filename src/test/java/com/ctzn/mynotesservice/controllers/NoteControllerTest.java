@@ -255,7 +255,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.existsById(Id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isOk());
+        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isOk(), null);
 
         verify(noteRepository, times(1)).existsById(Id);
         verify(noteRepository, times(1)).deleteById(Id);
@@ -265,7 +265,7 @@ public class NoteControllerTest {
         reset(noteRepository);
         when(noteRepository.existsById(Id)).thenReturn(false);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isNotFound());
+        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isNotFound(), null);
 
         verify(noteRepository, times(1)).existsById(Id);
         verifyNoMoreInteractions(noteRepository);
