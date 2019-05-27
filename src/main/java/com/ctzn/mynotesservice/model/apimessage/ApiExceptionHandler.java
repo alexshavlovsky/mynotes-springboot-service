@@ -13,10 +13,9 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiMessage> handleOtherExceptions(Exception ex) {
         String message = ex.getMessage();
         if (message == null) message = "Unknown error";
-        ApiMessage apiMessage = new ApiMessage(message);
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         if (ex instanceof HttpStatusContainer) httpStatus = ((HttpStatusContainer) ex).getHttpStatus();
-        return new ResponseEntity<>(apiMessage, httpStatus);
+        return new ResponseEntity<>(new ApiMessage(message), httpStatus);
     }
 
 }
