@@ -1,6 +1,7 @@
 package com.ctzn.mynotesservice.controllers;
 
 import com.ctzn.mynotesservice.model.DomainMapper;
+import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.note.NoteController;
 import com.ctzn.mynotesservice.model.note.NoteEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
@@ -46,8 +47,10 @@ public class NoteControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new NoteController(noteRepository, notebookRepository, new DomainMapper())).build();
-
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new NoteController(noteRepository, notebookRepository, new DomainMapper()))
+                .setControllerAdvice(new ApiExceptionHandler())
+                .build();
         someNotebookId = 255L;
         someNotebook = new NotebookEntity("Some notebook");
         someNotebook.setId(someNotebookId);

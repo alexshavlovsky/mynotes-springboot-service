@@ -19,12 +19,12 @@ class RestTestUtil {
         perform(mockMvc, get(joinPath(path, id)), status, expected);
     }
 
-    static void mockPostRequest(MockMvc mockMvc, String path, Object DTO, ResultMatcher status, Object expected) throws Exception {
-        perform(mockMvc, post(path).content(asJsonString(DTO)), status, expected);
+    static void mockPostRequest(MockMvc mockMvc, String path, Object request, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, post(path).content(asJsonString(request)), status, expected);
     }
 
-    static void mockPutRequest(MockMvc mockMvc, String path, Long id, Object DTO, ResultMatcher status, Object expected) throws Exception {
-        perform(mockMvc, put(joinPath(path, id)).content(asJsonString(DTO)), status, expected);
+    static void mockPutRequest(MockMvc mockMvc, String path, Long id, Object request, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, put(joinPath(path, id)).content(asJsonString(request)), status, expected);
     }
 
     static void mockDeleteRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status) throws Exception {

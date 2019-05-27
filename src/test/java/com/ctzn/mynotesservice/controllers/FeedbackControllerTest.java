@@ -46,10 +46,10 @@ public class FeedbackControllerTest {
     public void shouldPostFeedback() throws Exception {
         mockPostRequest(mockMvc, BASE_PATH, feedbackRequest, status().isAccepted(), null);
 
-        ArgumentCaptor<FeedbackRequest> feedbackDTOCaptor = ArgumentCaptor.forClass(FeedbackRequest.class);
-        verify(feedbackSender, times(1)).sendAsync(feedbackDTOCaptor.capture());
+        ArgumentCaptor<FeedbackRequest> captor = ArgumentCaptor.forClass(FeedbackRequest.class);
+        verify(feedbackSender, times(1)).sendAsync(captor.capture());
         verifyNoMoreInteractions(feedbackSender);
-        Assert.assertEquals(feedbackRequest, feedbackDTOCaptor.getValue());
+        Assert.assertEquals(feedbackRequest, captor.getValue());
     }
 
     @Test
