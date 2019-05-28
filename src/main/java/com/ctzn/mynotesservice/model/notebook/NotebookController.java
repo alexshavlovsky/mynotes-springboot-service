@@ -1,8 +1,8 @@
 package com.ctzn.mynotesservice.model.notebook;
 
 import com.ctzn.mynotesservice.model.DomainMapper;
+import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
-import com.ctzn.mynotesservice.model.apimessage.exceptions.EntityByIdNotFoundException;
 import com.ctzn.mynotesservice.repositories.NotebookRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +31,9 @@ public class NotebookController {
     }
 
     @GetMapping("{id}")
-    public NotebookResponse getNotebook(@PathVariable("id") long id) throws EntityByIdNotFoundException {
+    public NotebookResponse getNotebook(@PathVariable("id") long id) throws ApiException {
         NotebookEntity notebookEntity = notebookRepository.findById(id)
-                .orElseThrow(() -> new EntityByIdNotFoundException("Notebook", id));
+                .orElseThrow(() -> ApiException.getNotFoundById("Notebook", id));
         return domainMapper.map(notebookEntity, NotebookResponse.class);
     }
 
@@ -48,17 +48,17 @@ public class NotebookController {
     @PutMapping("{id}") // update only
     public NotebookResponse updateNotebook(
             @RequestBody NotebookRequest notebookRequest,
-            @PathVariable("id") long id) throws EntityByIdNotFoundException {
+            @PathVariable("id") long id) throws ApiException {
         NotebookEntity notebookEntity = notebookRepository.findById(id)
-                .orElseThrow(() -> new EntityByIdNotFoundException("Notebook", id));
+                .orElseThrow(() -> ApiException.getNotFoundById("Notebook", id));
         domainMapper.map(notebookRequest, notebookEntity);
         return domainMapper.map(notebookRepository.save(notebookEntity), NotebookResponse.class);
     }
 
     @DeleteMapping(path = "{id}")
     public ApiMessage deleteNotebook(
-            @PathVariable("id") long id) throws EntityByIdNotFoundException {
-        if (!notebookRepository.existsById(id)) throw new EntityByIdNotFoundException("Notebook", id);
+            @PathVariable("id") long id) throws ApiException {
+        if (!notebookRepository.existsById(id)) throw ApiException.getNotFoundById("Notebook", id);
         notebookRepository.deleteById(id);
         return new ApiMessage("Notebook deleted");
     }

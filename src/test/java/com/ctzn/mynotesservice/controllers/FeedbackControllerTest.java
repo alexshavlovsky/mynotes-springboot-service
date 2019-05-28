@@ -3,7 +3,7 @@ package com.ctzn.mynotesservice.controllers;
 import com.ctzn.mynotesservice.components.email.FeedbackSender;
 import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
-import com.ctzn.mynotesservice.model.apimessage.TimestampSource;
+import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.feedback.FeedbackController;
 import com.ctzn.mynotesservice.model.feedback.FeedbackRequest;
 import com.icegreen.greenmail.util.GreenMailUtil;
@@ -41,7 +41,7 @@ public class FeedbackControllerTest {
                 .standaloneSetup(new FeedbackController(feedbackSender))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
-        TimestampSource.setFixed(true);
+        TimeSource.setFixed(true);
         feedbackRequest = new FeedbackRequest(
                 "user123@mail.com",
                 GreenMailUtil.random(10),

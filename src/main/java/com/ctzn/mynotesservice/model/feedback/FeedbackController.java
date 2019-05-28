@@ -1,9 +1,9 @@
 package com.ctzn.mynotesservice.model.feedback;
 
 import com.ctzn.mynotesservice.components.email.FeedbackSender;
+import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.BindingResultAdapter;
-import com.ctzn.mynotesservice.model.apimessage.exceptions.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -27,11 +27,10 @@ public class FeedbackController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    // TODO: implement validation
-    public ApiMessage sendFeedback(@Valid @RequestBody FeedbackRequest feedbackRequest, BindingResult result) throws BadRequestException {
-        if (result.hasErrors()) throw new BadRequestException(BindingResultAdapter.adapt(result));
+    public ApiMessage sendFeedback(@Valid @RequestBody FeedbackRequest feedbackRequest, BindingResult result) throws ApiException {
+        if (result.hasErrors()) throw ApiException.getBadRequest(BindingResultAdapter.adapt(result));
         feedbackSender.sendAsync(feedbackRequest);
-        log.debug("Accepted ", feedbackRequest);
+        log.debug("Accepted {}", feedbackRequest);
         return new ApiMessage("Feedback accepted");
     }
 

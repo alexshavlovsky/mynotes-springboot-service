@@ -2,10 +2,9 @@ package com.ctzn.mynotesservice.model.command;
 
 import com.ctzn.mynotesservice.components.DbSeeder;
 import com.ctzn.mynotesservice.components.ShutdownManager;
+import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
-import com.ctzn.mynotesservice.model.apimessage.exceptions.EntityByNameNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequestMapping(path = CommandController.BASE_PATH)
+@Slf4j
 public class CommandController {
-
-    private static final Logger logger = LoggerFactory.getLogger(CommandController.class);
 
     public static final String BASE_PATH = "/api/command";
     private static final String SHUTDOWN_MSG = "Shutdown command accepted";
@@ -31,18 +29,18 @@ public class CommandController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ApiMessage executeCommand(@RequestBody CommandRequest commandRequest) throws EntityByNameNotFoundException {
+    public ApiMessage executeCommand(@RequestBody CommandRequest commandRequest) throws ApiException {
         switch (commandRequest.getCommand()) {
             case "shutdown":
-                logger.debug(SHUTDOWN_MSG);
+                log.debug(SHUTDOWN_MSG);
                 shutdownManager.initiateShutdown(0);
                 return new ApiMessage(SHUTDOWN_MSG);
             case "fill database":
-                logger.debug(FILL_DB_MSG);
+                log.debug(FILL_DB_MSG);
                 dbSeeder.run("force");
                 return new ApiMessage(FILL_DB_MSG);
         }
-        throw new EntityByNameNotFoundException("Command", commandRequest.getCommand());
+        throw ApiException.getNotFoundByName("Command", commandRequest.getCommand());
     }
 
 }

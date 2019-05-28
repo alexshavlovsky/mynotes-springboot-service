@@ -3,8 +3,7 @@ package com.ctzn.mynotesservice.controllers;
 import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
-import com.ctzn.mynotesservice.model.apimessage.TimestampSource;
-import com.ctzn.mynotesservice.model.note.NoteEntity;
+import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.notebook.NotebookController;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookRequest;
@@ -22,10 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static com.ctzn.mynotesservice.controllers.RestTestUtil.*;
+import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getNotebookList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,25 +45,7 @@ public class NotebookControllerTest {
                 .standaloneSetup(new NotebookController(notebookRepository, new DomainMapper()))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
-        TimestampSource.setFixed(true);
-    }
-
-    private List<NotebookEntity> getNotebookList() {
-        NotebookEntity notebook1 = new NotebookEntity("Notebook 1");
-        notebook1.setId(1L);
-
-        NotebookEntity notebook2 = new NotebookEntity("Notebook 2");
-        notebook2.setId(2L);
-
-        NoteEntity note1 = new NoteEntity("Note 1.1", "Some text 1", notebook1);
-        note1.setId(3L);
-        notebook1.getNotes().add(note1);
-
-        NoteEntity note2 = new NoteEntity("Note 1.2", "Some text 2", notebook1);
-        note2.setId(4L);
-        notebook1.getNotes().add(note2);
-
-        return Arrays.asList(notebook1, notebook2);
+        TimeSource.setFixed(true);
     }
 
     @Test
@@ -165,7 +146,9 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.findById(id)).thenReturn(Optional.empty());
 
-        mockPutRequest(mockMvc, BASE_PATH, id, notebookRequest, status().isNotFound(), null);
+        ApiMessage expected = new ApiMessage("Notebook with id=" + id + " not found");
+
+        mockPutRequest(mockMvc, BASE_PATH, id, notebookRequest, status().isNotFound(), expected);
 
         verify(notebookRepository, times(1)).findById(id);
         verifyNoMoreInteractions(notebookRepository);
@@ -189,7 +172,9 @@ public class NotebookControllerTest {
         reset(notebookRepository);
         when(notebookRepository.existsById(id)).thenReturn(false);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNotFound(), null);
+        ApiMessage expected = new ApiMessage("Notebook with id=" + id + " not found");
+
+        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNotFound(), expected);
 
         verify(notebookRepository, times(1)).existsById(id);
         verifyNoMoreInteractions(notebookRepository);

@@ -2,8 +2,11 @@ package com.ctzn.mynotesservice.controllers;
 
 import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
+import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
+import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.note.NoteController;
 import com.ctzn.mynotesservice.model.note.NoteEntity;
+import com.ctzn.mynotesservice.model.note.NoteResponse;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.repositories.NoteRepository;
 import com.ctzn.mynotesservice.repositories.NotebookRepository;
@@ -51,6 +54,7 @@ public class NoteControllerTest {
                 .standaloneSetup(new NoteController(noteRepository, notebookRepository, new DomainMapper()))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
+        TimeSource.setFixed(true);
         someNotebookId = 255L;
         someNotebook = new NotebookEntity("Some notebook");
         someNotebook.setId(someNotebookId);
@@ -58,19 +62,18 @@ public class NoteControllerTest {
 
     @Test
     public void getAll() throws Exception {
-        final NoteEntity note1 = new NoteEntity("NoteEntity 1", "NoteEntity 1 text", someNotebook);
-        note1.setId(1L);
-
-        final NoteEntity note2 = new NoteEntity("NoteEntity 2", "NoteEntity 2 text", someNotebook);
-        note2.setId(2L);
-
-        List<NoteEntity> noteList = Arrays.asList(note1, note2);
+        List<NoteEntity> notes = StaticTestProvider.getNotesList(someNotebook);
 
         // should return a list of entities
         reset(noteRepository);
-        when(noteRepository.findAll()).thenReturn(noteList);
+        when(noteRepository.findAll()).thenReturn(notes);
 
-        mockGetRequest(mockMvc, BASE_PATH, null, status().isOk(), noteList);
+        mockGetRequest(mockMvc, BASE_PATH, null, status().isOk(),
+                Arrays.asList(
+                        new NoteResponse(3L, "Note 1.1", "Some text 1", someNotebookId, TimeSource.now()),
+                        new NoteResponse(4L, "Note 1.2", "Some text 2", someNotebookId, TimeSource.now())
+                )
+        );
 
         verify(noteRepository, times(1)).findAll();
         verifyNoMoreInteractions(noteRepository);
@@ -78,27 +81,28 @@ public class NoteControllerTest {
 
     @Test
     public void getOne() throws Exception {
-        final Long Id = 1L;
-
-        final NoteEntity noteRepo = new NoteEntity("NoteEntity from repo", "This is a text", someNotebook);
-        noteRepo.setId(Id);
+        NoteEntity note = StaticTestProvider.getNotesList(someNotebook).get(0);
+        final Long id = note.getId();
 
         // should return entity
         reset(noteRepository);
-        when(noteRepository.findById(Id)).thenReturn(java.util.Optional.of(noteRepo));
+        when(noteRepository.findById(id)).thenReturn(java.util.Optional.of(note));
 
-        mockGetRequest(mockMvc, BASE_PATH, Id, status().isOk(), noteRepo);
+        mockGetRequest(mockMvc, BASE_PATH, id, status().isOk(),
+                new NoteResponse(3L, "Note 1.1", "Some text 1", someNotebookId, TimeSource.now()));
 
-        verify(noteRepository, times(1)).findById(Id);
+        verify(noteRepository, times(1)).findById(id);
         verifyNoMoreInteractions(noteRepository);
 
         // should return "not found" if entity does not exist
         reset(noteRepository);
-        when(noteRepository.findById(Id)).thenReturn(Optional.empty());
+        when(noteRepository.findById(id)).thenReturn(Optional.empty());
 
-        mockGetRequest(mockMvc, BASE_PATH, Id, status().isNotFound(), null);
+        ApiMessage expected = new ApiMessage("Note with id=" + id + " not found");
 
-        verify(noteRepository, times(1)).findById(Id);
+        mockGetRequest(mockMvc, BASE_PATH, id, status().isNotFound(), expected);
+
+        verify(noteRepository, times(1)).findById(id);
         verifyNoMoreInteractions(noteRepository);
     }
 
@@ -249,25 +253,25 @@ public class NoteControllerTest {
 
     @Test
     public void delete() throws Exception {
-        final Long Id = 1L;
+        final Long id = 1L;
 
         // should delete entity
         reset(noteRepository);
-        when(noteRepository.existsById(Id)).thenReturn(true);
+        when(noteRepository.existsById(id)).thenReturn(true);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isOk(), null);
+        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isOk(), new ApiMessage("Note deleted"));
 
-        verify(noteRepository, times(1)).existsById(Id);
-        verify(noteRepository, times(1)).deleteById(Id);
+        verify(noteRepository, times(1)).existsById(id);
+        verify(noteRepository, times(1)).deleteById(id);
         verifyNoMoreInteractions(noteRepository);
 
         // should return "not fond" if entity does not exist
         reset(noteRepository);
-        when(noteRepository.existsById(Id)).thenReturn(false);
+        when(noteRepository.existsById(id)).thenReturn(false);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, Id, status().isNotFound(), null);
+        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNotFound(), null);
 
-        verify(noteRepository, times(1)).existsById(Id);
+        verify(noteRepository, times(1)).existsById(id);
         verifyNoMoreInteractions(noteRepository);
     }
 

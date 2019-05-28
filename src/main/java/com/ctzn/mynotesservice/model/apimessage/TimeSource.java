@@ -2,15 +2,15 @@ package com.ctzn.mynotesservice.model.apimessage;
 
 import java.util.Date;
 
-public class TimestampSource {
+public class TimeSource {
     private static Date fixedTimestamp = new Date();
-    private static boolean isFixed = false;
+    private static boolean fixed = false;
 
     public static void setFixed(boolean fixed) {
-        isFixed = fixed;
+        TimeSource.fixed = fixed;
     }
 
-    static Date getTimestamp() {
-        return isFixed ? fixedTimestamp : new Date();
+    public static Date now() {
+        return fixed ? fixedTimestamp : new Date();
     }
 }

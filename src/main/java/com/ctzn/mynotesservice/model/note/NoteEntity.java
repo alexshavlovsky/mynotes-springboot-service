@@ -1,5 +1,6 @@
 package com.ctzn.mynotesservice.model.note;
 
+import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import lombok.*;
 
@@ -30,7 +31,7 @@ public class NoteEntity {
 
     @Column(nullable = false)
     @NonNull
-    private Date lastModifiedOn = new Date();
+    private Date lastModifiedOn = TimeSource.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notebook_id")
