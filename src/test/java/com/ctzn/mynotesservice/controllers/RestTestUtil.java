@@ -19,6 +19,11 @@ class RestTestUtil {
         perform(mockMvc, get(joinPath(path, id)), status, expected);
     }
 
+    static void mockGetParamRequest(MockMvc mockMvc, String path, Long id, String paramName, String paramValue, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, get(joinPath(path, id)).param(paramName, paramValue), status, expected);
+    }
+
+
     static void mockPostRequest(MockMvc mockMvc, String path, Object request, ResultMatcher status, Object expected) throws Exception {
         perform(mockMvc, post(path).content(asJsonString(request)), status, expected);
     }

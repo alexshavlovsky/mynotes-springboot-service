@@ -30,11 +30,10 @@ public class NoteController {
     }
 
     @GetMapping()
-    public List<NoteResponse> getAllNotesByNotebook(@RequestParam(required = false) Long nbId) throws ApiException {
+    public List<NoteResponse> getAllNotesByNotebook(@RequestParam(required = false, name = "nbId") Long nbId) throws ApiException {
         if (nbId == null) {
             return domainMapper.mapAll(noteRepository.findAll(), NoteResponse.class);
         } else {
-            // TODO: create tests for this case
             NotebookEntity notebookEntity = notebookRepository.findById(nbId).orElseThrow(() -> ApiException.getNotFoundById("Notebook", nbId));
             return domainMapper.mapAll(noteRepository.findAllByNotebook(notebookEntity), NoteResponse.class);
         }
@@ -61,11 +60,12 @@ public class NoteController {
     @PutMapping("{id}") // update only
     public NoteResponse updateNote(
             @RequestBody NoteRequest noteRequest,
-            @PathVariable("id") long id,
-            @PathVariable("id") NoteEntity noteEntity) throws ApiException {
-        if (!noteRepository.existsById(id)) throw ApiException.getNotFoundById("Note", id);
+            @PathVariable("id") long id) throws ApiException {
+        NoteEntity noteEntity = noteRepository.findById(id)
+                .orElseThrow(() -> ApiException.getNotFoundById("Note", id));
         long nbId = noteRequest.getNotebookId();
-        NotebookEntity requestNotebookEntity = notebookRepository.findById(nbId).orElseThrow(() -> ApiException.getNotFoundById("Notebook", nbId));
+        NotebookEntity requestNotebookEntity = notebookRepository.findById(nbId)
+                .orElseThrow(() -> ApiException.getNotFoundById("Notebook", nbId));
         domainMapper.map(noteRequest, noteEntity);
         noteEntity.setNotebook(requestNotebookEntity);
         return domainMapper.map(noteRepository.save(noteEntity), NoteResponse.class);
