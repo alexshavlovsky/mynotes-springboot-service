@@ -1,9 +1,7 @@
-package com.ctzn.mynotesservice.components;
+package com.ctzn.mynotesservice.repositories;
 
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.note.NoteEntity;
-import com.ctzn.mynotesservice.repositories.NoteRepository;
-import com.ctzn.mynotesservice.repositories.NotebookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

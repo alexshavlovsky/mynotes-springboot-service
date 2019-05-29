@@ -1,6 +1,7 @@
-package com.ctzn.mynotesservice.components.email;
+package com.ctzn.mynotesservice.model.feedback.feedbacksender;
 
 import com.ctzn.mynotesservice.model.feedback.FeedbackRequest;
+import com.ctzn.mynotesservice.model.feedback.FeedbackSender;
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;

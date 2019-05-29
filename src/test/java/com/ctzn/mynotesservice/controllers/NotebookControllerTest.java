@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,11 +25,12 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static com.ctzn.mynotesservice.controllers.RestTestUtil.*;
-import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getNotebookList;
+import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getEmptyNotebook;
+import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getTwoNotebooksList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class NotebookControllerTest {
 
     private static final String BASE_PATH = NotebookController.BASE_PATH;
@@ -56,7 +57,7 @@ public class NotebookControllerTest {
 
     @Test
     public void shouldReturnAllNotebooks() throws Exception {
-        when(notebookRepository.findAll()).thenReturn(getNotebookList());
+        when(notebookRepository.findAll()).thenReturn(getTwoNotebooksList());
 
         mockGetRequest(mockMvc, BASE_PATH, null, status().isOk(),
                 Arrays.asList(
@@ -70,13 +71,14 @@ public class NotebookControllerTest {
 
     @Test
     public void shouldReturnNotebookById() throws Exception {
-        NotebookEntity notebook = getNotebookList().get(0);
+
+        NotebookEntity notebook = getTwoNotebooksList().get(0);
         long id = notebook.getId();
 
         when(notebookRepository.findById(id)).thenReturn(Optional.of(notebook));
 
         mockGetRequest(mockMvc, BASE_PATH, id, status().isOk(),
-                new NotebookResponse(1L, "Notebook 1", 2)
+                new NotebookResponse(notebook.getId(), notebook.getName(), notebook.getSize())
         );
 
         verify(notebookRepository, times(1)).findById(id);
@@ -97,13 +99,11 @@ public class NotebookControllerTest {
 
     @Test
     public void shouldSaveNotebook() throws Exception {
-        NotebookEntity notebook = getNotebookList().get(1);
-        long id = notebook.getId();
-        String name = notebook.getName();
-        int size = notebook.getSize();
-
+        long id = 5L;
+        String name = "New notebook";
         NotebookRequest notebookRequest = new NotebookRequest(name);
-        final NotebookResponse notebookResponse = new NotebookResponse(id, name, size);
+        NotebookEntity notebook = getEmptyNotebook(id, name);
+        NotebookResponse notebookResponse = new NotebookResponse(id, name, 0);
 
         when(notebookRepository.save(any())).thenReturn(notebook);
 
@@ -117,35 +117,30 @@ public class NotebookControllerTest {
 
     @Test
     public void shouldUpdateNotebookById() throws Exception {
-        NotebookEntity notebook = getNotebookList().get(1);
-        Long id = notebook.getId();
-        int size = notebook.getSize();
+        Long id = 763L;
+        NotebookEntity oldNotebook = getEmptyNotebook(id, "Old name");
         String newName = "New name";
-        NotebookEntity newNotebook = new NotebookEntity(newName);
-        newNotebook.setId(id);
+        NotebookEntity newNotebook = getEmptyNotebook(id, newName);
         NotebookRequest notebookRequest = new NotebookRequest(newName);
-        final NotebookResponse notebookResponse = new NotebookResponse(id, newName, size);
+        NotebookResponse notebookResponse = new NotebookResponse(id, newName, 0);
 
-        when(notebookRepository.findById(id)).thenReturn(Optional.of(notebook));
+        when(notebookRepository.findById(id)).thenReturn(Optional.of(oldNotebook));
         when(notebookRepository.save(any())).thenReturn(newNotebook);
 
         mockPutRequest(mockMvc, BASE_PATH, id, notebookRequest, status().isOk(), notebookResponse);
 
-        ArgumentCaptor<NotebookEntity> notebookArgumentCaptor = ArgumentCaptor.forClass(NotebookEntity.class);
+        ArgumentCaptor<NotebookEntity> captor = ArgumentCaptor.forClass(NotebookEntity.class);
         verify(notebookRepository, times(1)).findById(id);
-        verify(notebookRepository, times(1)).save(notebookArgumentCaptor.capture());
-        Assert.assertEquals(id, notebookArgumentCaptor.getValue().getId());
-        Assert.assertEquals(newName, notebookArgumentCaptor.getValue().getName());
+        verify(notebookRepository, times(1)).save(captor.capture());
+        Assert.assertEquals(id, captor.getValue().getId());
+        Assert.assertEquals(newName, captor.getValue().getName());
+        Assert.assertEquals(Integer.valueOf(0), captor.getValue().getSize());
     }
 
     @Test
     public void shouldReturnNotFoundWhileUpdateNotebookById() throws Exception {
-        NotebookEntity notebook = getNotebookList().get(1);
-        Long id = notebook.getId();
-        String newName = "New name";
-        NotebookEntity newNotebook = new NotebookEntity(newName);
-        newNotebook.setId(id);
-        NotebookRequest notebookRequest = new NotebookRequest(newName);
+        Long id = 345L;
+        NotebookRequest notebookRequest = new NotebookRequest("New name");
 
         when(notebookRepository.findById(id)).thenReturn(Optional.empty());
 

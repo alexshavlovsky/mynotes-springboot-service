@@ -19,11 +19,12 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ import static com.ctzn.mynotesservice.controllers.RestTestUtil.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class NoteControllerTest {
 
     private static final String BASE_PATH = NoteController.BASE_PATH;
@@ -67,7 +68,7 @@ public class NoteControllerTest {
 
     @Test
     public void shouldReturnAllNotes() throws Exception {
-        List<NoteEntity> notes = StaticTestProvider.getNotesList(someNotebook);
+        List<NoteEntity> notes = StaticTestProvider.getTwoNotesList(someNotebook);
 
         when(noteRepository.findAll()).thenReturn(notes);
 
@@ -83,7 +84,7 @@ public class NoteControllerTest {
 
     @Test
     public void shouldReturnNotesByNotebookId() throws Exception {
-        List<NotebookEntity> notebooks = StaticTestProvider.getNotebookList();
+        List<NotebookEntity> notebooks = StaticTestProvider.getTwoNotebooksList();
         NotebookEntity notebook = notebooks.get(0);
         Long id = notebook.getId();
 
@@ -116,8 +117,8 @@ public class NoteControllerTest {
 
     @Test
     public void shouldReturnNoteById() throws Exception {
-        NoteEntity note = StaticTestProvider.getNotesList(someNotebook).get(0);
-        final Long id = note.getId();
+        NoteEntity note = StaticTestProvider.getTwoNotesList(someNotebook).get(0);
+        Long id = note.getId();
 
         when(noteRepository.findById(id)).thenReturn(java.util.Optional.of(note));
 
@@ -186,11 +187,16 @@ public class NoteControllerTest {
 
     @Test
     public void shouldUpdateNote() throws Exception {
+        Long oldNotebookId = 75L;
+        NotebookEntity oldNotebook = new NotebookEntity("Old notebook");
+        oldNotebook.setId(oldNotebookId);
         Long id = 10L;
         String repoTitle = "Old note";
         String repoText = "Old text";
-        NoteEntity repoNote = new NoteEntity(repoTitle, repoText, someNotebook);
+        NoteEntity repoNote = new NoteEntity(repoTitle, repoText, oldNotebook);
         repoNote.setId(id);
+        // set lastModifiedOn to 1 hour before now
+        repoNote.setLastModifiedOn(new Date(TimeSource.now().getTime() - 3600000));
         String newTitle = "New note";
         String newText = "New text";
         NoteEntity updatedNote = new NoteEntity(newTitle, newText, someNotebook);
@@ -199,7 +205,7 @@ public class NoteControllerTest {
 
         when(noteRepository.findById(id)).thenReturn(Optional.of(repoNote));
         when(notebookRepository.findById(someNotebookId)).thenReturn(Optional.of(someNotebook));
-        when(noteRepository.save(any())).thenReturn(updatedNote);
+        when(noteRepository.save(any())).thenReturn(repoNote);
 
         mockPutRequest(mockMvc, BASE_PATH, id, noteRequest, status().isOk(),
                 new NoteResponse(id, newTitle, newText, someNotebookId, TimeSource.now())

@@ -3,6 +3,7 @@ package com.ctzn.mynotesservice.model.note;
 import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
+import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.repositories.NoteRepository;
 import com.ctzn.mynotesservice.repositories.NotebookRepository;
@@ -51,16 +52,16 @@ public class NoteController {
     @ResponseStatus(HttpStatus.CREATED)
     public NoteResponse saveNote(@RequestBody NoteRequest noteRequest) throws ApiException {
         long nbId = noteRequest.getNotebookId();
-        NotebookEntity notebookEntity = notebookRepository.findById(nbId).orElseThrow(() -> ApiException.getNotFoundById("Notebook", nbId));
+        NotebookEntity notebookEntity = notebookRepository.findById(nbId)
+                .orElseThrow(() -> ApiException.getNotFoundById("Notebook", nbId));
         NoteEntity noteEntity = domainMapper.map(noteRequest, NoteEntity.class);
         noteEntity.setNotebook(notebookEntity);
         return domainMapper.map(noteRepository.save(noteEntity), NoteResponse.class);
     }
 
     @PutMapping("{id}") // update only
-    public NoteResponse updateNote(
-            @RequestBody NoteRequest noteRequest,
-            @PathVariable("id") long id) throws ApiException {
+    public NoteResponse updateNote(@RequestBody NoteRequest noteRequest,
+                                   @PathVariable("id") long id) throws ApiException {
         NoteEntity noteEntity = noteRepository.findById(id)
                 .orElseThrow(() -> ApiException.getNotFoundById("Note", id));
         long nbId = noteRequest.getNotebookId();
@@ -68,6 +69,7 @@ public class NoteController {
                 .orElseThrow(() -> ApiException.getNotFoundById("Notebook", nbId));
         domainMapper.map(noteRequest, noteEntity);
         noteEntity.setNotebook(requestNotebookEntity);
+        noteEntity.setLastModifiedOn(TimeSource.now());
         return domainMapper.map(noteRepository.save(noteEntity), NoteResponse.class);
     }
 

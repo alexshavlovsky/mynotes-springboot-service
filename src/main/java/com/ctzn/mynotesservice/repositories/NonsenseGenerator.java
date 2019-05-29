@@ -1,4 +1,4 @@
-package com.ctzn.mynotesservice.components;
+package com.ctzn.mynotesservice.repositories;
 
 import java.util.ArrayList;
 import java.util.List;

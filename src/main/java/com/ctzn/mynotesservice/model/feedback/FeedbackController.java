@@ -1,6 +1,5 @@
 package com.ctzn.mynotesservice.model.feedback;
 
-import com.ctzn.mynotesservice.components.email.FeedbackSender;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.BindingResultAdapter;

@@ -1,7 +1,6 @@
 package com.ctzn.mynotesservice.model.command;
 
-import com.ctzn.mynotesservice.components.DbSeeder;
-import com.ctzn.mynotesservice.components.ShutdownManager;
+import com.ctzn.mynotesservice.repositories.DbSeeder;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import lombok.extern.slf4j.Slf4j;

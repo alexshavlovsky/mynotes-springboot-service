@@ -7,25 +7,28 @@ import java.util.Arrays;
 import java.util.List;
 
 class StaticTestProvider {
-    static List<NoteEntity> getNotesList(NotebookEntity notebook) {
-        NoteEntity note1 = new NoteEntity("Note 1.1", "Some text 1", notebook);
-        note1.setId(3L);
+    static NoteEntity getNote(long id, String title, String text, NotebookEntity notebook) {
+        NoteEntity note = new NoteEntity(title, text, notebook);
+        note.setId(id);
+        return note;
+    }
 
-        NoteEntity note2 = new NoteEntity("Note 1.2", "Some text 2", notebook);
-        note2.setId(4L);
+    static NotebookEntity getEmptyNotebook(long id, String name) {
+        NotebookEntity notebook = new NotebookEntity(name);
+        notebook.setId(id);
+        return notebook;
+    }
 
+    static List<NoteEntity> getTwoNotesList(NotebookEntity notebook) {
+        NoteEntity note1 = getNote(3L, "Note 1.1", "Some text 1", notebook);
+        NoteEntity note2 = getNote(4L, "Note 1.2", "Some text 2", notebook);
         return Arrays.asList(note1, note2);
     }
 
-    static List<NotebookEntity> getNotebookList() {
-        NotebookEntity notebook1 = new NotebookEntity("Notebook 1");
-        notebook1.setId(1L);
-
-        NotebookEntity notebook2 = new NotebookEntity("Notebook 2");
-        notebook2.setId(2L);
-
-        notebook1.getNotes().addAll(getNotesList(notebook1));
-
+    static List<NotebookEntity> getTwoNotebooksList() {
+        NotebookEntity notebook1 = getEmptyNotebook(1L, "Notebook 1");
+        NotebookEntity notebook2 = getEmptyNotebook(2L, "Notebook 2");
+        notebook1.getNotes().addAll(getTwoNotesList(notebook1));
         return Arrays.asList(notebook1, notebook2);
     }
 }

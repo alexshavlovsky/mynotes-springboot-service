@@ -1,4 +1,4 @@
-package com.ctzn.mynotesservice.components;
+package com.ctzn.mynotesservice.model.command;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;

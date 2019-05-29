@@ -1,12 +1,12 @@
 package com.ctzn.mynotesservice.controllers;
 
-import com.ctzn.mynotesservice.components.email.FeedbackSender;
+import com.ctzn.mynotesservice.model.feedback.FeedbackSender;
 import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.feedback.FeedbackController;
 import com.ctzn.mynotesservice.model.feedback.FeedbackRequest;
-import com.icegreen.greenmail.util.GreenMailUtil;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +32,6 @@ public class FeedbackControllerTest {
 
     private MockMvc mockMvc;
 
-    private FeedbackRequest feedbackRequest;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -42,33 +40,54 @@ public class FeedbackControllerTest {
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);
-        feedbackRequest = new FeedbackRequest(
-                "user123@mail.com",
-                GreenMailUtil.random(10),
-                GreenMailUtil.random(50)
-        );
+    }
+
+    @After
+    public void checkMocks() {
+        verifyNoMoreInteractions(feedbackSender);
     }
 
     @Test
-    public void shouldPostFeedback() throws Exception {
+    public void shouldPostFeedbacks() throws Exception {
+        FeedbackRequest feedback1 = new FeedbackRequest(
+                "user123@mail.com",
+                "Alex",
+                "Feedback 1"
+        );
+
+        FeedbackRequest feedback2 = new FeedbackRequest(
+                "tom@mail.com",
+                "Tom",
+                "Feedback 2"
+        );
+
         ApiMessage expected = new ApiMessage("Feedback accepted");
 
-        mockPostRequest(mockMvc, BASE_PATH, feedbackRequest, status().isAccepted(), expected);
+        mockPostRequest(mockMvc, BASE_PATH, feedback1, status().isAccepted(), expected);
+        mockPostRequest(mockMvc, BASE_PATH, feedback2, status().isAccepted(), expected);
 
         ArgumentCaptor<FeedbackRequest> captor = ArgumentCaptor.forClass(FeedbackRequest.class);
-        verify(feedbackSender, times(1)).sendAsync(captor.capture());
-        verifyNoMoreInteractions(feedbackSender);
-        Assert.assertEquals(feedbackRequest, captor.getValue());
+        verify(feedbackSender, times(2)).sendAsync(captor.capture());
+        Assert.assertEquals(feedback1, captor.getAllValues().get(0));
+        Assert.assertEquals(feedback2, captor.getAllValues().get(1));
     }
 
     @Test
-    public void shouldRejectInvalidFeedback() throws Exception {
+    public void shouldRejectInvalidFeedbacks() throws Exception {
         // invalid mail address
-        feedbackRequest.setSenderEmail("user123_mail.com");
+        mockPostRequest(mockMvc, BASE_PATH,
+                new FeedbackRequest("user123_mail.com", "Alex", "Feedback text"),
+                status().isBadRequest(), null);
 
-        mockPostRequest(mockMvc, BASE_PATH, feedbackRequest, status().isBadRequest(), null);
+        // blank user name
+        mockPostRequest(mockMvc, BASE_PATH,
+                new FeedbackRequest("user123@mail.com", " ", "Feedback text"),
+                status().isBadRequest(), null);
 
-        verifyNoMoreInteractions(feedbackSender);
+        // blank feedback text
+        mockPostRequest(mockMvc, BASE_PATH,
+                new FeedbackRequest("user123@mail.com", "Alex", " "),
+                status().isBadRequest(), null);
     }
 
 }
