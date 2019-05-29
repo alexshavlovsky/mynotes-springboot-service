@@ -20,7 +20,7 @@ git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
 cd mynotes-springboot-service
 mvn package
 cd target
-java -jar spring-angular-sandbox-0.0.1-SNAPSHOT.jar
+java -jar mynotes-service-v2.0.jar
 firefox https://localhost:8443
 ```
 
@@ -28,7 +28,7 @@ In Windows create a .cmd file and execute it from any folder:
 ```
 git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
 call mvn package -f mynotes-springboot-service\pom.xml --log-file maven.log
-start cmd.exe /c java -jar .\mynotes-springboot-service\target\spring-angular-sandbox-0.0.1-SNAPSHOT.jar
+start cmd.exe /c java -jar .\mynotes-springboot-service\target\mynotes-service-v2.0.jar
 timeout 15
 start firefox https://localhost:8443
 ```
@@ -41,18 +41,19 @@ start firefox https://localhost:8443
 
 ## Technology Stack
 
-Component         | Technology
----               | ---
-Runtime           | Java 8
-Build tool        | Maven
-Server            | SpringBoot WEB (Tomcat)
-Security          | SSL, basic auth
-Database          | SpringBoot JPA (Hibernate), H2         
-Email             | SpringBoot MAIL
-Async tasks       | ThreadPoolTaskExecutor
-REST data mapping | Jackson, Bean Validation API
-Testing           | Junit, Mockito, MockMvc, GreenMail
-REST Documentation| SpringFox Swagger2
+Component          | Technology
+---                | ---
+Runtime            | Java 8
+Build tool         | Maven
+Server             | SpringBoot WEB (Tomcat)
+Security           | SSL, basic auth
+Database           | SpringBoot JPA (Hibernate), H2         
+Email              | SpringBoot MAIL
+Async tasks        | ThreadPoolTaskExecutor
+REST data mapping  | Jackson, Bean Validation API, [ModelMapper](https://github.com/modelmapper/modelmapper)
+Code reducer       | [ProjectLombok](https://github.com/rzwitserloot/lombok)
+Testing            | Junit, Mockito, MockMvc, [GreenMail](https://github.com/greenmail-mail-test/greenmail)
+REST Documentation | [SpringFox Swagger2](https://github.com/springfox/springfox/releases)
 
 ## API specification
 
