@@ -4,6 +4,7 @@ import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.command.CommandController;
+import com.ctzn.mynotesservice.model.command.factory.CommandFactory;
 import com.ctzn.mynotesservice.model.command.CommandRequest;
 import com.ctzn.mynotesservice.model.command.ShutdownManager;
 import com.ctzn.mynotesservice.repositories.DbSeeder;
@@ -38,7 +39,7 @@ public class CommandControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new CommandController(dbSeeder, shutdownManager))
+                .standaloneSetup(new CommandController(new CommandFactory(dbSeeder, shutdownManager)))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);
@@ -60,7 +61,7 @@ public class CommandControllerTest {
     @Test
     public void shouldAcceptAndExecuteFillDatabaseCommand() throws Exception {
         CommandRequest command = new CommandRequest("fill database");
-        ApiMessage expected = new ApiMessage("Fill database accepted");
+        ApiMessage expected = new ApiMessage("Fill database command accepted");
         mockPostRequest(mockMvc, BASE_PATH, command, status().isAccepted(), expected);
         verify(dbSeeder, times(1)).run("force");
     }
