@@ -21,13 +21,11 @@ Content-Type: application/json
 }
 
 ### Secured
-
 GET {{api-url}}/notebooks/
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWRlNGM4NS03ZjhkLTQxOTgtYWY3NS1jMDUwZDc3OGY2ZDEiLCJyb2xlcyI6MiwiaWF0IjoxNTU5Njc2MTQwLCJleHAiOjE1NjA1NDAxNDB9.82bhtI-d1mOnpPufsGWjB_JCKiD7DUdLQ9Kx0tCklDs
 
-### Secured
-
+### Public
 GET {{api-url}}/notes/
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWRlNGM4NS03ZjhkLTQxOTgtYWY3NS1jMDUwZDc3OGY2ZDEiLCJyb2xlcyI6MiwiaWF0IjoxNTU5Njc2MTQwLCJleHAiOjE1NjA1NDAxNDB9.82bhtI-d1mOnpPufsGWjB_JCKiD7DUdLQ9Kx0tCklDs

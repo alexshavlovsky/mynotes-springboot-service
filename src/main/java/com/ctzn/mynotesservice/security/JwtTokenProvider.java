@@ -18,12 +18,10 @@ public class JwtTokenProvider {
 
     private final String secretKey = Base64.getEncoder().encodeToString(JwtProperties.SECRET.getBytes());
 
-    public String createToken(String subject, int roleBitmask) {
+    public String createToken(String subject, int rolesMask) {
         Claims claims = Jwts.claims().setSubject(subject);
-        claims.put(JwtProperties.ROLES_CLAIM_KEY, roleBitmask);
-
+        claims.put(JwtProperties.ROLES_CLAIM_KEY, rolesMask);
         Date now = TimeSource.now();
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -39,20 +37,23 @@ public class JwtTokenProvider {
     }
 
     boolean validateToken(String token) {
-        return !Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration().before(TimeSource.now());
+        return !Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
+                .getExpiration().before(TimeSource.now());
     }
 
     private String getSubject(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    private <T> T getClaimByKey(String token, String key, Class<T> type) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get(key, type);
+    private int getRolesMask(String token) {
+        Integer mask = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
+                .get(JwtProperties.ROLES_CLAIM_KEY, Integer.class);
+        return mask == null ? 0 : mask;
     }
 
     Authentication getAuthentication(String token) {
-        int roles = getClaimByKey(token, JwtProperties.ROLES_CLAIM_KEY, Integer.class);
-        return new UsernamePasswordAuthenticationToken(getSubject(token), null, UserRole.maskToAuthorities(roles));
+        return new UsernamePasswordAuthenticationToken(getSubject(token), null,
+                UserRole.maskToAuthorities(getRolesMask(token)));
     }
 
 }

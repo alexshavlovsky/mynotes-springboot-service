@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FrontendEnvironmentController {
-    @Value("${app.auth.username}")
+    @Value("${app.api.username}")
     private String userName;
 
-    @Value("${app.auth.password}")
+    @Value("${app.api.password}")
     private String userPassword;
 
     @Value("${app.api.path}")

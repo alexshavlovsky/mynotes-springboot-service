@@ -1,0 +1,11 @@
+### Login
+POST {{api-url}}/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "luke@example.com",
+  "password": "qwerty"
+}
+
+###
