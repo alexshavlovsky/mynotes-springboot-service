@@ -18,6 +18,10 @@ public class ApiException extends Exception {
         return new ApiException(message, HttpStatus.BAD_REQUEST);
     }
 
+    public static ApiException getBadCredentials(String message) {
+        return new ApiException(message, HttpStatus.NOT_FOUND);
+    }
+
     public static ApiException getNotFoundById(String className, long entityId) {
         return new ApiException(className + " with id=" + entityId + " not found", HttpStatus.NOT_FOUND);
     }
@@ -25,4 +29,9 @@ public class ApiException extends Exception {
     public static ApiException getNotFoundByName(String className, String entityName) {
         return new ApiException(className + " '" + entityName + "' not found", HttpStatus.NOT_FOUND);
     }
+
+    public static ApiException getAlreadyInUse(String className, String entityName) {
+        return new ApiException(className + " '" + entityName + "' already taken", HttpStatus.CONFLICT);
+    }
+
 }

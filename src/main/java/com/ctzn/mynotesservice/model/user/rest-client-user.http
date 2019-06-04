@@ -1,0 +1,13 @@
+### Create
+POST {{api-url}}/users
+Accept: application/json
+Content-Type: application/json
+
+{
+  "firstName": "Luke",
+  "lastName": "Thompson",
+  "email": "luke@example.com",
+  "password": "qwerty"
+}
+
+###
