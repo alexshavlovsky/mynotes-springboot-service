@@ -1,0 +1,35 @@
+### Create
+POST {{api-url}}/users
+Accept: application/json
+Content-Type: application/json
+
+{
+  "firstName": "Luke",
+  "lastName": "Thompson",
+  "email": "luke@example.com",
+  "password": "qwerty"
+}
+
+### Login
+POST {{api-url}}/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "luke@example.com",
+  "password": "qwerty"
+}
+
+### Secured
+
+GET {{api-url}}/notebooks/
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWRlNGM4NS03ZjhkLTQxOTgtYWY3NS1jMDUwZDc3OGY2ZDEiLCJyb2xlcyI6MiwiaWF0IjoxNTU5Njc2MTQwLCJleHAiOjE1NjA1NDAxNDB9.82bhtI-d1mOnpPufsGWjB_JCKiD7DUdLQ9Kx0tCklDs
+
+### Secured
+
+GET {{api-url}}/notes/
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWRlNGM4NS03ZjhkLTQxOTgtYWY3NS1jMDUwZDc3OGY2ZDEiLCJyb2xlcyI6MiwiaWF0IjoxNTU5Njc2MTQwLCJleHAiOjE1NjA1NDAxNDB9.82bhtI-d1mOnpPufsGWjB_JCKiD7DUdLQ9Kx0tCklDs
+
+###
