@@ -37,8 +37,12 @@ public class JwtTokenProvider {
     }
 
     boolean validateToken(String token) {
-        return !Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-                .getExpiration().before(TimeSource.now());
+        try {
+            return !Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
+                    .getExpiration().before(TimeSource.now());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private String getSubject(String token) {
