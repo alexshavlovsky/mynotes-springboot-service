@@ -1,8 +1,8 @@
 package com.ctzn.mynotesservice.security;
 
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
-import com.ctzn.mynotesservice.model.user.UserRole;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,10 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 
+import static com.ctzn.mynotesservice.model.user.UserRole.maskToAuthorities;
+
 @Component
 public class JwtTokenProvider {
 
     private final String secretKey = Base64.getEncoder().encodeToString(JwtProperties.SECRET.getBytes());
+    private final JwtParser parser = Jwts.parser().setSigningKey(secretKey);
 
     public String createToken(String subject, int rolesMask) {
         Claims claims = Jwts.claims().setSubject(subject);
@@ -30,34 +33,19 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    String getToken(HttpServletRequest req) {
+    Authentication getAuthentication(HttpServletRequest req) {
         String header = req.getHeader(JwtProperties.HEADER_STRING);
-        return (header != null && header.startsWith(JwtProperties.TOKEN_PREFIX)) ?
-                header.substring(JwtProperties.TOKEN_PREFIX.length()) : null;
-    }
-
-    boolean validateToken(String token) {
+        if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) return null;
+        String token = header.substring(JwtProperties.TOKEN_PREFIX.length());
         try {
-            return !Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-                    .getExpiration().before(TimeSource.now());
+            Claims claims = parser.parseClaimsJws(token).getBody();
+            String subject = claims.getSubject();
+            Integer mask = claims.get(JwtProperties.ROLES_CLAIM_KEY, Integer.class);
+            if (subject == null || mask == null) return null;
+            return new UsernamePasswordAuthenticationToken(subject, null, maskToAuthorities(mask));
         } catch (Exception e) {
-            return false;
+            return null;
         }
-    }
-
-    private String getSubject(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    private int getRolesMask(String token) {
-        Integer mask = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-                .get(JwtProperties.ROLES_CLAIM_KEY, Integer.class);
-        return mask == null ? 0 : mask;
-    }
-
-    Authentication getAuthentication(String token) {
-        return new UsernamePasswordAuthenticationToken(getSubject(token), null,
-                UserRole.maskToAuthorities(getRolesMask(token)));
     }
 
 }
