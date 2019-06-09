@@ -2,7 +2,7 @@
 POST {{api-url}}/feedback
 Accept: application/json
 Content-Type: application/json
-Authorization: Basic {{auth-enc}}
+Authorization: {{auth}}
 
 {
   "senderName": "User",

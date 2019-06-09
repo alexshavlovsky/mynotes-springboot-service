@@ -1,23 +1,23 @@
 ### Get all
 GET {{api-url}}/notes/
 Accept: application/json
-Authorization: Basic {{auth-enc}}
+Authorization: {{auth}}
 
 ### Get all by notebook id
 GET {{api-url}}/notes/?nbId=1
 Accept: application/json
-Authorization: Basic {{auth-enc}}
+Authorization: {{auth}}
 
 ### Get by id
 GET {{api-url}}/notes/3
 Accept: application/json
-Authorization: Basic {{auth-enc}}
+Authorization: {{auth}}
 
 ### Create
 POST {{api-url}}/notes/
 Accept: application/json
 Content-Type: application/json
-Authorization: Basic {{auth-enc}}
+Authorization: {{auth}}
 
 {
   "title": "New note",
@@ -29,7 +29,7 @@ Authorization: Basic {{auth-enc}}
 PUT {{api-url}}/notes/3
 Accept: application/json
 Content-Type: application/json
-Authorization: Basic {{auth-enc}}
+Authorization: {{auth}}
 
 {
   "title": "Renamed note",
@@ -41,6 +41,6 @@ Authorization: Basic {{auth-enc}}
 DELETE {{api-url}}/notes/4
 Accept: application/json
 Content-Type: application/json
-Authorization: Basic {{auth-enc}}
+Authorization: {{auth}}
 
 ###
