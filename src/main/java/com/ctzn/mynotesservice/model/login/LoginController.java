@@ -6,18 +6,16 @@ import com.ctzn.mynotesservice.model.user.UserPasswordEncoder;
 import com.ctzn.mynotesservice.repositories.UserRepository;
 import com.ctzn.mynotesservice.security.JwtTokenProvider;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin
 @RequestMapping(LoginController.BASE_PATH)
 public class LoginController {
 
-    public static final String BASE_PATH = "/api/login";
+    public static final String BASE_PATH = "/api/login/";
 
     private static final ApiException BAD_CREDENTIALS = ApiException.getBadCredentials("Invalid email/password supplied");
 

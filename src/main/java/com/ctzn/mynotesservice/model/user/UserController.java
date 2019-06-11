@@ -13,10 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(UserController.BASE_PATH)
 public class UserController {
 
-    public static final String BASE_PATH = "/api/users";
+    public static final String BASE_PATH = "/api/users/";
 
     private static final List<UserRole> DEFAULT_USER_ROLES = Collections.singletonList(UserRole.USER);
 

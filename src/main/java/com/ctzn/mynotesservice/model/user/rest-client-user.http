@@ -1,5 +1,5 @@
 ### Create
-POST {{api-url}}/users
+POST {{api-url}}/users/
 Accept: application/json
 Content-Type: application/json
 
