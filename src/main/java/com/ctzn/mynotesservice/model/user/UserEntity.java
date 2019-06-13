@@ -26,7 +26,7 @@ public class UserEntity {
     @NonNull
     private String firstName;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     @NonNull
     private String lastName;
 
@@ -35,7 +35,6 @@ public class UserEntity {
     private String email;
 
     @Column(nullable = false, length = 60)
-    @NonNull
     private String encodedPassword;
 
     @Column(nullable = false)

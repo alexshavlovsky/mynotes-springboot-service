@@ -1,13 +1,16 @@
 package com.ctzn.mynotesservice.repositories;
 
-import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.note.NoteEntity;
+import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
+import com.ctzn.mynotesservice.model.user.UserEntity;
+import com.ctzn.mynotesservice.model.user.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 
@@ -18,13 +21,24 @@ public class DbSeeder implements CommandLineRunner {
 
     private NotebookRepository notebookRepository;
     private NoteRepository noteRepository;
+    private UserRepository userRepository;
 
-    public DbSeeder(NotebookRepository notebookRepository, NoteRepository noteRepository) {
+    public DbSeeder(NotebookRepository notebookRepository, NoteRepository noteRepository, UserRepository userRepository) {
         this.notebookRepository = notebookRepository;
         this.noteRepository = noteRepository;
+        this.userRepository = userRepository;
     }
 
     private void generateRandomDb(int nbNum, int notesPerNbMin, int notesPerNbMax) {
+        userRepository.deleteAll();
+        UserEntity user = new UserEntity("User", "", "user@example.com");
+        user.setPassword("12345");
+        user.setRolesMask(Collections.singletonList(UserRole.USER));
+        userRepository.save(user);
+        UserEntity admin = new UserEntity("Admin", "", "admin@example.com");
+        admin.setPassword("qwerty");
+        admin.setRolesMask(Collections.singletonList(UserRole.ADMIN));
+        userRepository.save(admin);
         notebookRepository.deleteAll();
         Random rnd = new Random();
         long now = new Date().getTime();
