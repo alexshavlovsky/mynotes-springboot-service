@@ -30,4 +30,9 @@ GET {{api-url}}/notes/
 Accept: application/json
 Authorization: {{auth}}
 
+### Get current user
+GET {{api-url}}/users/
+Accept: application/json
+Authorization: {{auth}}
+
 ###

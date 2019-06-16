@@ -10,4 +10,9 @@ Content-Type: application/json
   "password": "qwerty"
 }
 
+### Get current user
+GET {{api-url}}/users/
+Accept: application/json
+Authorization: {{auth}}
+
 ###

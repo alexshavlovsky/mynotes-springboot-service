@@ -1,5 +1,5 @@
 ### Send command
-POST {{api-url}}/command
+POST {{api-url}}/command/
 Accept: application/json
 Content-Type: application/json
 Authorization: {{auth}}
