@@ -40,6 +40,10 @@ public class UserEntity {
     @Column(nullable = false)
     private Integer rolesMask = 0;
 
+    public String getLastName() {
+        return lastName == null ? "" : lastName;
+    }
+
     public void setPassword(String rawPassword) {
         encodedPassword = UserPasswordEncoder.encode(rawPassword);
     }
