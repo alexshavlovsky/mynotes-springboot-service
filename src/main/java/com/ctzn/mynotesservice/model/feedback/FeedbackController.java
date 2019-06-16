@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @Slf4j
 public class FeedbackController {
 
-    public static final String BASE_PATH = "/api/feedback";
+    public static final String BASE_PATH = "/api/feedback/";
 
     private FeedbackSender feedbackSender;
 

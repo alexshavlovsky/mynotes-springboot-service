@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping(NotebookController.BASE_PATH)
 public class NotebookController {
 
-    public static final String BASE_PATH = "/api/notebooks";
+    public static final String BASE_PATH = "/api/notebooks/";
 
     private NotebookRepository notebookRepository;
 
