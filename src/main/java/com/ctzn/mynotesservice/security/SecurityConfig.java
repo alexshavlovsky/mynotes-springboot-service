@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/h2-console/*").permitAll()
+                .antMatchers("/*").permitAll()
                 .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, LoginController.BASE_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, CommandController.BASE_PATH).hasRole("ADMIN")
