@@ -1,8 +1,10 @@
 package com.ctzn.mynotesservice.model.login;
 
+import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.user.UserEntity;
 import com.ctzn.mynotesservice.model.user.UserPasswordEncoder;
+import com.ctzn.mynotesservice.model.user.UserResponse;
 import com.ctzn.mynotesservice.repositories.UserRepository;
 import com.ctzn.mynotesservice.security.JwtTokenProvider;
 import org.springframework.validation.BindingResult;
@@ -23,9 +25,12 @@ public class LoginController {
 
     private UserRepository userRepository;
 
-    public LoginController(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
+    private DomainMapper domainMapper;
+
+    public LoginController(JwtTokenProvider jwtTokenProvider, UserRepository userRepository, DomainMapper domainMapper) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRepository;
+        this.domainMapper = domainMapper;
     }
 
     @PostMapping
@@ -36,6 +41,6 @@ public class LoginController {
         if (!UserPasswordEncoder.matches(loginRequest.getPassword(), userEntity.getEncodedPassword()))
             throw BAD_CREDENTIALS;
         String token = jwtTokenProvider.createToken(userEntity.getUserId(), userEntity.getRolesMask());
-        return new LoginResponse(token);
+        return new LoginResponse(token, domainMapper.map(userEntity, UserResponse.class));
     }
 }
