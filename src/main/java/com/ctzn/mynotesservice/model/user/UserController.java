@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,4 +41,12 @@ public class UserController {
         userEntity.setRolesMask(DEFAULT_USER_ROLES);
         return domainMapper.map(userRepository.save(userEntity), UserResponse.class);
     }
+
+    @GetMapping()
+    public UserResponse getCurrentUserDetails(Principal principal) throws ApiException {
+        UserEntity userEntity = userRepository.findByUserId(principal.getName())
+                .orElseThrow(() -> ApiException.getNotFoundByName("User", principal.getName()));
+        return domainMapper.map(userEntity, UserResponse.class);
+    }
+
 }
