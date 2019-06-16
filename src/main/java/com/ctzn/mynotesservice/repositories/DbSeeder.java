@@ -30,15 +30,6 @@ public class DbSeeder implements CommandLineRunner {
     }
 
     private void generateRandomDb(int nbNum, int notesPerNbMin, int notesPerNbMax) {
-        userRepository.deleteAll();
-        UserEntity user = new UserEntity("User", "", "user@example.com");
-        user.setPassword("12345");
-        user.setRolesMask(Collections.singletonList(UserRole.USER));
-        userRepository.save(user);
-        UserEntity admin = new UserEntity("Admin", "", "admin@example.com");
-        admin.setPassword("qwerty");
-        admin.setRolesMask(Collections.singletonList(UserRole.ADMIN));
-        userRepository.save(admin);
         notebookRepository.deleteAll();
         Random rnd = new Random();
         long now = new Date().getTime();
@@ -56,6 +47,17 @@ public class DbSeeder implements CommandLineRunner {
                 note.setLastModifiedOn(new Date(now - 1000L * rnd.nextInt(period)));
                 noteRepository.save(note);
             }
+        }
+        if (userRepository.count() == 0) {
+            UserEntity user = new UserEntity("User", "", "user@example.com");
+            user.setPassword("12345");
+            user.setRolesMask(Collections.singletonList(UserRole.USER));
+            userRepository.save(user);
+            UserEntity admin = new UserEntity("Admin", "", "admin@example.com");
+            admin.setPassword("12345");
+            admin.setRolesMask(Collections.singletonList(UserRole.ADMIN));
+            userRepository.save(admin);
+            logger.debug("Default users created");
         }
     }
 
