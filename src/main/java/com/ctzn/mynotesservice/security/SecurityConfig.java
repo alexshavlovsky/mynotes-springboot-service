@@ -1,5 +1,6 @@
 package com.ctzn.mynotesservice.security;
 
+import com.ctzn.mynotesservice.model.command.CommandController;
 import com.ctzn.mynotesservice.model.login.LoginController;
 import com.ctzn.mynotesservice.model.user.UserController;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/*").permitAll()
                 .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, LoginController.BASE_PATH).permitAll()
-                .antMatchers("/api/notebooks/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, CommandController.BASE_PATH).hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
 
