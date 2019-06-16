@@ -6,12 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FrontendEnvironmentController {
-    @Value("${app.api.username}")
-    private String userName;
-
-    @Value("${app.api.password}")
-    private String userPassword;
-
     @Value("${app.api.path}")
     private String apiBasePath;
 
