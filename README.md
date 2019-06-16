@@ -8,9 +8,12 @@ Frontend client for this project: [MyNotes Angular Client](https://github.com/al
 
 Prebuilt Angular client is included and served at `https://localhost:8443`
 <br>
-Default username: usr1
-<br>
-Default password: pwd1
+Default users:
+
+Email             |Password |Role
+---               |---      |---
+user@example.com  |12345    |USER
+admin@example.com |12345    |ADMIN
 
 ## Build and run instructions
 
@@ -46,7 +49,8 @@ Component          | Technology
 Runtime            | Java 8
 Build tool         | Maven
 Server             | SpringBoot WEB (Tomcat)
-Security           | SSL, basic auth
+Security           | SSL, JWT
+JWT implementation | [jsonwebtoken.io](https://github.com/jwtk/jjwt)
 Database           | SpringBoot JPA (Hibernate), H2         
 Email              | SpringBoot MAIL
 Async tasks        | ThreadPoolTaskExecutor

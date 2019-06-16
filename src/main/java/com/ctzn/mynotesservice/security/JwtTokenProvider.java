@@ -5,12 +5,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
 import java.util.Date;
 
 import static com.ctzn.mynotesservice.model.user.UserRole.maskToAuthorities;
@@ -18,7 +19,8 @@ import static com.ctzn.mynotesservice.model.user.UserRole.maskToAuthorities;
 @Component
 public class JwtTokenProvider {
 
-    private final String secretKey = Base64.getEncoder().encodeToString(JwtProperties.SECRET.getBytes());
+    private final SecretKey secretKey = JwtProperties.RANDOM_SECRET ? Keys.secretKeyFor(SignatureAlgorithm.HS256) :
+            Keys.hmacShaKeyFor(JwtProperties.FIXED_SECRET.getBytes());
     private final JwtParser parser = Jwts.parser().setSigningKey(secretKey);
 
     public String createToken(String subject, int rolesMask) {
@@ -29,7 +31,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + JwtProperties.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
