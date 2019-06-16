@@ -22,8 +22,6 @@ public class FrontendEnvironmentController {
     public String overrideEnvironment() {
         return String.format("(function (window) {" +
                 "window.__env = window.__env || {};" +
-                "window.__env.apiEndpoint = '%s';" +
-                "window.__env.apiAuth = '%s:%s'" +
-                "}(this));", apiBasePath, userName, userPassword);
+                "window.__env.apiEndpoint = '%s';", apiBasePath);
     }
 }
