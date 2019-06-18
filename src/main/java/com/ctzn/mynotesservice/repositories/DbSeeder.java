@@ -52,9 +52,15 @@ public class DbSeeder implements CommandLineRunner {
             UserEntity user = new UserEntity("User", "", "user@example.com");
             user.setPassword("12345");
             user.setRolesMask(Collections.singletonList(UserRole.USER));
+            // set the fixed public user id instead of randomly generated
+            // for easier debugging
+            user.setUserId("36c773c8-00b0-4f94-ada1-da5b74b49de4");
             userRepository.save(user);
             UserEntity admin = new UserEntity("Admin", "", "admin@example.com");
             admin.setPassword("12345");
+            // set the fixed public user id instead of randomly generated
+            // for easier debugging
+            admin.setUserId("82e91d4a-5ba5-4854-b3d4-6977d58283b9");
             admin.setRolesMask(Collections.singletonList(UserRole.ADMIN));
             userRepository.save(admin);
             logger.debug("Default users created");

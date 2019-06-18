@@ -20,15 +20,15 @@ Content-Type: application/json
   "password": "qwerty"
 }
 
-### Private
+### Test private
 GET {{api-url}}/notebooks/
 Accept: application/json
 Authorization: {{auth}}
 
-### Public
+### Test private without the auth header
 GET {{api-url}}/notes/
 Accept: application/json
-Authorization: {{auth}}
+# Authorization: {{auth}} - without the auth header access will be denied
 
 ### Get current user
 GET {{api-url}}/users/
