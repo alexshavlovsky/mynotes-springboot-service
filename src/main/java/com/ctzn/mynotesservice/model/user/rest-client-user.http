@@ -10,9 +10,24 @@ Content-Type: application/json
   "password": "qwerty"
 }
 
-### Get current user
+### Get current user as ADMIN
+GET {{api-url}}/users/current
+Accept: application/json
+Authorization: {{admin-auth}}
+
+### Get current user as USER
+GET {{api-url}}/users/current
+Accept: application/json
+Authorization: {{user-auth}}
+
+### Get all users as ADMIN
 GET {{api-url}}/users/
 Accept: application/json
-Authorization: {{auth}}
+Authorization: {{admin-auth}}
+
+### Get all users as USER - should be forbidden
+GET {{api-url}}/users/
+Accept: application/json
+Authorization: {{user-auth}}
 
 ###

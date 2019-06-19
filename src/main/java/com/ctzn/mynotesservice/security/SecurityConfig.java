@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, LoginController.BASE_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, CommandController.BASE_PATH).hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, UserController.BASE_PATH).hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
 

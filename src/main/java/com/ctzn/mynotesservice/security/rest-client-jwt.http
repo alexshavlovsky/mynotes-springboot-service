@@ -31,7 +31,7 @@ Accept: application/json
 # Authorization: {{auth}} - without the auth header access will be denied
 
 ### Get current user
-GET {{api-url}}/users/
+GET {{api-url}}/users/current
 Accept: application/json
 Authorization: {{auth}}
 

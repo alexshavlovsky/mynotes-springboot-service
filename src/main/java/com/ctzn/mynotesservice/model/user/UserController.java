@@ -42,11 +42,16 @@ public class UserController {
         return domainMapper.map(userRepository.save(userEntity), UserResponse.class);
     }
 
-    @GetMapping()
-    public UserResponse getCurrentUserDetails(Principal principal) throws ApiException {
+    @GetMapping("current")
+    public UserResponse getCurrentUser(Principal principal) throws ApiException {
         UserEntity userEntity = userRepository.findByUserId(principal.getName())
                 .orElseThrow(() -> ApiException.getNotFoundByName("User", principal.getName()));
         return domainMapper.map(userEntity, UserResponse.class);
+    }
+
+    @GetMapping()
+    public List<UserResponse> getAllUsers() {
+        return domainMapper.mapAll(userRepository.findAll(), UserResponse.class);
     }
 
 }
