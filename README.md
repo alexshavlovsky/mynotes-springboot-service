@@ -51,7 +51,7 @@ Build tool         | Maven
 Server             | SpringBoot WEB (Tomcat)
 Security           | SSL, JWT
 JWT implementation | [jsonwebtoken.io](https://github.com/jwtk/jjwt)
-Database           | SpringBoot JPA (Hibernate), H2         
+Database           | SpringBoot JPA (Hibernate), H2, MySQL         
 Email              | SpringBoot MAIL
 Async tasks        | ThreadPoolTaskExecutor
 REST data mapping  | Jackson, Bean Validation API, [ModelMapper](https://github.com/modelmapper/modelmapper)
@@ -63,6 +63,20 @@ REST Documentation | [SpringFox Swagger2](https://github.com/springfox/springfox
 
 Default base API URL: https://localhost:8443/api/
 
+User endpoint:
+                       
+Method  |URI            |Operation
+---     |---            |---
+POST    |/users         |create a user
+GET     |/users         |read all (ADMIN only)
+GET     |/users/current |read the current
+
+User login endpoint:
+                       
+Method  |URI           |Operation
+---     |---           |---
+POST    |/login        |create a token
+
 Feedback Email queue endpoint:
                        
 Method  |URI           |Operation
@@ -73,7 +87,7 @@ Admin command controller endpoint:
                        
 Method  |URI           |Operation
 ---     |---           |---
-POST    |/command      |accept
+POST    |/command      |accept (ADMIN only)
 
 Note resource endpoints:
 
