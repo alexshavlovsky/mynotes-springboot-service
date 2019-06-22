@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.ctzn.mynotesservice.controllers.RestTestUtil.*;
+import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getFixedIdUser;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,7 +58,7 @@ public class NoteControllerTest {
                 .build();
         TimeSource.setFixed(true);
         someNotebookId = 255L;
-        someNotebook = new NotebookEntity("Some notebook");
+        someNotebook = new NotebookEntity("Some notebook", getFixedIdUser());
         someNotebook.setId(someNotebookId);
     }
 
@@ -188,7 +189,7 @@ public class NoteControllerTest {
     @Test
     public void shouldUpdateNote() throws Exception {
         Long oldNotebookId = 75L;
-        NotebookEntity oldNotebook = new NotebookEntity("Old notebook");
+        NotebookEntity oldNotebook = new NotebookEntity("Old notebook", getFixedIdUser());
         oldNotebook.setId(oldNotebookId);
         Long id = 10L;
         String repoTitle = "Old note";

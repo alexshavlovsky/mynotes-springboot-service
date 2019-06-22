@@ -2,11 +2,25 @@ package com.ctzn.mynotesservice.controllers;
 
 import com.ctzn.mynotesservice.model.note.NoteEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
+import com.ctzn.mynotesservice.model.user.UserEntity;
+import com.ctzn.mynotesservice.model.user.UserRole;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 class StaticTestProvider {
+
+    private static final String fixedUserPublicId = "74751a5a-951c-11e9-bc42-526af7764f64";
+
+    static UserEntity getFixedIdUser() {
+        UserEntity user = new UserEntity("Fixed Id User", "Last Name", "fixed_id_user@example.com");
+        user.setPassword("12345");
+        user.setRolesMask(Collections.singletonList(UserRole.USER));
+        user.setUserId(fixedUserPublicId);
+        return user;
+    }
+
     static NoteEntity getNote(long id, String title, String text, NotebookEntity notebook) {
         NoteEntity note = new NoteEntity(title, text, notebook);
         note.setId(id);
@@ -14,7 +28,7 @@ class StaticTestProvider {
     }
 
     static NotebookEntity getEmptyNotebook(long id, String name) {
-        NotebookEntity notebook = new NotebookEntity(name);
+        NotebookEntity notebook = new NotebookEntity(name, getFixedIdUser());
         notebook.setId(id);
         return notebook;
     }
