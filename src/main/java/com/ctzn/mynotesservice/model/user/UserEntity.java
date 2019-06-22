@@ -1,8 +1,10 @@
 package com.ctzn.mynotesservice.model.user;
 
+import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -39,6 +41,9 @@ public class UserEntity {
 
     @Column(nullable = false)
     private Integer rolesMask = 0;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<NotebookEntity> notebooks = new ArrayList<>();
 
     public String getLastName() {
         return lastName == null ? "" : lastName;

@@ -1,6 +1,7 @@
 package com.ctzn.mynotesservice.model.notebook;
 
 import com.ctzn.mynotesservice.model.note.NoteEntity;
+import com.ctzn.mynotesservice.model.user.UserEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +27,11 @@ public class NotebookEntity {
 
     @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL)
     private List<NoteEntity> notes = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @NonNull
+    private UserEntity user;
 
     public Integer getSize() {
         return notes.size();
