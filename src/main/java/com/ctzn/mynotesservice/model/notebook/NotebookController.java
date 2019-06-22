@@ -3,9 +3,11 @@ package com.ctzn.mynotesservice.model.notebook;
 import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
+import com.ctzn.mynotesservice.model.note.NoteResponse;
 import com.ctzn.mynotesservice.model.user.UserEntity;
+import com.ctzn.mynotesservice.repositories.NoteRepository;
 import com.ctzn.mynotesservice.repositories.NotebookRepository;
-import com.ctzn.mynotesservice.repositories.UserRepository;
+import com.ctzn.mynotesservice.repositories.NotebookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,43 +21,40 @@ public class NotebookController {
 
     public static final String BASE_PATH = "/api/notebooks/";
 
-    private UserRepository userRepository;
     private NotebookRepository notebookRepository;
+    private NotebookService notebookService;
+    private NoteRepository noteRepository;
 
     private DomainMapper domainMapper;
 
-    public NotebookController(UserRepository userRepository, NotebookRepository notebookRepository, DomainMapper domainMapper) {
-        this.userRepository = userRepository;
+    public NotebookController(NotebookRepository notebookRepository, NotebookService notebookService, NoteRepository noteRepository, DomainMapper domainMapper) {
         this.notebookRepository = notebookRepository;
+        this.notebookService = notebookService;
+        this.noteRepository = noteRepository;
         this.domainMapper = domainMapper;
     }
 
     @GetMapping()
     public List<NotebookResponse> getAllNotebooks(Principal principal) throws ApiException {
-        UserEntity user = userRepository.findByUserId(principal.getName())
-                .orElseThrow(ApiException::getCredentialsDeleted);
-        return domainMapper.mapAll(notebookRepository.findAllByUser(user), NotebookResponse.class);
+        return domainMapper.mapAll(notebookService.authorizeAndGetAll(principal), NotebookResponse.class);
     }
 
-    private NotebookEntity getNotebookByIdAndUserId(long id, String userId) throws ApiException {
-        UserEntity user = userRepository.findByUserId(userId).orElseThrow(ApiException::getCredentialsDeleted);
-        NotebookEntity notebookEntity = notebookRepository.findById(id)
-                .orElseThrow(() -> ApiException.getNotFoundById("Notebook", id));
-        if (!notebookEntity.getUser().getId().equals(user.getId()))
-            throw ApiException.getNotFoundById("Notebook", id);
-        return notebookEntity;
+    @GetMapping("{id}/notes")
+    public List<NoteResponse> getAllNotesByNotebook(@PathVariable long id, Principal principal) throws ApiException {
+        NotebookEntity notebookEntity = notebookService.authorizeAndGet(id, principal);
+        return domainMapper.mapAll(noteRepository.findAllByNotebook(notebookEntity), NoteResponse.class);
     }
 
     @GetMapping("{id}")
     public NotebookResponse getNotebook(@PathVariable("id") long id, Principal principal) throws ApiException {
-        NotebookEntity notebookEntity = getNotebookByIdAndUserId(id, principal.getName());
-        return domainMapper.map(notebookEntity, NotebookResponse.class);
+        return domainMapper.map(notebookService.authorizeAndGet(id, principal), NotebookResponse.class);
     }
 
+    //authorize
     @PostMapping() // create only
     @ResponseStatus(HttpStatus.CREATED)
     public NotebookResponse saveNotebook(@RequestBody NotebookRequest notebookRequest, Principal principal) throws ApiException {
-        UserEntity user = userRepository.findByUserId(principal.getName()).orElseThrow(ApiException::getCredentialsDeleted);
+        UserEntity user = notebookService.authorize(principal);
         NotebookEntity notebook = domainMapper.map(notebookRequest, NotebookEntity.class);
         notebook.setUser(user);
         return domainMapper.map(notebookRepository.save(notebook), NotebookResponse.class);
@@ -64,15 +63,13 @@ public class NotebookController {
     @PutMapping("{id}") // update only
     public NotebookResponse updateNotebook(@RequestBody NotebookRequest notebookRequest,
                                            @PathVariable("id") long id, Principal principal) throws ApiException {
-        NotebookEntity notebookEntity = getNotebookByIdAndUserId(id, principal.getName());
-        domainMapper.map(notebookRequest, notebookEntity);
+        NotebookEntity notebookEntity = domainMapper.map(notebookRequest, notebookService.authorizeAndGet(id, principal));
         return domainMapper.map(notebookRepository.save(notebookEntity), NotebookResponse.class);
     }
 
     @DeleteMapping(path = "{id}")
     public ApiMessage deleteNotebook(@PathVariable("id") long id, Principal principal) throws ApiException {
-        NotebookEntity notebookEntity = getNotebookByIdAndUserId(id, principal.getName());
-        notebookRepository.delete(notebookEntity);
+        notebookRepository.delete(notebookService.authorizeAndGet(id, principal));
         return new ApiMessage("Notebook deleted");
     }
 

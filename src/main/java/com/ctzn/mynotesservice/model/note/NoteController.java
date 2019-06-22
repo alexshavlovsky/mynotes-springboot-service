@@ -10,8 +10,6 @@ import com.ctzn.mynotesservice.repositories.NotebookRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @CrossOrigin
 @RequestMapping(NoteController.BASE_PATH)
@@ -28,16 +26,6 @@ public class NoteController {
         this.noteRepository = noteRepository;
         this.notebookRepository = notebookRepository;
         this.domainMapper = domainMapper;
-    }
-
-    @GetMapping()
-    public List<NoteResponse> getAllNotesByNotebook(@RequestParam(required = false, name = "nbId") Long nbId) throws ApiException {
-        if (nbId == null) {
-            return domainMapper.mapAll(noteRepository.findAll(), NoteResponse.class);
-        } else {
-            NotebookEntity notebookEntity = notebookRepository.findById(nbId).orElseThrow(() -> ApiException.getNotFoundById("Notebook", nbId));
-            return domainMapper.mapAll(noteRepository.findAllByNotebook(notebookEntity), NoteResponse.class);
-        }
     }
 
     @GetMapping("{id}")

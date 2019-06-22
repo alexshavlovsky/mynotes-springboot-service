@@ -8,8 +8,9 @@ import com.ctzn.mynotesservice.model.notebook.NotebookController;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookRequest;
 import com.ctzn.mynotesservice.model.notebook.NotebookResponse;
+import com.ctzn.mynotesservice.repositories.NoteRepository;
 import com.ctzn.mynotesservice.repositories.NotebookRepository;
-import com.ctzn.mynotesservice.repositories.UserRepository;
+import com.ctzn.mynotesservice.repositories.NotebookService;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -39,9 +40,11 @@ public class NotebookControllerTest {
     @Mock
     private NotebookRepository notebookRepository;
 
-    // TODO: test interactions with userRepository
-    @Mock
-    private UserRepository userRepository;
+    @Mock // TODO: test interactions with notebookService
+    private NotebookService notebookService;
+
+    @Mock // TODO: test interactions with noteRepository
+    private NoteRepository noteRepository;
 
     private MockMvc mockMvc;
 
@@ -49,7 +52,7 @@ public class NotebookControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new NotebookController(userRepository, notebookRepository, new DomainMapper()))
+                .standaloneSetup(new NotebookController(notebookRepository, notebookService, noteRepository, new DomainMapper()))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);
