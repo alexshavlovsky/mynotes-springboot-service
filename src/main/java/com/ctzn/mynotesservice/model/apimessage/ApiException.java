@@ -22,8 +22,8 @@ public class ApiException extends Exception {
         return new ApiException(message, HttpStatus.NOT_FOUND);
     }
 
-    public static ApiException getCredentialsDeleted() {
-        return new ApiException("Credentials deleted", HttpStatus.FORBIDDEN);
+    public static ApiException getCredentialsNotExist() {
+        return new ApiException("Credentials not exist", HttpStatus.FORBIDDEN);
     }
 
     public static ApiException getNotFoundById(String className, long entityId) {
