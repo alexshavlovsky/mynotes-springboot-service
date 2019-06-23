@@ -27,13 +27,6 @@ public class NoteController {
         this.domainMapper = domainMapper;
     }
 
-    @GetMapping("{id}")
-    public NoteResponse getNote(@PathVariable("id") long id, Principal principal) throws ApiException {
-        UserEntity user = persistenceService.getUser(principal);
-        NoteEntity note = persistenceService.getNote(id, user);
-        return domainMapper.map(note, NoteResponse.class);
-    }
-
     @PostMapping() // create only
     @ResponseStatus(HttpStatus.CREATED)
     public NoteResponse saveNote(@RequestBody NoteRequest noteRequest, Principal principal) throws ApiException {

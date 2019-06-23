@@ -40,12 +40,6 @@ public class NotebookController {
         return domainMapper.mapAll(persistenceService.getNotesFromNotebook(notebookEntity), NoteResponse.class);
     }
 
-    @GetMapping("{id}")
-    public NotebookResponse getNotebook(@PathVariable("id") long id, Principal principal) throws ApiException {
-        UserEntity user = persistenceService.getUser(principal);
-        return domainMapper.map(persistenceService.getNotebook(id, user), NotebookResponse.class);
-    }
-
     @PostMapping() // create only
     @ResponseStatus(HttpStatus.CREATED)
     public NotebookResponse saveNotebook(@RequestBody NotebookRequest notebookRequest, Principal principal) throws ApiException {
