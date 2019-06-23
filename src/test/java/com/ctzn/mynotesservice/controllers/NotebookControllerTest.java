@@ -8,9 +8,8 @@ import com.ctzn.mynotesservice.model.notebook.NotebookController;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookRequest;
 import com.ctzn.mynotesservice.model.notebook.NotebookResponse;
-import com.ctzn.mynotesservice.repositories.NoteRepository;
 import com.ctzn.mynotesservice.repositories.NotebookRepository;
-import com.ctzn.mynotesservice.repositories.NotebookService;
+import com.ctzn.mynotesservice.repositories.PersistenceService;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -29,22 +28,16 @@ import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getTwoNoteb
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-// TODO: repair these tests
-@Ignore
+@Ignore // TODO: repair these tests
 @RunWith(MockitoJUnitRunner.class)
 public class NotebookControllerTest {
 
     private static final String BASE_PATH = NotebookController.BASE_PATH;
 
-    @Mock
+    @Mock // TODO: test interactions with persistenceService and remove repository dependencies
+    private PersistenceService persistenceService;
+
     private NotebookRepository notebookRepository;
-
-    @Mock // TODO: test interactions with notebookService
-    private NotebookService notebookService;
-
-    @Mock // TODO: test interactions with noteRepository
-    private NoteRepository noteRepository;
 
     private MockMvc mockMvc;
 
@@ -52,7 +45,7 @@ public class NotebookControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new NotebookController(notebookRepository, notebookService, noteRepository, new DomainMapper()))
+                .standaloneSetup(new NotebookController(persistenceService, new DomainMapper()))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);
