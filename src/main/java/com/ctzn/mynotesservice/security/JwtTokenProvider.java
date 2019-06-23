@@ -23,6 +23,13 @@ public class JwtTokenProvider {
             Keys.hmacShaKeyFor(JwtProperties.FIXED_SECRET.getBytes());
     private final JwtParser parser = Jwts.parser().setSigningKey(secretKey);
 
+    /**
+     * Create JWT authorisation token
+     *
+     * @param subject   user public id
+     * @param rolesMask packed user roles
+     * @return created JWT token
+     */
     public String createToken(String subject, int rolesMask) {
         Claims claims = Jwts.claims().setSubject(subject);
         claims.put(JwtProperties.ROLES_CLAIM_KEY, rolesMask);
@@ -35,6 +42,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * Authenticate incoming HTTP request with should contain Authorization header
+     *
+     * @param req incoming HTTP request
+     * @return Authentication token witch contains user public id and granted authorities
+     */
     Authentication getAuthentication(HttpServletRequest req) {
         String header = req.getHeader(JwtProperties.HEADER_STRING);
         if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) return null;

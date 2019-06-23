@@ -12,6 +12,7 @@ import java.util.concurrent.Executor;
 public class AsyncConfig implements AsyncConfigurer {
 
     @Override
+    // this executor is used for async email sending
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);

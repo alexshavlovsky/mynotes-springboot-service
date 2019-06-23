@@ -1,8 +1,9 @@
-package com.ctzn.mynotesservice.security;
+package com.ctzn.mynotesservice.configuration;
 
 import com.ctzn.mynotesservice.model.command.CommandController;
 import com.ctzn.mynotesservice.model.login.LoginController;
 import com.ctzn.mynotesservice.model.user.UserController;
+import com.ctzn.mynotesservice.security.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

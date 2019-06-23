@@ -1,38 +1,25 @@
-### Create
-POST {{api-url}}/users/
+### Test private without the auth header
+GET {{api-url}}/notebooks/
 Accept: application/json
-Content-Type: application/json
-
-{
-  "firstName": "Luke",
-  "lastName": "Thompson",
-  "email": "luke@example.com",
-  "password": "qwerty"
-}
-
-### Login
-POST {{api-url}}/login/
-Accept: application/json
-Content-Type: application/json
-
-{
-  "email": "luke@example.com",
-  "password": "qwerty"
-}
 
 ### Test private
 GET {{api-url}}/notebooks/
 Accept: application/json
-Authorization: {{auth}}
-
-### Test private without the auth header
-GET {{api-url}}/notes/
-Accept: application/json
-# Authorization: {{auth}} - without the auth header access will be denied
+Authorization: {{user-auth}}
 
 ### Get current user
 GET {{api-url}}/users/current
 Accept: application/json
-Authorization: {{auth}}
+Authorization: {{user-auth}}
+
+### Get all users
+GET {{api-url}}/users/
+Accept: application/json
+Authorization: {{admin-auth}}
+
+### USER is attempting to access an endpoint which requires ADMIN credentials
+GET {{api-url}}/users/
+Accept: application/json
+Authorization: {{user-auth}}
 
 ###

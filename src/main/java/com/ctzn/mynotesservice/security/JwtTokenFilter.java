@@ -21,6 +21,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     @Override
+    // this filter extracts JWT an authentication token from the request header
+    // which must contain public user id and granted user roles
+    // user public id and granted authorities are then stored in the SecurityContext
+    // if token is expired or any error happens, no authentication information will be stored
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication auth = jwtTokenProvider.getAuthentication(request);
         if (auth != null) SecurityContextHolder.getContext().setAuthentication(auth);
