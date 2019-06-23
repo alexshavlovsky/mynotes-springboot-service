@@ -40,7 +40,7 @@ public class UserEntity {
     private String encodedPassword;
 
     @Column(nullable = false)
-    private Integer rolesMask = 0;
+    private Integer roles = 0;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<NotebookEntity> notebooks = new ArrayList<>();
@@ -53,8 +53,8 @@ public class UserEntity {
         encodedPassword = UserPasswordEncoder.encode(rawPassword);
     }
 
-    public void setRolesMask(List<UserRole> roles) {
-        rolesMask = UserRole.rolesToMask(roles);
+    public void setRoles(List<UserRole> roles) {
+        this.roles = UserRole.rolesToMask(roles);
     }
 
 }

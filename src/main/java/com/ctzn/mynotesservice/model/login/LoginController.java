@@ -40,7 +40,7 @@ public class LoginController {
                 .orElseThrow(() -> BAD_CREDENTIALS);
         if (!UserPasswordEncoder.matches(loginRequest.getPassword(), userEntity.getEncodedPassword()))
             throw BAD_CREDENTIALS;
-        String token = jwtTokenProvider.createToken(userEntity.getUserId(), userEntity.getRolesMask());
+        String token = jwtTokenProvider.createToken(userEntity.getUserId(), userEntity.getRoles());
         return new LoginResponse(token, domainMapper.map(userEntity, UserResponse.class));
     }
 }

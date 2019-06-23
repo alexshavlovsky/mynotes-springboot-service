@@ -38,7 +38,7 @@ public class UserController {
         if (userRepository.findByEmail(userRequest.getEmail()).isPresent())
             throw ApiException.getAlreadyInUse("Email address", userRequest.getEmail());
         UserEntity userEntity = domainMapper.map(userRequest, UserEntity.class);
-        userEntity.setRolesMask(DEFAULT_USER_ROLES);
+        userEntity.setRoles(DEFAULT_USER_ROLES);
         return domainMapper.map(userRepository.save(userEntity), UserResponse.class);
     }
 
