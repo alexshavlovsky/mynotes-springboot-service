@@ -10,10 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Component
 public class DbSeeder implements CommandLineRunner {
@@ -34,20 +31,30 @@ public class DbSeeder implements CommandLineRunner {
     private void generateRandomDb(int nbNum, int notesPerNbMin, int notesPerNbMax) {
         // create default users no db init
         if (userRepository.count() == 0) {
+            // USER
             UserEntity user = new UserEntity("User", "", "user@example.com");
             user.setPassword("12345");
-            user.setRolesMask(Collections.singletonList(UserRole.USER));
+            user.setRoles(Collections.singletonList(UserRole.USER));
             // set the fixed public user id instead of randomly generated
             // for easier debugging
             user.setUserId(defaultUserPublicId);
             userRepository.save(user);
+            // ADMIN
             UserEntity admin = new UserEntity("Admin", "", "admin@example.com");
             admin.setPassword("12345");
             // set the fixed public user id instead of randomly generated
             // for easier debugging
             admin.setUserId("82e91d4a-5ba5-4854-b3d4-6977d58283b9");
-            admin.setRolesMask(Collections.singletonList(UserRole.ADMIN));
+            admin.setRoles(Collections.singletonList(UserRole.ADMIN));
             userRepository.save(admin);
+            // MULTIPLE ROLES USER
+            UserEntity admin2 = new UserEntity("Multiple roles user", "", "admin2@example.com");
+            admin2.setPassword("12345");
+            // set the fixed public user id instead of randomly generated
+            // for easier debugging
+            admin2.setUserId("82e91d4a-5ba5-4854-b3d4-6977d58283ba");
+            admin2.setRoles(Arrays.asList(UserRole.ADMIN, UserRole.USER));
+            userRepository.save(admin2);
             logger.debug("Default users created");
         }
         // generate random db for default user

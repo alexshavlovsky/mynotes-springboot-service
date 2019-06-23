@@ -10,10 +10,11 @@ Prebuilt Angular client is included and served at `https://localhost:8443`
 <br>
 Default users:
 
-Email             |Password |Role
----               |---      |---
-user@example.com  |12345    |USER
-admin@example.com |12345    |ADMIN
+Email              |Password |Role
+---                |---      |---
+user@example.com   |12345    |USER
+admin@example.com  |12345    |ADMIN
+admin2@example.com |12345    |ADMIN, USER
 
 ## Build and run instructions
 
