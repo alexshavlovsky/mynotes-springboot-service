@@ -16,6 +16,12 @@ user@example.com   |12345    |USER
 admin@example.com  |12345    |ADMIN
 admin2@example.com |12345    |ADMIN, USER
 
+Granted authorities by the role:
+<br>
+ADMIN can view the list of users and execute commands on backend
+<br>
+USER can create, edit, delete notebooks and notes and send a feedback
+
 ## Build and run instructions
 
 Tested on Maven 3.0.5 and Java 1.8.0_212:
@@ -24,7 +30,7 @@ git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
 cd mynotes-springboot-service
 mvn package
 cd target
-java -jar mynotes-service-v2.0.jar
+java -jar mynotes-service-v3.0.jar
 firefox https://localhost:8443
 ```
 
@@ -32,7 +38,7 @@ In Windows create a .cmd file and execute it from any folder:
 ```
 git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
 call mvn package -f mynotes-springboot-service\pom.xml --log-file maven.log
-start cmd.exe /c java -jar .\mynotes-springboot-service\target\mynotes-service-v2.0.jar
+start cmd.exe /c java -jar .\mynotes-springboot-service\target\mynotes-service-v3.0.jar
 timeout 15
 start firefox https://localhost:8443
 ```
@@ -40,7 +46,7 @@ start firefox https://localhost:8443
 ## Screenshot
 
 <p align="center">
-  <img src="screenshots/desktop.png?raw=true"/>
+  <img src="screenshots/3_user-notes.png?raw=true"/>
 </p>
 
 ## Technology Stack
