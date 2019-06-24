@@ -74,42 +74,39 @@ GET     |/users/current |read the current
 
 User login endpoint:
                        
-Method  |URI           |Operation
----     |---           |---
-POST    |/login        |create a token
+Method  |URI            |Operation
+---     |---            |---
+POST    |/login         |create a token
 
 Feedback Email queue endpoint:
                        
-Method  |URI           |Operation
----     |---           |---
-POST    |/feedback     |accept
+Method  |URI            |Operation
+---     |---            |---
+POST    |/feedback      |accept
 
 Admin command controller endpoint:
                        
-Method  |URI           |Operation
----     |---           |---
-POST    |/command      |accept (ADMIN only)
+Method  |URI            |Operation
+---     |---            |---
+POST    |/command       |accept (ADMIN only)
 
 Note resource endpoints:
 
-Method  |URI           |Operation
----     |---           |---
-GET     |/notes        |read all
-POST    |/notes        |create
-GET     |/notes/:id    |read
-PUT     |/notes/:id    |update
-DELETE  |/notes/:id    |delete
+Method  |URI                   |Operation
+---     |---                   |---
+GET     |/notebooks/{id}/notes |read by notebook id
+POST    |/notes                |create
+PUT     |/notes/{id}           |update
+DELETE  |/notes/{id}           |delete
 
 Notebook resource endpoints:
 
-Method  |URI                  |Operation
----     |---                  |---
-GET     |/notebooks           |read all
-GET     |/notebooks?nbId=:id  |read by notebook id
-POST    |/notebooks           |create
-GET     |/notebooks/:id       |read
-PUT     |/notebooks/:id       |update
-DELETE  |/notebooks/:id       |delete
+Method  |URI                   |Operation
+---     |---                   |---
+GET     |/notebooks            |read all
+POST    |/notebooks            |create
+PUT     |/notebooks/{id}       |update
+DELETE  |/notebooks/{id}       |delete
 
 Status code conventions:
 

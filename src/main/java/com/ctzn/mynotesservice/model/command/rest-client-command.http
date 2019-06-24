@@ -2,7 +2,7 @@
 POST {{api-url}}/command/
 Accept: application/json
 Content-Type: application/json
-Authorization: {{auth}}
+Authorization: {{admin-auth}}
 
 {
   "command": "fill database"

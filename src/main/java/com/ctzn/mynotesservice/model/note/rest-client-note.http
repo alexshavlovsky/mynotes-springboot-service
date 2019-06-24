@@ -1,46 +1,31 @@
-### Get all
-GET {{api-url}}/notes/
-Accept: application/json
-Authorization: {{auth}}
-
-### Get all by notebook id
-GET {{api-url}}/notes/?nbId=1
-Accept: application/json
-Authorization: {{auth}}
-
-### Get by id
-GET {{api-url}}/notes/3
-Accept: application/json
-Authorization: {{auth}}
-
 ### Create
 POST {{api-url}}/notes/
 Accept: application/json
 Content-Type: application/json
-Authorization: {{auth}}
+Authorization: {{user-auth}}
 
 {
   "title": "New note",
   "text": "Some text",
-  "notebookId": "1"
+  "notebookId": "4"
 }
 
 ### Update by id
-PUT {{api-url}}/notes/3
+PUT {{api-url}}/notes/5
 Accept: application/json
 Content-Type: application/json
-Authorization: {{auth}}
+Authorization: {{user-auth}}
 
 {
   "title": "Renamed note",
   "text": "Another text",
-  "notebookId": "1"
+  "notebookId": "4"
 }
 
 ### Delete by id
-DELETE {{api-url}}/notes/4
+DELETE {{api-url}}/notes/5
 Accept: application/json
 Content-Type: application/json
-Authorization: {{auth}}
+Authorization: {{user-auth}}
 
 ###

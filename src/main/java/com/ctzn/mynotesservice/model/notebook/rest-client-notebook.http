@@ -3,8 +3,8 @@ GET {{api-url}}/notebooks/
 Accept: application/json
 Authorization: {{user-auth}}
 
-### Get by id
-GET {{api-url}}/notebooks/3
+### Get all notes from notebook
+GET {{api-url}}/notebooks/4/notes
 Accept: application/json
 Authorization: {{user-auth}}
 
@@ -19,7 +19,7 @@ Authorization: {{user-auth}}
 }
 
 ### Update by id
-PUT {{api-url}}/notebooks/3
+PUT {{api-url}}/notebooks/4
 Accept: application/json
 Content-Type: application/json
 Authorization: {{user-auth}}
@@ -29,7 +29,7 @@ Authorization: {{user-auth}}
 }
 
 ### Delete by id
-DELETE {{api-url}}/notebooks/3
+DELETE {{api-url}}/notebooks/4
 Accept: application/json
 Content-Type: application/json
 Authorization: {{user-auth}}
