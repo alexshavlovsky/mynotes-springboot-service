@@ -1,5 +1,5 @@
 ### Get all
-GET {{api-url}}/notebooks/
+GET {{api-url}}/notebooks
 Accept: application/json
 Authorization: {{user-auth}}
 
@@ -9,7 +9,7 @@ Accept: application/json
 Authorization: {{user-auth}}
 
 ### Create
-POST {{api-url}}/notebooks/
+POST {{api-url}}/notebooks
 Accept: application/json
 Content-Type: application/json
 Authorization: {{user-auth}}

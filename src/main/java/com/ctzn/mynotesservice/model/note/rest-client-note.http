@@ -1,5 +1,5 @@
 ### Create
-POST {{api-url}}/notes/
+POST {{api-url}}/notes
 Accept: application/json
 Content-Type: application/json
 Authorization: {{user-auth}}

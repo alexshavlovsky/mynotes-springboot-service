@@ -1,5 +1,5 @@
 ### Create
-POST {{api-url}}/users/
+POST {{api-url}}/users
 Accept: application/json
 Content-Type: application/json
 
@@ -21,12 +21,12 @@ Accept: application/json
 Authorization: {{user-auth}}
 
 ### Get all users as ADMIN
-GET {{api-url}}/users/
+GET {{api-url}}/users
 Accept: application/json
 Authorization: {{admin-auth}}
 
 ### Get all users as USER - should be forbidden
-GET {{api-url}}/users/
+GET {{api-url}}/users
 Accept: application/json
 Authorization: {{user-auth}}
 

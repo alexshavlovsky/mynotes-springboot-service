@@ -1,9 +1,9 @@
 ### Test private without the auth header
-GET {{api-url}}/notebooks/
+GET {{api-url}}/notebooks
 Accept: application/json
 
 ### Test private
-GET {{api-url}}/notebooks/
+GET {{api-url}}/notebooks
 Accept: application/json
 Authorization: {{user-auth}}
 
@@ -13,12 +13,12 @@ Accept: application/json
 Authorization: {{user-auth}}
 
 ### Get all users
-GET {{api-url}}/users/
+GET {{api-url}}/users
 Accept: application/json
 Authorization: {{admin-auth}}
 
 ### USER is attempting to access an endpoint which requires ADMIN credentials
-GET {{api-url}}/users/
+GET {{api-url}}/users
 Accept: application/json
 Authorization: {{user-auth}}
 

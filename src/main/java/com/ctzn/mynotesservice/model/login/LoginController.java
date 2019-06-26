@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RequestMapping(LoginController.BASE_PATH)
 public class LoginController {
 
-    public static final String BASE_PATH = "/api/login/";
+    public static final String BASE_PATH = "/api/login";
 
     private static final ApiException BAD_CREDENTIALS = ApiException.getBadCredentials("Invalid email/password supplied");
 

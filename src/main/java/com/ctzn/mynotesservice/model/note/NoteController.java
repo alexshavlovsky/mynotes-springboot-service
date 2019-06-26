@@ -17,7 +17,7 @@ import java.security.Principal;
 @RequestMapping(NoteController.BASE_PATH)
 public class NoteController {
 
-    public static final String BASE_PATH = "/api/notes/";
+    public static final String BASE_PATH = "/api/notes";
 
     private PersistenceService persistenceService;
     private DomainMapper domainMapper;
