@@ -15,6 +15,12 @@ public class AsyncConfig implements AsyncConfigurer {
     // this executor is used for async email sending
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
+        // this prevents the core thread from waiting forever
+        // and enables to properly shut down the application by the ShutdownManager
+        executor.setAllowCoreThreadTimeOut(true);
+        executor.setKeepAliveSeconds(10);
+
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(10);
         executor.setQueueCapacity(10);
