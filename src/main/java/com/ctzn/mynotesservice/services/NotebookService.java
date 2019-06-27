@@ -1,30 +1,24 @@
-package com.ctzn.mynotesservice.repositories;
+package com.ctzn.mynotesservice.services;
 
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.note.NoteEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.user.UserEntity;
+import com.ctzn.mynotesservice.repositories.NoteRepository;
+import com.ctzn.mynotesservice.repositories.NotebookRepository;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service
-public class PersistenceService {
+public class NotebookService {
 
-    private UserRepository userRepository;
     private NotebookRepository notebookRepository;
     private NoteRepository noteRepository;
 
-    public PersistenceService(UserRepository userRepository, NotebookRepository notebookRepository, NoteRepository noteRepository) {
-        this.userRepository = userRepository;
+    public NotebookService(NotebookRepository notebookRepository, NoteRepository noteRepository) {
         this.notebookRepository = notebookRepository;
         this.noteRepository = noteRepository;
-    }
-
-    public UserEntity getUser(Principal principal) throws ApiException {
-        return userRepository.findByUserId(principal.getName())
-                .orElseThrow(ApiException::getCredentialsNotExist);
     }
 
     public List<NotebookEntity> getAllNotebooks(UserEntity user) {

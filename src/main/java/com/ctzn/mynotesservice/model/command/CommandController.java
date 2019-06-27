@@ -22,7 +22,7 @@ public class CommandController {
         this.commandFactory = commandFactory;
     }
 
-    @PostMapping()
+    @PostMapping() // ADMIN only
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ApiMessage executeCommand(@RequestBody CommandRequest commandRequest) throws ApiException {
         String keyWord = commandRequest.getCommand();

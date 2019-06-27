@@ -9,7 +9,8 @@ import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookRequest;
 import com.ctzn.mynotesservice.model.notebook.NotebookResponse;
 import com.ctzn.mynotesservice.repositories.NotebookRepository;
-import com.ctzn.mynotesservice.repositories.PersistenceService;
+import com.ctzn.mynotesservice.services.NotebookService;
+import com.ctzn.mynotesservice.services.UserService;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -35,7 +36,9 @@ public class NotebookControllerTest {
     private static final String BASE_PATH = NotebookController.BASE_PATH;
 
     @Mock // TODO: test interactions with persistenceService and remove repository dependencies
-    private PersistenceService persistenceService;
+    private UserService userService;
+    @Mock
+    private NotebookService notebookService;
 
     private NotebookRepository notebookRepository;
 
@@ -45,7 +48,7 @@ public class NotebookControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new NotebookController(persistenceService, new DomainMapper()))
+                .standaloneSetup(new NotebookController(userService, notebookService, new DomainMapper()))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);

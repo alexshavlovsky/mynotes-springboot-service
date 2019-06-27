@@ -1,6 +1,5 @@
-package com.ctzn.mynotesservice.model.login;
+package com.ctzn.mynotesservice.model.user;
 
-import com.ctzn.mynotesservice.model.user.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
+public class UserLoginResponse {
     private String token;
     private UserResponse user;
 }

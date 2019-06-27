@@ -10,6 +10,16 @@ Content-Type: application/json
   "password": "qwerty"
 }
 
+### Login
+POST {{api-url}}/users/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "luke@example.com",
+  "password": "qwerty"
+}
+
 ### Get current user as ADMIN
 GET {{api-url}}/users/current
 Accept: application/json

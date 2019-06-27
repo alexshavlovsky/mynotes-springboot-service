@@ -1,7 +1,6 @@
 package com.ctzn.mynotesservice.configuration;
 
 import com.ctzn.mynotesservice.model.command.CommandController;
-import com.ctzn.mynotesservice.model.login.LoginController;
 import com.ctzn.mynotesservice.model.user.UserController;
 import com.ctzn.mynotesservice.security.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
@@ -38,10 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/h2-console/*").permitAll()
-                .antMatchers("/*").permitAll()
-                .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll()
-                .antMatchers(HttpMethod.POST, LoginController.BASE_PATH).permitAll()
+//                .antMatchers("/h2-console/*").permitAll()
+                .antMatchers("/*").permitAll() // frontend app
+                .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll() // register
+                .antMatchers(HttpMethod.POST, UserController.LOGIN_PATH).permitAll() // login
                 .antMatchers(HttpMethod.POST, CommandController.BASE_PATH).hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, UserController.BASE_PATH).hasRole("ADMIN")
                 .anyRequest().authenticated();

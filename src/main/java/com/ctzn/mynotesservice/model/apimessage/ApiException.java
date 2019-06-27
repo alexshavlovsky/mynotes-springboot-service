@@ -14,16 +14,18 @@ public class ApiException extends Exception {
         this.httpStatus = httpStatus;
     }
 
-    public static ApiException getBadRequest(String message) {
-        return new ApiException(message, HttpStatus.BAD_REQUEST);
-    }
+    public static final ApiException INVALID_EMAIL_PASSWORD = new ApiException("Invalid email/password supplied", HttpStatus.NOT_FOUND);
 
-    public static ApiException getBadCredentials(String message) {
-        return new ApiException(message, HttpStatus.NOT_FOUND);
+    public static ApiException getAlreadyInUse(String className, String entityName) {
+        return new ApiException(className + " '" + entityName + "' already taken", HttpStatus.CONFLICT);
     }
 
     public static ApiException getCredentialsNotExist() {
         return new ApiException("Credentials not exist", HttpStatus.FORBIDDEN);
+    }
+
+    public static ApiException getBadRequest(String message) {
+        return new ApiException(message, HttpStatus.BAD_REQUEST);
     }
 
     public static ApiException getNotFoundById(String className, long entityId) {
@@ -32,10 +34,6 @@ public class ApiException extends Exception {
 
     public static ApiException getNotFoundByName(String className, String entityName) {
         return new ApiException(className + " '" + entityName + "' not found", HttpStatus.NOT_FOUND);
-    }
-
-    public static ApiException getAlreadyInUse(String className, String entityName) {
-        return new ApiException(className + " '" + entityName + "' already taken", HttpStatus.CONFLICT);
     }
 
 }

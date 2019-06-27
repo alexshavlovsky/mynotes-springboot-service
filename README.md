@@ -75,14 +75,9 @@ User endpoint:
 Method  |URI            |Operation
 ---     |---            |---
 POST    |/users         |create a user
-GET     |/users         |read all (ADMIN only)
+POST    |/users/login   |create a token
 GET     |/users/current |read the current
-
-User login endpoint:
-                       
-Method  |URI            |Operation
----     |---            |---
-POST    |/login         |create a token
+GET     |/users         |read all (ADMIN only)
 
 Feedback Email queue endpoint:
                        
