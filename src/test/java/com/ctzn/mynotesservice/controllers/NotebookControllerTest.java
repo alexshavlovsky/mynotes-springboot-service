@@ -4,14 +4,19 @@ import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
+import com.ctzn.mynotesservice.model.note.NoteEntity;
+import com.ctzn.mynotesservice.model.note.NoteResponse;
 import com.ctzn.mynotesservice.model.notebook.NotebookController;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookRequest;
 import com.ctzn.mynotesservice.model.notebook.NotebookResponse;
-import com.ctzn.mynotesservice.repositories.NotebookRepository;
+import com.ctzn.mynotesservice.model.user.UserEntity;
 import com.ctzn.mynotesservice.services.NotebookService;
 import com.ctzn.mynotesservice.services.UserService;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -21,26 +26,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
 import static com.ctzn.mynotesservice.controllers.RestTestUtil.*;
-import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getEmptyNotebook;
-import static com.ctzn.mynotesservice.controllers.StaticTestProvider.getTwoNotebooksList;
+import static com.ctzn.mynotesservice.controllers.StaticTestProvider.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Ignore // TODO: repair these tests
 @RunWith(MockitoJUnitRunner.class)
 public class NotebookControllerTest {
 
     private static final String BASE_PATH = NotebookController.BASE_PATH;
 
-    @Mock // TODO: test interactions with persistenceService and remove repository dependencies
+    @Mock
     private UserService userService;
+
     @Mock
     private NotebookService notebookService;
-
-    private NotebookRepository notebookRepository;
 
     private MockMvc mockMvc;
 
@@ -56,130 +58,113 @@ public class NotebookControllerTest {
 
     @After
     public void checkRepository() {
-        verifyNoMoreInteractions(notebookRepository);
+        verifyNoMoreInteractions(userService, notebookService);
     }
 
     @Test
     public void shouldReturnAllNotebooks() throws Exception {
-        when(notebookRepository.findAll()).thenReturn(getTwoNotebooksList());
+        UserEntity user = getFixedIdUser();
+        List<NotebookEntity> notebooks = getTwoNotebooksList();
 
-        mockGetRequest(mockMvc, BASE_PATH, null, status().isOk(),
+        when(userService.getUser(any())).thenReturn(user);
+        when(notebookService.getAllNotebooks(user)).thenReturn(notebooks);
+
+        mockGetRequest(mockMvc, BASE_PATH, status().isOk(),
                 Arrays.asList(
                         new NotebookResponse(1L, "Notebook 1", 2),
                         new NotebookResponse(2L, "Notebook 2", 0)
                 )
         );
 
-        verify(notebookRepository, times(1)).findAll();
+        verify(userService, times(1)).getUser(any());
+        verify(notebookService, times(1)).getAllNotebooks(user);
     }
 
     @Test
-    public void shouldReturnNotebookById() throws Exception {
+    public void shouldReturnNotesByNotebook() throws Exception {
+        UserEntity user = getFixedIdUser();
+        long nbId = 44L;
+        NotebookEntity notebook = getEmptyNotebook(nbId, "Notebook");
+        List<NoteEntity> notes = StaticTestProvider.getTwoNotesList(notebook);
 
-        NotebookEntity notebook = getTwoNotebooksList().get(0);
-        long id = notebook.getId();
+        when(userService.getUser(any())).thenReturn(user);
+        when(notebookService.getNotebook(nbId, user)).thenReturn(notebook);
+        when(notebookService.getNotesFromNotebook(notebook)).thenReturn(notes);
 
-        when(notebookRepository.findById(id)).thenReturn(Optional.of(notebook));
-
-        mockGetRequest(mockMvc, BASE_PATH, id, status().isOk(),
-                new NotebookResponse(notebook.getId(), notebook.getName(), notebook.getSize())
+        mockGetRequest(mockMvc, BASE_PATH + '/' + nbId + "/notes", status().isOk(),
+                Arrays.asList(
+                        new NoteResponse(3L, "Note 1.1", "Some text 1", nbId, TimeSource.now()),
+                        new NoteResponse(4L, "Note 1.2", "Some text 2", nbId, TimeSource.now())
+                )
         );
 
-        verify(notebookRepository, times(1)).findById(id);
-    }
-
-    @Test
-    public void shouldReturnNotFoundWhileFindNotebookById() throws Exception {
-        long id = 76L;
-
-        when(notebookRepository.findById(id)).thenReturn(Optional.empty());
-
-        mockGetRequest(mockMvc, BASE_PATH, id, status().isNotFound(),
-                new ApiMessage("Notebook with id=" + id + " not found")
-        );
-
-        verify(notebookRepository, times(1)).findById(id);
+        verify(userService, times(1)).getUser(any());
+        verify(notebookService, times(1)).getNotebook(nbId, user);
+        verify(notebookService, times(1)).getNotesFromNotebook(notebook);
     }
 
     @Test
     public void shouldSaveNotebook() throws Exception {
-        long id = 5L;
+        UserEntity user = getFixedIdUser();
+        long id = 54L;
         String name = "New notebook";
         NotebookRequest notebookRequest = new NotebookRequest(name);
         NotebookEntity notebook = getEmptyNotebook(id, name);
         NotebookResponse notebookResponse = new NotebookResponse(id, name, 0);
 
-        when(notebookRepository.save(any())).thenReturn(notebook);
+        when(userService.getUser(any())).thenReturn(user);
+        when(notebookService.saveNotebook(any())).thenReturn(notebook);
 
         mockPostRequest(mockMvc, BASE_PATH, notebookRequest, status().isCreated(), notebookResponse);
 
+        verify(userService, times(1)).getUser(any());
         ArgumentCaptor<NotebookEntity> notebookArgumentCaptor = ArgumentCaptor.forClass(NotebookEntity.class);
-        verify(notebookRepository, times(1)).save(notebookArgumentCaptor.capture());
+        verify(notebookService, times(1)).saveNotebook(notebookArgumentCaptor.capture());
         Assert.assertNull(notebookArgumentCaptor.getValue().getId());
         Assert.assertEquals(name, notebookArgumentCaptor.getValue().getName());
+        Assert.assertEquals(user, notebookArgumentCaptor.getValue().getUser());
     }
 
     @Test
     public void shouldUpdateNotebookById() throws Exception {
-        Long id = 763L;
+        UserEntity user = getFixedIdUser();
+        long id = 64L;
         NotebookEntity oldNotebook = getEmptyNotebook(id, "Old name");
         String newName = "New name";
         NotebookEntity newNotebook = getEmptyNotebook(id, newName);
         NotebookRequest notebookRequest = new NotebookRequest(newName);
         NotebookResponse notebookResponse = new NotebookResponse(id, newName, 0);
 
-        when(notebookRepository.findById(id)).thenReturn(Optional.of(oldNotebook));
-        when(notebookRepository.save(any())).thenReturn(newNotebook);
+        when(userService.getUser(any())).thenReturn(user);
+        when(notebookService.getNotebook(id, user)).thenReturn(oldNotebook);
+        when(notebookService.saveNotebook(any())).thenReturn(newNotebook);
 
-        mockPutRequest(mockMvc, BASE_PATH, id, notebookRequest, status().isOk(), notebookResponse);
+        mockPutRequest(mockMvc, BASE_PATH + '/' + id, notebookRequest, status().isOk(), notebookResponse);
 
+        verify(userService, times(1)).getUser(any());
         ArgumentCaptor<NotebookEntity> captor = ArgumentCaptor.forClass(NotebookEntity.class);
-        verify(notebookRepository, times(1)).findById(id);
-        verify(notebookRepository, times(1)).save(captor.capture());
-        Assert.assertEquals(id, captor.getValue().getId());
+        verify(notebookService, times(1)).getNotebook(id, user);
+        verify(notebookService, times(1)).saveNotebook(captor.capture());
+        Assert.assertEquals(Long.valueOf(id), captor.getValue().getId());
         Assert.assertEquals(newName, captor.getValue().getName());
         Assert.assertEquals(Integer.valueOf(0), captor.getValue().getSize());
-    }
-
-    @Test
-    public void shouldReturnNotFoundWhileUpdateNotebookById() throws Exception {
-        Long id = 345L;
-        NotebookRequest notebookRequest = new NotebookRequest("New name");
-
-        when(notebookRepository.findById(id)).thenReturn(Optional.empty());
-
-        mockPutRequest(mockMvc, BASE_PATH, id, notebookRequest, status().isNotFound(),
-                new ApiMessage("Notebook with id=" + id + " not found")
-        );
-
-        verify(notebookRepository, times(1)).findById(id);
+        Assert.assertEquals(user, captor.getValue().getUser());
     }
 
     @Test
     public void shouldDeleteNotebookById() throws Exception {
-        final Long id = 1L;
+        UserEntity user = getFixedIdUser();
+        long id = 24L;
+        NotebookEntity notebook = getEmptyNotebook(id, "Notebook to delete");
 
-        when(notebookRepository.existsById(id)).thenReturn(true);
+        when(userService.getUser(any())).thenReturn(user);
+        when(notebookService.getNotebook(id, user)).thenReturn(notebook);
 
-        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isOk(),
-                new ApiMessage("Notebook deleted")
-        );
+        mockDeleteRequest(mockMvc, BASE_PATH + '/' + id, status().isOk(), new ApiMessage("Notebook deleted"));
 
-        verify(notebookRepository, times(1)).existsById(id);
-        verify(notebookRepository, times(1)).deleteById(id);
-    }
-
-    @Test
-    public void shouldReturnNotFoundWhileDeleteNotebookById() throws Exception {
-        final Long id = 1L;
-
-        when(notebookRepository.existsById(id)).thenReturn(false);
-
-        mockDeleteRequest(mockMvc, BASE_PATH, id, status().isNotFound(),
-                new ApiMessage("Notebook with id=" + id + " not found")
-        );
-
-        verify(notebookRepository, times(1)).existsById(id);
+        verify(userService, times(1)).getUser(any());
+        verify(notebookService, times(1)).getNotebook(id, user);
+        verify(notebookService, times(1)).deleteNotebook(notebook);
     }
 
 }

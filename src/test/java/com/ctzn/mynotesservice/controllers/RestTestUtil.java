@@ -15,25 +15,24 @@ class RestTestUtil {
         throw new AssertionError();
     }
 
-    static void mockGetRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status, Object expected) throws Exception {
-        perform(mockMvc, get(joinPath(path, id)), status, expected);
+    static void mockGetRequest(MockMvc mockMvc, String path, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, get(path), status, expected);
     }
 
-    static void mockGetParamRequest(MockMvc mockMvc, String path, Long id, String paramName, String paramValue, ResultMatcher status, Object expected) throws Exception {
-        perform(mockMvc, get(joinPath(path, id)).param(paramName, paramValue), status, expected);
+    static void mockGetParamRequest(MockMvc mockMvc, String path, String paramName, String paramValue, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, get(path).param(paramName, paramValue), status, expected);
     }
-
 
     static void mockPostRequest(MockMvc mockMvc, String path, Object request, ResultMatcher status, Object expected) throws Exception {
         perform(mockMvc, post(path).content(asJsonString(request)), status, expected);
     }
 
-    static void mockPutRequest(MockMvc mockMvc, String path, Long id, Object request, ResultMatcher status, Object expected) throws Exception {
-        perform(mockMvc, put(joinPath(path, id)).content(asJsonString(request)), status, expected);
+    static void mockPutRequest(MockMvc mockMvc, String path, Object request, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, put(path).content(asJsonString(request)), status, expected);
     }
 
-    static void mockDeleteRequest(MockMvc mockMvc, String path, Long id, ResultMatcher status, Object expected) throws Exception {
-        perform(mockMvc, delete(joinPath(path, id)), status, expected);
+    static void mockDeleteRequest(MockMvc mockMvc, String path, ResultMatcher status, Object expected) throws Exception {
+        perform(mockMvc, delete(path), status, expected);
     }
 
     private static String asJsonString(final Object obj) {
@@ -42,10 +41,6 @@ class RestTestUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static String joinPath(String path, Long id) {
-        return id == null ? path : String.join("/", path, id.toString());
     }
 
     private static void perform(MockMvc mockMvc, MockHttpServletRequestBuilder requestBuilder, ResultMatcher status, Object expected) throws Exception {
