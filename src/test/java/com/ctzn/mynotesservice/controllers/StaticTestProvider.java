@@ -24,6 +24,7 @@ class StaticTestProvider {
     static NoteEntity getNote(long id, String title, String text, NotebookEntity notebook) {
         NoteEntity note = new NoteEntity(title, text, notebook);
         note.setId(id);
+        notebook.getNotes().add(note);
         return note;
     }
 
@@ -42,7 +43,7 @@ class StaticTestProvider {
     static List<NotebookEntity> getTwoNotebooksList() {
         NotebookEntity notebook1 = getEmptyNotebook(1L, "Notebook 1");
         NotebookEntity notebook2 = getEmptyNotebook(2L, "Notebook 2");
-        notebook1.getNotes().addAll(getTwoNotesList(notebook1));
+        getTwoNotesList(notebook1);
         return Arrays.asList(notebook1, notebook2);
     }
 }
