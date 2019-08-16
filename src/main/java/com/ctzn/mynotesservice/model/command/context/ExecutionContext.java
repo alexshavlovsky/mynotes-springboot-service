@@ -1,4 +1,4 @@
-package com.ctzn.mynotesservice.model.command.factory;
+package com.ctzn.mynotesservice.model.command.context;
 
 import com.ctzn.mynotesservice.model.command.ShutdownManager;
 import com.ctzn.mynotesservice.repositories.DbSeeder;
@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class CommandFactory {
+public class ExecutionContext {
     private DbSeeder dbSeeder;
     private ShutdownManager shutdownManager;
 
-    public CommandFactory(DbSeeder dbSeeder, ShutdownManager shutdownManager) {
+    public ExecutionContext(DbSeeder dbSeeder, ShutdownManager shutdownManager) {
         this.dbSeeder = dbSeeder;
         this.shutdownManager = shutdownManager;
     }
@@ -30,8 +30,11 @@ public class CommandFactory {
         return commandsMap.containsKey(keyWord);
     }
 
-    public Command getCommandByKeyWord(String keyWord) {
-        return commandsMap.get(keyWord);
+    public String executeCommandByKeyWord(String keyWord) {
+        Command command = commandsMap.get(keyWord);
+        command.apply();
+        return command.getDebugMessage();
     }
+
 
 }
