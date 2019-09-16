@@ -37,7 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-//                .antMatchers("/h2-console/*").permitAll()
+                // TODO: check if h2-console and swagger are disabled in prod
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/swagger-resources/**", "/webjars/**", "/v2/api-docs").permitAll()
                 .antMatchers("/*").permitAll() // frontend app
                 .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll() // register
                 .antMatchers(HttpMethod.POST, UserController.LOGIN_PATH).permitAll() // login
