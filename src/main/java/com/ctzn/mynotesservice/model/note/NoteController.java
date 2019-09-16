@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -28,6 +29,13 @@ public class NoteController {
         this.userService = userService;
         this.notebookService = notebookService;
         this.domainMapper = domainMapper;
+    }
+
+    // TODO: test this method
+    @GetMapping()
+    public List<NoteResponse> getAllNotes(Principal principal) throws ApiException {
+        UserEntity user = userService.getUser(principal);
+        return domainMapper.mapAll(notebookService.getAllNotes(user), NoteResponse.class);
     }
 
     @PostMapping() // create only

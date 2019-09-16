@@ -21,6 +21,11 @@ public class NotebookService {
         this.noteRepository = noteRepository;
     }
 
+    // TODO: test this method
+    public List<NoteEntity> getAllNotes(UserEntity user) {
+        return noteRepository.findAllByUserId(user.getId());
+    }
+
     public List<NotebookEntity> getAllNotebooks(UserEntity user) {
         return notebookRepository.findAllByUser(user);
     }

@@ -96,6 +96,7 @@ Note resource endpoints:
 Method  |URI                   |Operation
 ---     |---                   |---
 GET     |/notebooks/{id}/notes |read by notebook id
+GET     |/notes                |read all
 POST    |/notes                |create
 PUT     |/notes/{id}           |update
 DELETE  |/notes/{id}           |delete
