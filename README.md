@@ -1,8 +1,12 @@
 # MyNotes SpringBoot Service
 
-Basic SpringBoot database service with REST API.
+Basic SpringBoot CRUD service with REST API.
 
-Frontend client for this project: [MyNotes Angular Client](https://github.com/alexshavlovsky/mynotes-ng-client.git).
+Frontend clients for this project:
+<br>
+[Angular Bootstrap REST Client](https://github.com/alexshavlovsky/mynotes-ng-client.git).
+<br>
+[Angular Material NgRx  REST Client](https://github.com/alexshavlovsky/mynotes-material-client.git).
 
 ## Embedded frontend client
 
@@ -30,7 +34,7 @@ git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
 cd mynotes-springboot-service
 mvn package
 cd target
-java -jar mynotes-service-v3.0.jar
+java -jar mynotes-service-v3.1-SNAPSHOT.jar
 firefox https://localhost:8443
 ```
 
@@ -38,7 +42,7 @@ In Windows create a .cmd file and execute it from any folder:
 ```
 git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
 call mvn package -f mynotes-springboot-service\pom.xml --log-file maven.log
-start cmd.exe /c java -jar .\mynotes-springboot-service\target\mynotes-service-v3.0.jar
+start cmd.exe /c java -jar .\mynotes-springboot-service\target\mynotes-service-v3.1-SNAPSHOT.jar
 timeout 15
 start firefox https://localhost:8443
 ```
