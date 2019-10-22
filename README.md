@@ -69,6 +69,7 @@ REST data mapping  | Jackson, Bean Validation API, [ModelMapper](https://github.
 Code reducer       | [ProjectLombok](https://github.com/rzwitserloot/lombok)
 Testing            | Junit, Mockito, MockMvc, [GreenMail](https://github.com/greenmail-mail-test/greenmail)
 REST Documentation | [SpringFox Swagger2](https://github.com/springfox/springfox/releases)
+MS Excel export    | [Apache POI](http://poi.apache.org/)
 
 ## API specification
 
@@ -101,6 +102,7 @@ Method  |URI                   |Operation
 ---     |---                   |---
 GET     |/notebooks/{id}/notes |read by notebook id
 GET     |/notes                |read all
+GET     |/notes/export/xls     |export as an Excel 2003 .xls file
 POST    |/notes                |create
 PUT     |/notes/{id}           |update
 DELETE  |/notes/{id}           |delete

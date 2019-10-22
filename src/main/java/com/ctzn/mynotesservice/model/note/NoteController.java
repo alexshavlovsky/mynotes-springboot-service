@@ -4,14 +4,20 @@ import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
+import com.ctzn.mynotesservice.model.note.excel.ExcelResourceFactory;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.user.UserEntity;
 import com.ctzn.mynotesservice.services.NotebookService;
 import com.ctzn.mynotesservice.services.UserService;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @RestController
@@ -24,11 +30,13 @@ public class NoteController {
     private UserService userService;
     private NotebookService notebookService;
     private DomainMapper domainMapper;
+    private ExcelResourceFactory excelResourceFactory;
 
-    public NoteController(UserService userService, NotebookService notebookService, DomainMapper domainMapper) {
+    public NoteController(UserService userService, NotebookService notebookService, DomainMapper domainMapper, ExcelResourceFactory excelResourceFactory) {
         this.userService = userService;
         this.notebookService = notebookService;
         this.domainMapper = domainMapper;
+        this.excelResourceFactory = excelResourceFactory;
     }
 
     // TODO: test this method
@@ -36,6 +44,20 @@ public class NoteController {
     public List<NoteResponse> getAllNotes(Principal principal) throws ApiException {
         UserEntity user = userService.getUser(principal);
         return domainMapper.mapAll(notebookService.getAllNotes(user), NoteResponse.class);
+    }
+
+    // TODO: test this method
+    @GetMapping(path = "export/xls", produces = "application/vnd.ms-excel")
+    public ResponseEntity getAllNotesExcel(Principal principal) throws ApiException, IOException {
+        UserEntity user = userService.getUser(principal);
+        InputStreamResource resource = excelResourceFactory.fromNotes(notebookService.getAllNotes(user));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Expose-Headers", "Content-Disposition");
+        headers.add("Content-Disposition", String.format("attachment; filename=mynotes-%s.xls",
+                new SimpleDateFormat("yyMMdd-hhmmss").format(TimeSource.now())));
+
+        return ResponseEntity.ok().headers(headers).body(resource);
     }
 
     @PostMapping() // create only

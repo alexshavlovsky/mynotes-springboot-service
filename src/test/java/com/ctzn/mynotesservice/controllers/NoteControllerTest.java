@@ -8,6 +8,7 @@ import com.ctzn.mynotesservice.model.note.NoteController;
 import com.ctzn.mynotesservice.model.note.NoteEntity;
 import com.ctzn.mynotesservice.model.note.NoteRequest;
 import com.ctzn.mynotesservice.model.note.NoteResponse;
+import com.ctzn.mynotesservice.model.note.excel.ExcelXlsResourceFactory;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.user.UserEntity;
 import com.ctzn.mynotesservice.services.NotebookService;
@@ -49,7 +50,7 @@ public class NoteControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new NoteController(userService, notebookService, new DomainMapper()))
+                .standaloneSetup(new NoteController(userService, notebookService, new DomainMapper(), new ExcelXlsResourceFactory()))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);

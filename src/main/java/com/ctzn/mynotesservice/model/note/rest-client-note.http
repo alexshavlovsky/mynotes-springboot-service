@@ -3,6 +3,11 @@ GET {{api-url}}/notes
 Accept: application/json
 Authorization: {{user-auth}}
 
+### Get all as an Excel file
+GET {{api-url}}/notes/export/xls
+Accept: application/vnd.ms-excel
+Authorization: {{user-auth}}
+
 ### Create
 POST {{api-url}}/notes
 Accept: application/json
