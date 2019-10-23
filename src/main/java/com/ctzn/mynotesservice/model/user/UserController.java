@@ -22,6 +22,7 @@ public class UserController {
     public static final String LOGIN_RES = "login";
     public static final String CURRENT_RES = "current";
     public static final String LOGIN_PATH = BASE_PATH + '/' + LOGIN_RES;
+    public static final String CURRENT_PATH = BASE_PATH + '/' + CURRENT_RES;
 
     private static final List<UserRole> DEFAULT_USER_ROLES = Collections.singletonList(UserRole.USER);
 
