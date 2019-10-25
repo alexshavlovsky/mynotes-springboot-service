@@ -4,9 +4,9 @@ import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.command.CommandController;
-import com.ctzn.mynotesservice.model.command.context.ExecutionContext;
 import com.ctzn.mynotesservice.model.command.CommandRequest;
 import com.ctzn.mynotesservice.model.command.ShutdownManager;
+import com.ctzn.mynotesservice.model.command.context.ExecutionContext;
 import com.ctzn.mynotesservice.repositories.DbSeeder;
 import org.junit.After;
 import org.junit.Before;
@@ -55,7 +55,7 @@ public class CommandControllerTest {
         CommandRequest command = new CommandRequest("shutdown");
         ApiMessage expected = new ApiMessage("Shutdown command accepted");
         mockPostRequest(mockMvc, BASE_PATH, command, status().isAccepted(), expected);
-        verify(shutdownManager, times(1)).initiateShutdown(0);
+        verify(shutdownManager, times(1)).initiateShutdownAsync(0);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class CommandControllerTest {
         CommandRequest command = new CommandRequest("fill database");
         ApiMessage expected = new ApiMessage("Fill database command accepted");
         mockPostRequest(mockMvc, BASE_PATH, command, status().isAccepted(), expected);
-        verify(dbSeeder, times(1)).run("force");
+        verify(dbSeeder, times(1)).seedAsync();
     }
 
     @Test

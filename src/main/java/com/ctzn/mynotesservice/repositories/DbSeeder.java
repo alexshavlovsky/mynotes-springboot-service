@@ -4,18 +4,17 @@ import com.ctzn.mynotesservice.model.note.NoteEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.user.UserEntity;
 import com.ctzn.mynotesservice.model.user.UserRole;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.*;
 
 @Component
-public class DbSeeder implements CommandLineRunner {
+@Slf4j
+public class DbSeeder {
 
-    private static final Logger logger = LoggerFactory.getLogger(DbSeeder.class);
     private static final String defaultUserPublicId = "36c773c8-00b0-4f94-ada1-da5b74b49de4";
 
     private NotebookRepository notebookRepository;
@@ -55,7 +54,7 @@ public class DbSeeder implements CommandLineRunner {
             admin2.setUserId("82e91d4a-5ba5-4854-b3d4-6977d58283ba");
             admin2.setRoles(Arrays.asList(UserRole.ADMIN, UserRole.USER));
             userRepository.save(admin2);
-            logger.debug("Default users created");
+            log.info("Default users created");
         }
         // generate random db for default user
         Optional<UserEntity> optionalUser = userRepository.findByUserId(defaultUserPublicId);
@@ -82,12 +81,21 @@ public class DbSeeder implements CommandLineRunner {
         }
     }
 
-    @Override
-    public void run(String... args) {
+    // method to call on the app startup
+    public void seed(boolean force) {
         // put random data to db if db is empty
-        if (notebookRepository.count() == 0 || (args.length == 1 && "force".equals(args[0]))) {
+        if (notebookRepository.count() == 0 || force) {
+            log.info("Fill database: begin");
             generateRandomDb(12, 3, 40);
-            logger.debug("Random database generated");
+            log.info("Fill database: end");
         }
     }
+
+    @Async
+    // method to call from a NIO thread
+    // async execution enables to immediately receive an acknowledgment message on the client side
+    public void seedAsync() {
+        seed(true);
+    }
+
 }

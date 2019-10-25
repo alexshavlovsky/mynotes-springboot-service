@@ -21,8 +21,8 @@ public class ExecutionContext {
 
     private Map<String, Command> createCommandsMap() {
         HashMap<String, Command> map = new HashMap<>();
-        map.put("shutdown", new Command("Shutdown command accepted", () -> shutdownManager.initiateShutdown(0)));
-        map.put("fill database", new Command("Fill database command accepted", () -> dbSeeder.run("force")));
+        map.put("shutdown", new Command("Shutdown command accepted", () -> shutdownManager.initiateShutdownAsync(0)));
+        map.put("fill database", new Command("Fill database command accepted", () -> dbSeeder.seedAsync()));
         return map;
     }
 
