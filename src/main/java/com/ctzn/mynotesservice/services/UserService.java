@@ -22,7 +22,9 @@ public class UserService {
     }
 
     public UserEntity getUser(Principal principal) throws ApiException {
-        return userRepository.findByUserId(principal.getName()).orElseThrow(ApiException::getAccessDenied);
+        UserEntity user = userRepository.findByUserId(principal.getName()).orElseThrow(ApiException::getAccessDenied);
+        if (!user.getEnabled()) throw ApiException.getAccessDenied();
+        return user;
     }
 
     public void assertEmailNotUsed(String email) throws ApiException {
@@ -30,7 +32,9 @@ public class UserService {
     }
 
     public UserEntity getUserByEmail(String email) throws ApiException {
-        return userRepository.findByEmail(email).orElseThrow(ApiException::getInvalidEmailPassword);
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(ApiException::getInvalidEmailPassword);
+        if (!user.getEnabled()) throw ApiException.getAccessDenied();
+        return user;
     }
 
     public void updateLastSeenOn(UserEntity user) {
