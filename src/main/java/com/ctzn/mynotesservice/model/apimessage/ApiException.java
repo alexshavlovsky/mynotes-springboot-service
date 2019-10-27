@@ -14,14 +14,19 @@ public class ApiException extends Exception {
         this.httpStatus = httpStatus;
     }
 
-    public static final ApiException INVALID_EMAIL_PASSWORD = new ApiException("Invalid email/password supplied", HttpStatus.NOT_FOUND);
+    private static final ApiException INVALID_EMAIL_PASSWORD = new ApiException("Invalid email/password supplied", HttpStatus.NOT_FOUND);
+    private static final ApiException ACCESS_DENIED = new ApiException("Access denied", HttpStatus.FORBIDDEN);
 
     public static ApiException getAlreadyInUse(String className, String entityName) {
         return new ApiException(className + " '" + entityName + "' already taken", HttpStatus.CONFLICT);
     }
 
-    public static ApiException getCredentialsNotExist() {
-        return new ApiException("Credentials not exist", HttpStatus.FORBIDDEN);
+    public static ApiException getInvalidEmailPassword() {
+        return INVALID_EMAIL_PASSWORD;
+    }
+
+    public static ApiException getAccessDenied() {
+        return ACCESS_DENIED;
     }
 
     public static ApiException getBadRequest(String message) {

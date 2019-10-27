@@ -1,10 +1,12 @@
 package com.ctzn.mynotesservice.model.user;
 
+import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -41,6 +43,18 @@ public class UserEntity {
 
     @Column(nullable = false)
     private Integer roles = 0;
+
+    @Column(nullable = false)
+    @NonNull
+    private Date createdOn = TimeSource.now();
+
+    @Column(nullable = false)
+    @NonNull
+    private Date lastSeenOn = TimeSource.now();
+
+    @Column(nullable = false)
+    @NonNull
+    private Boolean enabled = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<NotebookEntity> notebooks = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.ctzn.mynotesservice.services;
 
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
+import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.user.UserEntity;
 import com.ctzn.mynotesservice.repositories.UserRepository;
 import com.ctzn.mynotesservice.security.JwtTokenProvider;
@@ -21,7 +22,7 @@ public class UserService {
     }
 
     public UserEntity getUser(Principal principal) throws ApiException {
-        return userRepository.findByUserId(principal.getName()).orElseThrow(ApiException::getCredentialsNotExist);
+        return userRepository.findByUserId(principal.getName()).orElseThrow(ApiException::getAccessDenied);
     }
 
     public void assertEmailNotUsed(String email) throws ApiException {
@@ -29,7 +30,12 @@ public class UserService {
     }
 
     public UserEntity getUserByEmail(String email) throws ApiException {
-        return userRepository.findByEmail(email).orElseThrow(() -> ApiException.INVALID_EMAIL_PASSWORD);
+        return userRepository.findByEmail(email).orElseThrow(ApiException::getInvalidEmailPassword);
+    }
+
+    public void updateLastSeenOn(UserEntity user) {
+        user.setLastSeenOn(TimeSource.now());
+        saveUser(user);
     }
 
     public UserEntity saveUser(UserEntity user) {

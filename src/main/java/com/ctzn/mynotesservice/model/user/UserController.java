@@ -46,23 +46,29 @@ public class UserController {
 
     @PostMapping(LOGIN_RES)
     UserLoginResponse login(@Valid @RequestBody UserLoginRequest userLoginRequest, BindingResult result) throws ApiException {
-        if (result.hasErrors()) throw ApiException.INVALID_EMAIL_PASSWORD;
-        UserEntity userEntity = userService.getUserByEmail(userLoginRequest.getEmail());
-        if (!UserPasswordEncoder.matches(userLoginRequest.getPassword(), userEntity.getEncodedPassword()))
-            throw ApiException.INVALID_EMAIL_PASSWORD;
-        String token = userService.createToken(userEntity);
-        return new UserLoginResponse(token, domainMapper.map(userEntity, UserResponse.class));
+        if (result.hasErrors()) throw ApiException.getInvalidEmailPassword();
+        UserEntity user = userService.getUserByEmail(userLoginRequest.getEmail());
+        if (!user.getEnabled()) throw ApiException.getAccessDenied();
+        if (!UserPasswordEncoder.matches(userLoginRequest.getPassword(), user.getEncodedPassword()))
+            throw ApiException.getInvalidEmailPassword();
+        String token = userService.createToken(user);
+        UserLoginResponse response = new UserLoginResponse(token, domainMapper.map(user, UserResponse.class));
+        userService.updateLastSeenOn(user);
+        return response;
     }
 
     @GetMapping(CURRENT_RES)
     public UserResponse getCurrentUser(Principal principal) throws ApiException {
         UserEntity user = userService.getUser(principal);
-        return domainMapper.map(user, UserResponse.class);
+        if (!user.getEnabled()) throw ApiException.getAccessDenied();
+        UserResponse response = domainMapper.map(user, UserResponse.class);
+        userService.updateLastSeenOn(user);
+        return response;
     }
 
     @GetMapping() // ADMIN only
-    public List<UserResponse> getAllUsers() {
-        return domainMapper.mapAll(userService.getAllUsers(), UserResponse.class);
+    public List<UserAdminResponse> getAllUsers() {
+        return domainMapper.mapAll(userService.getAllUsers(), UserAdminResponse.class);
     }
 
 }
