@@ -48,9 +48,8 @@ public class UserEntity {
     @NonNull
     private Date createdOn = TimeSource.now();
 
-    @Column(nullable = false)
-    @NonNull
-    private Date lastSeenOn = TimeSource.now();
+    @Column
+    private Date lastSeenOn = null;
 
     @Column(nullable = false)
     @NonNull
