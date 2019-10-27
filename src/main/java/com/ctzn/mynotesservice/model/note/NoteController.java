@@ -47,7 +47,7 @@ public class NoteController {
     }
 
     // TODO: test this method
-    @GetMapping(path = "export/xls", produces = "application/vnd.ms-excel")
+    @GetMapping(path = "export/xls", produces = {"application/vnd.ms-excel", "application/json"})
     public ResponseEntity getAllNotesExcel(Principal principal) throws ApiException, IOException {
         UserEntity user = userService.getUser(principal);
         InputStreamResource resource = excelResourceFactory.fromNotes(notebookService.getAllNotes(user));
@@ -55,7 +55,7 @@ public class NoteController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Expose-Headers", "Content-Disposition");
         headers.add("Content-Disposition", String.format("attachment; filename=mynotes-%s.xls",
-                new SimpleDateFormat("yyMMdd-hhmmss").format(TimeSource.now())));
+                new SimpleDateFormat("yyMMdd-HHmmss").format(TimeSource.now())));
 
         return ResponseEntity.ok().headers(headers).body(resource);
     }

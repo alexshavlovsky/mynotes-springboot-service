@@ -5,7 +5,7 @@ Authorization: {{user-auth}}
 
 ### Get all as an Excel file
 GET {{api-url}}/notes/export/xls
-Accept: application/vnd.ms-excel
+Accept: application/vnd.ms-excel, application/json
 Authorization: {{user-auth}}
 
 ### Create
