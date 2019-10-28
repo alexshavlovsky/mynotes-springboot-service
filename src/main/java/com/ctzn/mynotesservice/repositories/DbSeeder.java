@@ -33,7 +33,7 @@ public class DbSeeder {
             // USER
             UserEntity user = new UserEntity("User", "", "user@example.com");
             user.setPassword("12345");
-            user.setRoles(Collections.singletonList(UserRole.USER));
+            user.setRolesFromList(Collections.singletonList(UserRole.USER));
             // set the fixed public user id instead of randomly generated
             // for easier debugging
             user.setUserId(defaultUserPublicId);
@@ -44,7 +44,7 @@ public class DbSeeder {
             // set the fixed public user id instead of randomly generated
             // for easier debugging
             admin.setUserId("82e91d4a-5ba5-4854-b3d4-6977d58283b9");
-            admin.setRoles(Collections.singletonList(UserRole.ADMIN));
+            admin.setRolesFromList(Collections.singletonList(UserRole.ADMIN));
             userRepository.save(admin);
             // MULTIPLE ROLES USER
             UserEntity admin2 = new UserEntity("Multiple roles user", "", "admin2@example.com");
@@ -52,7 +52,7 @@ public class DbSeeder {
             // set the fixed public user id instead of randomly generated
             // for easier debugging
             admin2.setUserId("82e91d4a-5ba5-4854-b3d4-6977d58283ba");
-            admin2.setRoles(Arrays.asList(UserRole.ADMIN, UserRole.USER));
+            admin2.setRolesFromList(Arrays.asList(UserRole.ADMIN, UserRole.USER));
             userRepository.save(admin2);
             log.info("Default users created");
         }

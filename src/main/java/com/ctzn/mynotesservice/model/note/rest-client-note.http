@@ -35,7 +35,6 @@ Authorization: {{user-auth}}
 ### Delete by id
 DELETE {{api-url}}/notes/5
 Accept: application/json
-Content-Type: application/json
 Authorization: {{user-auth}}
 
 ###

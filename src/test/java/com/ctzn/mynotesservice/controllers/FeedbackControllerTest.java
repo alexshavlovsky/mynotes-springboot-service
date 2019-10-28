@@ -1,11 +1,12 @@
 package com.ctzn.mynotesservice.controllers;
 
-import com.ctzn.mynotesservice.model.feedback.FeedbackSender;
 import com.ctzn.mynotesservice.model.apimessage.ApiExceptionHandler;
 import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.feedback.FeedbackController;
 import com.ctzn.mynotesservice.model.feedback.FeedbackRequest;
+import com.ctzn.mynotesservice.model.feedback.FeedbackSender;
+import com.ctzn.mynotesservice.services.UserService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,6 +29,9 @@ public class FeedbackControllerTest {
     private static final String BASE_PATH = FeedbackController.BASE_PATH;
 
     @Mock
+    private UserService userService;
+
+    @Mock
     FeedbackSender feedbackSender;
 
     private MockMvc mockMvc;
@@ -36,7 +40,7 @@ public class FeedbackControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new FeedbackController(feedbackSender))
+                .standaloneSetup(new FeedbackController(userService, feedbackSender))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);

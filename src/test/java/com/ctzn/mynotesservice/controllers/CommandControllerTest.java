@@ -8,6 +8,7 @@ import com.ctzn.mynotesservice.model.command.CommandRequest;
 import com.ctzn.mynotesservice.model.command.ShutdownManager;
 import com.ctzn.mynotesservice.model.command.context.ExecutionContext;
 import com.ctzn.mynotesservice.repositories.DbSeeder;
+import com.ctzn.mynotesservice.services.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,9 @@ public class CommandControllerTest {
     private static final String BASE_PATH = CommandController.BASE_PATH;
 
     @Mock
+    private UserService userService;
+
+    @Mock
     private DbSeeder dbSeeder;
 
     @Mock
@@ -39,7 +43,7 @@ public class CommandControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new CommandController(new ExecutionContext(dbSeeder, shutdownManager)))
+                .standaloneSetup(new CommandController(userService, new ExecutionContext(dbSeeder, shutdownManager)))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);

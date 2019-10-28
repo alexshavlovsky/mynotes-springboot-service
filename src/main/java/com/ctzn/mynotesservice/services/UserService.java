@@ -27,6 +27,12 @@ public class UserService {
         return user;
     }
 
+    public UserEntity getUserByPublicId(String userId) throws ApiException {
+        return userRepository.findByUserId(userId).orElseThrow(
+                () -> ApiException.getNotFoundByName("User with public id", userId)
+        );
+    }
+
     public void assertEmailNotUsed(String email) throws ApiException {
         if (userRepository.findByEmail(email).isPresent()) throw ApiException.getAlreadyInUse("Email address", email);
     }
@@ -44,6 +50,10 @@ public class UserService {
 
     public UserEntity saveUser(UserEntity user) {
         return userRepository.save(user);
+    }
+
+    public void deleteUser(UserEntity user) {
+        userRepository.delete(user);
     }
 
     public List<UserEntity> getAllUsers() {

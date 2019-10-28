@@ -49,6 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*").permitAll()
                 // admin endpoints
                 .antMatchers(HttpMethod.GET, UserController.BASE_PATH).hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, UserController.BASE_PATH + "/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, UserController.BASE_PATH + "/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, CommandController.BASE_PATH).hasRole("ADMIN")
                 // public authentication api
                 .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll()
@@ -63,6 +65,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
-
-
-

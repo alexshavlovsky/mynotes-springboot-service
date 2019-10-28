@@ -2,6 +2,7 @@ package com.ctzn.mynotesservice.model.user;
 
 import com.ctzn.mynotesservice.model.DomainMapper;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
+import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.BindingResultAdapter;
 import com.ctzn.mynotesservice.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class UserController {
         if (result.hasErrors()) throw ApiException.getBadRequest(BindingResultAdapter.adapt(result));
         userService.assertEmailNotUsed(userRequest.getEmail());
         UserEntity user = domainMapper.map(userRequest, UserEntity.class);
-        user.setRoles(DEFAULT_USER_ROLES);
+        user.setRolesFromList(DEFAULT_USER_ROLES);
         return domainMapper.map(userService.saveUser(user), UserResponse.class);
     }
 
@@ -65,8 +66,28 @@ public class UserController {
     }
 
     @GetMapping() // ADMIN only
-    public List<UserAdminResponse> getAllUsers() {
+    public List<UserAdminResponse> getAllUsers(Principal principal) throws ApiException {
+        userService.getUser(principal); // check if the admin account is not removed or blocked
         return domainMapper.mapAll(userService.getAllUsers(), UserAdminResponse.class);
+    }
+
+    //TODO: test this
+    @PutMapping("{id}") // ADMIN only
+    public UserAdminResponse updateUser(@RequestBody UserAdminRequest userRequest,
+                                        @PathVariable("id") String id, Principal principal) throws ApiException {
+        userService.getUser(principal); // check if the admin account is not removed or blocked
+        UserEntity user = userService.getUserByPublicId(id);
+        domainMapper.map(userRequest, user);
+        return domainMapper.map(userService.saveUser(user), UserAdminResponse.class);
+    }
+
+    //TODO: test this
+    @DeleteMapping("{id}") // ADMIN only
+    public ApiMessage deleteNote(@PathVariable("id") String id, Principal principal) throws ApiException {
+        userService.getUser(principal); // check if the admin account is not removed or blocked
+        UserEntity user = userService.getUserByPublicId(id);
+        userService.deleteUser(user);
+        return new ApiMessage("User deleted");
     }
 
 }

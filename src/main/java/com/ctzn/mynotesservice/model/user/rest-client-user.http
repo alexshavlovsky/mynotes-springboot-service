@@ -40,4 +40,20 @@ GET {{api-url}}/users
 Accept: application/json
 Authorization: {{user-auth}}
 
+### Delete user with public ID 36c773c8-00b0-4f94-ada1-da5b74b49de4 as ADMIN
+DELETE {{api-url}}/users/36c773c8-00b0-4f94-ada1-da5b74b49de4
+Accept: application/json
+Authorization: {{admin-auth}}
+
+### Update user with public ID 36c773c8-00b0-4f94-ada1-da5b74b49de4 as ADMIN
+PUT {{api-url}}/users/36c773c8-00b0-4f94-ada1-da5b74b49de4
+Accept: application/json
+Authorization: {{admin-auth}}
+Content-Type: application/json
+
+{
+  "roles": 2,
+  "enabled": true
+}
+
 ###

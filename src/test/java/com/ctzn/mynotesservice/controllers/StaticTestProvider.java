@@ -16,7 +16,7 @@ class StaticTestProvider {
     static UserEntity getFixedIdUser() {
         UserEntity user = new UserEntity("Fixed Id User", "Last Name", "fixed_id_user@example.com");
         user.setPassword("12345");
-        user.setRoles(Collections.singletonList(UserRole.USER));
+        user.setRolesFromList(Collections.singletonList(UserRole.USER));
         user.setUserId(fixedUserPublicId);
         return user;
     }

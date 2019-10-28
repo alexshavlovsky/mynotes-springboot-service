@@ -66,7 +66,7 @@ public class UserEntity {
         encodedPassword = UserPasswordEncoder.encode(rawPassword);
     }
 
-    public void setRoles(List<UserRole> roles) {
+    public void setRolesFromList(List<UserRole> roles) {
         this.roles = UserRole.rolesToMask(roles);
     }
 
