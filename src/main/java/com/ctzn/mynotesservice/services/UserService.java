@@ -3,12 +3,15 @@ package com.ctzn.mynotesservice.services;
 import com.ctzn.mynotesservice.model.apimessage.ApiException;
 import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.user.UserEntity;
+import com.ctzn.mynotesservice.model.user.UserRole;
 import com.ctzn.mynotesservice.repositories.UserRepository;
 import com.ctzn.mynotesservice.security.JwtTokenProvider;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
+
+import static com.ctzn.mynotesservice.model.user.UserRole.checkUserHasRole;
 
 @Service
 public class UserService {
@@ -21,9 +24,16 @@ public class UserService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public UserEntity getUser(Principal principal) throws ApiException {
-        UserEntity user = userRepository.findByUserId(principal.getName()).orElseThrow(ApiException::getAccessDenied);
+    public UserEntity getUser(Authentication auth) throws ApiException {
+        UserEntity user = userRepository.findByUserId(auth.getName()).orElseThrow(ApiException::getAccessDenied);
         if (!user.getEnabled()) throw ApiException.getAccessDenied();
+        if (!user.getRoles().equals(auth.getCredentials())) throw ApiException.getAccessDenied();
+        return user;
+    }
+
+    public UserEntity getUserAssertRole(Authentication auth, UserRole role) throws ApiException {
+        UserEntity user = getUser(auth);
+        if (!checkUserHasRole(user, role)) throw ApiException.getAccessDenied();
         return user;
     }
 

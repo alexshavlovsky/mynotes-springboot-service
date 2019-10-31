@@ -27,6 +27,10 @@ public enum UserRole {
         return roles.stream().mapToInt(r -> r.roleMask).sum();
     }
 
+    public static boolean checkUserHasRole(UserEntity user, UserRole role) {
+        return (role.roleMask & user.getRoles()) != 0;
+    }
+
     public static Collection<GrantedAuthority> maskToAuthorities(int mask) {
         return Collections.unmodifiableCollection(
                 Arrays.stream(UserRole.values()).filter(r -> (r.roleMask & mask) != 0)

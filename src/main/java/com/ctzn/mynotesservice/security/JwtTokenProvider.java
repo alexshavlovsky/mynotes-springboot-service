@@ -57,7 +57,7 @@ public class JwtTokenProvider {
             String subject = claims.getSubject();
             Integer mask = claims.get(JwtProperties.ROLES_CLAIM_KEY, Integer.class);
             if (subject == null || mask == null) return null;
-            return new UsernamePasswordAuthenticationToken(subject, null, maskToAuthorities(mask));
+            return new UsernamePasswordAuthenticationToken(subject, mask, maskToAuthorities(mask));
         } catch (Exception e) {
             return null;
         }

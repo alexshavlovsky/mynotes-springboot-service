@@ -6,11 +6,11 @@ import com.ctzn.mynotesservice.model.apimessage.ApiMessage;
 import com.ctzn.mynotesservice.model.apimessage.BindingResultAdapter;
 import com.ctzn.mynotesservice.services.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,33 +58,31 @@ public class UserController {
     }
 
     @GetMapping(CURRENT_RES)
-    public UserResponse getCurrentUser(Principal principal) throws ApiException {
-        UserEntity user = userService.getUser(principal);
+    public UserResponse getCurrentUser(Authentication auth) throws ApiException {
+        UserEntity user = userService.getUser(auth);
         UserResponse response = domainMapper.map(user, UserResponse.class);
         userService.updateLastSeenOn(user);
         return response;
     }
 
-    @GetMapping() // ADMIN only
-    public List<UserAdminResponse> getAllUsers(Principal principal) throws ApiException {
-        userService.getUser(principal); // check if the admin account is not removed or blocked
+    @GetMapping()
+    public List<UserAdminResponse> getAllUsers(Authentication auth) throws ApiException {
+        userService.getUserAssertRole(auth, UserRole.ADMIN);
         return domainMapper.mapAll(userService.getAllUsers(), UserAdminResponse.class);
     }
 
-    //TODO: test this
-    @PutMapping("{id}") // ADMIN only
+    @PutMapping("{id}")
     public UserAdminResponse updateUser(@RequestBody UserAdminRequest userRequest,
-                                        @PathVariable("id") String id, Principal principal) throws ApiException {
-        userService.getUser(principal); // check if the admin account is not removed or blocked
+                                        @PathVariable("id") String id, Authentication auth) throws ApiException {
+        userService.getUserAssertRole(auth, UserRole.ADMIN);
         UserEntity user = userService.getUserByPublicId(id);
         domainMapper.map(userRequest, user);
         return domainMapper.map(userService.saveUser(user), UserAdminResponse.class);
     }
 
-    //TODO: test this
-    @DeleteMapping("{id}") // ADMIN only
-    public ApiMessage deleteNote(@PathVariable("id") String id, Principal principal) throws ApiException {
-        userService.getUser(principal); // check if the admin account is not removed or blocked
+    @DeleteMapping("{id}")
+    public ApiMessage deleteUser(@PathVariable("id") String id, Authentication auth) throws ApiException {
+        userService.getUserAssertRole(auth, UserRole.ADMIN);
         UserEntity user = userService.getUserByPublicId(id);
         userService.deleteUser(user);
         return new ApiMessage("User deleted");
