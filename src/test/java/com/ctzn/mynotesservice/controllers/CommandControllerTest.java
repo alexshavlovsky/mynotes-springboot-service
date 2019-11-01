@@ -7,6 +7,7 @@ import com.ctzn.mynotesservice.model.command.CommandController;
 import com.ctzn.mynotesservice.model.command.CommandRequest;
 import com.ctzn.mynotesservice.model.command.ShutdownManager;
 import com.ctzn.mynotesservice.model.command.context.ExecutionContext;
+import com.ctzn.mynotesservice.model.user.UserRole;
 import com.ctzn.mynotesservice.repositories.DbSeeder;
 import com.ctzn.mynotesservice.services.UserService;
 import org.junit.After;
@@ -51,14 +52,18 @@ public class CommandControllerTest {
 
     @After
     public void checkMocks() {
-        verifyNoMoreInteractions(dbSeeder, shutdownManager);
+        verifyNoMoreInteractions(dbSeeder, shutdownManager, userService);
     }
 
     @Test
     public void shouldAcceptAndExecuteShutdownCommand() throws Exception {
         CommandRequest command = new CommandRequest("shutdown");
         ApiMessage expected = new ApiMessage("Shutdown command accepted");
+        when(userService.getUserAssertRole(any(), eq(UserRole.ADMIN))).thenReturn(null);
+
         mockPostRequest(mockMvc, BASE_PATH, command, status().isAccepted(), expected);
+
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.ADMIN));
         verify(shutdownManager, times(1)).initiateShutdownAsync(0);
     }
 
@@ -66,7 +71,11 @@ public class CommandControllerTest {
     public void shouldAcceptAndExecuteFillDatabaseCommand() throws Exception {
         CommandRequest command = new CommandRequest("fill database");
         ApiMessage expected = new ApiMessage("Fill database command accepted");
+        when(userService.getUserAssertRole(any(), eq(UserRole.ADMIN))).thenReturn(null);
+
         mockPostRequest(mockMvc, BASE_PATH, command, status().isAccepted(), expected);
+
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.ADMIN));
         verify(dbSeeder, times(1)).seedAsync();
     }
 
@@ -74,7 +83,11 @@ public class CommandControllerTest {
     public void shouldRejectUnknownCommand() throws Exception {
         CommandRequest command = new CommandRequest("smile");
         ApiMessage expected = new ApiMessage("Command 'smile' not found");
+        when(userService.getUserAssertRole(any(), eq(UserRole.ADMIN))).thenReturn(null);
+
         mockPostRequest(mockMvc, BASE_PATH, command, status().isNotFound(), expected);
+
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.ADMIN));
     }
 
 }

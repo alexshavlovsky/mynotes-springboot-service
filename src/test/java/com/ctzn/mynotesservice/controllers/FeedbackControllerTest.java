@@ -6,6 +6,7 @@ import com.ctzn.mynotesservice.model.apimessage.TimeSource;
 import com.ctzn.mynotesservice.model.feedback.FeedbackController;
 import com.ctzn.mynotesservice.model.feedback.FeedbackRequest;
 import com.ctzn.mynotesservice.model.feedback.FeedbackSender;
+import com.ctzn.mynotesservice.model.user.UserRole;
 import com.ctzn.mynotesservice.services.UserService;
 import org.junit.After;
 import org.junit.Assert;
@@ -48,7 +49,7 @@ public class FeedbackControllerTest {
 
     @After
     public void checkMocks() {
-        verifyNoMoreInteractions(feedbackSender);
+        verifyNoMoreInteractions(feedbackSender, userService);
     }
 
     @Test
@@ -66,10 +67,12 @@ public class FeedbackControllerTest {
         );
 
         ApiMessage expected = new ApiMessage("Feedback accepted");
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(null);
 
         mockPostRequest(mockMvc, BASE_PATH, feedback1, status().isAccepted(), expected);
         mockPostRequest(mockMvc, BASE_PATH, feedback2, status().isAccepted(), expected);
 
+        verify(userService, times(2)).getUserAssertRole(any(), eq(UserRole.USER));
         ArgumentCaptor<FeedbackRequest> captor = ArgumentCaptor.forClass(FeedbackRequest.class);
         verify(feedbackSender, times(2)).sendAsync(captor.capture());
         Assert.assertEquals(feedback1, captor.getAllValues().get(0));
@@ -78,6 +81,8 @@ public class FeedbackControllerTest {
 
     @Test
     public void shouldRejectInvalidFeedbacks() throws Exception {
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(null);
+
         // invalid mail address
         mockPostRequest(mockMvc, BASE_PATH,
                 new FeedbackRequest("user123_mail.com", "Alex", "Feedback text"),
@@ -92,6 +97,8 @@ public class FeedbackControllerTest {
         mockPostRequest(mockMvc, BASE_PATH,
                 new FeedbackRequest("user123@mail.com", "Alex", " "),
                 status().isBadRequest(), null);
+
+        verify(userService, times(3)).getUserAssertRole(any(), eq(UserRole.USER));
     }
 
 }

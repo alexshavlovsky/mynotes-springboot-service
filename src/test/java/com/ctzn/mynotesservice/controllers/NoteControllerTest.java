@@ -11,6 +11,7 @@ import com.ctzn.mynotesservice.model.note.NoteResponse;
 import com.ctzn.mynotesservice.model.note.excel.ExcelXlsResourceFactory;
 import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.user.UserEntity;
+import com.ctzn.mynotesservice.model.user.UserRole;
 import com.ctzn.mynotesservice.services.NotebookService;
 import com.ctzn.mynotesservice.services.UserService;
 import org.junit.After;
@@ -72,7 +73,7 @@ public class NoteControllerTest {
         NoteEntity note = StaticTestProvider.getNote(id, noteTitle, noteText, notebook);
         NoteRequest noteRequest = new NoteRequest(noteTitle, noteText, nbId);
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getNotebook(nbId, user)).thenReturn(notebook);
         when(notebookService.saveNote(any())).thenReturn(note);
 
@@ -80,7 +81,7 @@ public class NoteControllerTest {
                 new NoteResponse(id, noteTitle, noteText, nbId, TimeSource.now())
         );
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         verify(notebookService, times(1)).getNotebook(nbId, user);
         ArgumentCaptor<NoteEntity> noteArgumentCaptor = ArgumentCaptor.forClass(NoteEntity.class);
         verify(notebookService, times(1)).saveNote(noteArgumentCaptor.capture());
@@ -106,7 +107,7 @@ public class NoteControllerTest {
         NoteEntity updatedNote = StaticTestProvider.getNote(id, newTitle, newText, notebook);
         NoteRequest noteRequest = new NoteRequest(newTitle, newText, nbId);
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getNote(id, user)).thenReturn(repoNote);
         when(notebookService.saveNote(any())).thenReturn(updatedNote);
 
@@ -114,7 +115,7 @@ public class NoteControllerTest {
                 new NoteResponse(id, newTitle, newText, nbId, TimeSource.now())
         );
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         verify(notebookService, times(1)).getNote(id, user);
         ArgumentCaptor<NoteEntity> noteArgumentCaptor = ArgumentCaptor.forClass(NoteEntity.class);
         verify(notebookService, times(1)).saveNote(noteArgumentCaptor.capture());
@@ -142,7 +143,7 @@ public class NoteControllerTest {
         NoteEntity updatedNote = StaticTestProvider.getNote(id, newTitle, newText, destNotebook);
         NoteRequest noteRequest = new NoteRequest(newTitle, newText, destNbId);
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getNote(id, user)).thenReturn(repoNote);
         when(notebookService.getNotebook(destNbId, user)).thenReturn(destNotebook);
         when(notebookService.saveNote(any())).thenReturn(updatedNote);
@@ -151,7 +152,7 @@ public class NoteControllerTest {
                 new NoteResponse(id, newTitle, newText, destNbId, TimeSource.now())
         );
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         verify(notebookService, times(1)).getNote(id, user);
         verify(notebookService, times(1)).getNotebook(destNbId, user);
         ArgumentCaptor<NoteEntity> noteArgumentCaptor = ArgumentCaptor.forClass(NoteEntity.class);
@@ -168,12 +169,12 @@ public class NoteControllerTest {
         long id = 33L;
         NoteEntity note = StaticTestProvider.getNote(id, "Some note", "Some text", StaticTestProvider.getEmptyNotebook(77L, "Some notebook"));
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getNote(id, user)).thenReturn(note);
 
         mockDeleteRequest(mockMvc, BASE_PATH + '/' + id, status().isOk(), new ApiMessage("Note deleted"));
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         verify(notebookService, times(1)).getNote(id, user);
         verify(notebookService, times(1)).deleteNote(note);
     }

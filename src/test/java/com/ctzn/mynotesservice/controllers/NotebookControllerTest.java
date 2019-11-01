@@ -11,6 +11,7 @@ import com.ctzn.mynotesservice.model.notebook.NotebookEntity;
 import com.ctzn.mynotesservice.model.notebook.NotebookRequest;
 import com.ctzn.mynotesservice.model.notebook.NotebookResponse;
 import com.ctzn.mynotesservice.model.user.UserEntity;
+import com.ctzn.mynotesservice.model.user.UserRole;
 import com.ctzn.mynotesservice.services.NotebookService;
 import com.ctzn.mynotesservice.services.UserService;
 import org.junit.After;
@@ -66,7 +67,7 @@ public class NotebookControllerTest {
         UserEntity user = getFixedIdUser();
         List<NotebookEntity> notebooks = getTwoNotebooksList();
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getAllNotebooks(user)).thenReturn(notebooks);
 
         mockGetRequest(mockMvc, BASE_PATH, status().isOk(),
@@ -76,7 +77,7 @@ public class NotebookControllerTest {
                 )
         );
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         verify(notebookService, times(1)).getAllNotebooks(user);
     }
 
@@ -87,7 +88,7 @@ public class NotebookControllerTest {
         NotebookEntity notebook = getEmptyNotebook(nbId, "Notebook");
         List<NoteEntity> notes = StaticTestProvider.getTwoNotesList(notebook);
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getNotebook(nbId, user)).thenReturn(notebook);
         when(notebookService.getNotesFromNotebook(notebook)).thenReturn(notes);
 
@@ -98,7 +99,7 @@ public class NotebookControllerTest {
                 )
         );
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         verify(notebookService, times(1)).getNotebook(nbId, user);
         verify(notebookService, times(1)).getNotesFromNotebook(notebook);
     }
@@ -112,12 +113,12 @@ public class NotebookControllerTest {
         NotebookEntity notebook = getEmptyNotebook(id, name);
         NotebookResponse notebookResponse = new NotebookResponse(id, name, 0);
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.saveNotebook(any())).thenReturn(notebook);
 
         mockPostRequest(mockMvc, BASE_PATH, notebookRequest, status().isCreated(), notebookResponse);
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         ArgumentCaptor<NotebookEntity> notebookArgumentCaptor = ArgumentCaptor.forClass(NotebookEntity.class);
         verify(notebookService, times(1)).saveNotebook(notebookArgumentCaptor.capture());
         Assert.assertNull(notebookArgumentCaptor.getValue().getId());
@@ -135,13 +136,13 @@ public class NotebookControllerTest {
         NotebookRequest notebookRequest = new NotebookRequest(newName);
         NotebookResponse notebookResponse = new NotebookResponse(id, newName, 0);
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getNotebook(id, user)).thenReturn(oldNotebook);
         when(notebookService.saveNotebook(any())).thenReturn(newNotebook);
 
         mockPutRequest(mockMvc, BASE_PATH + '/' + id, notebookRequest, status().isOk(), notebookResponse);
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         ArgumentCaptor<NotebookEntity> captor = ArgumentCaptor.forClass(NotebookEntity.class);
         verify(notebookService, times(1)).getNotebook(id, user);
         verify(notebookService, times(1)).saveNotebook(captor.capture());
@@ -157,12 +158,12 @@ public class NotebookControllerTest {
         long id = 24L;
         NotebookEntity notebook = getEmptyNotebook(id, "Notebook to delete");
 
-        when(userService.getUser(any())).thenReturn(user);
+        when(userService.getUserAssertRole(any(), eq(UserRole.USER))).thenReturn(user);
         when(notebookService.getNotebook(id, user)).thenReturn(notebook);
 
         mockDeleteRequest(mockMvc, BASE_PATH + '/' + id, status().isOk(), new ApiMessage("Notebook deleted"));
 
-        verify(userService, times(1)).getUser(any());
+        verify(userService, times(1)).getUserAssertRole(any(), eq(UserRole.USER));
         verify(notebookService, times(1)).getNotebook(id, user);
         verify(notebookService, times(1)).deleteNotebook(notebook);
     }
