@@ -4,7 +4,7 @@ spring:
 ---
 spring:
   profiles: h2file
-  datasource.url: jdbc:h2:file:./database
+  datasource.url: jdbc:h2:file:./.h2/database
 ---
 spring:
   profiles: mysql

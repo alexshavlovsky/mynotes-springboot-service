@@ -29,4 +29,4 @@ HELP.md
 .vscode/
 
 ### H2 databse files ###
-*.db
+.h2/
