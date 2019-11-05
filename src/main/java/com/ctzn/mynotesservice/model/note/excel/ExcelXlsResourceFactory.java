@@ -1,6 +1,7 @@
 package com.ctzn.mynotesservice.model.note.excel;
 
 import com.ctzn.mynotesservice.model.note.NoteEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.core.io.InputStreamResource;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
+@Slf4j
 public class ExcelXlsResourceFactory implements ExcelResourceFactory {
 
     private final static String[] HEADERS = {"Nb Id", "Nb Name", "Id", "Title", "Text", "Last Modified"};
@@ -63,7 +65,16 @@ public class ExcelXlsResourceFactory implements ExcelResourceFactory {
                 cell.setCellStyle(dateCallStyle);
             }
 
-            for (int i = 0; i < 6; i++) sheet.autoSizeColumn(i);
+            try {
+                for (int i = 0; i < 6; i++) sheet.autoSizeColumn(i);
+            } catch (NullPointerException e) {
+                log.warn("Column auto-size: standard fonts are not installed on the host os");
+                // the autoSizeColumn method will throw a null pointer exception
+                // if host os has not got standard fonts installed
+                // for example, if app is running in a container
+                // so we catch the exception silently
+                // columns in a resulting Excel file will have a default width
+            }
 
             workbook.write(out);
 
