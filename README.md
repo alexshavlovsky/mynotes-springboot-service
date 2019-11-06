@@ -49,13 +49,30 @@ start firefox https://localhost:8443
 
 With Docker:
 ```
+git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
+cd mynotes-springboot-service
+mvn clean package
+
 docker build -t mynotes-service .
-&& docker run
+&& docker run -d
 -p 8080:8080 -p 8443:8443
 -v /.h2:/.h2
 --name mynotes_service
 mynotes-service
 ```
+
+To deploy both API and frontend on the same host run:
+```
+docker pull docker.pkg.github.com/alexshavlovsky/mynotes-material-client/mynotes-front:v1.0 \
+  && docker pull docker.pkg.github.com/alexshavlovsky/mynotes-springboot-service/mynotes-service:v3.2 \
+  && docker run -d -p 8080:8080 -p 8443:8443 -v /.h2:/.h2 --name mynotes_service \
+    docker.pkg.github.com/alexshavlovsky/mynotes-springboot-service/mynotes-service:v3.2 \
+  && docker run -d -p 80:80 -p 443:443 --name mynotes_front \
+    docker.pkg.github.com/alexshavlovsky/mynotes-material-client/mynotes-front:v1.0
+``` 
+Backend API will be accessible on port 8443.
+Tomcat hosted Bootstrap client will be accessible on port 8080.
+Nginx hosted Angular Material client will be accessible on ports 80 and 443.
 
 ## Screenshot
 
@@ -80,6 +97,7 @@ Code reducer       | [ProjectLombok](https://github.com/rzwitserloot/lombok)
 Testing            | Junit, Mockito, MockMvc, [GreenMail](https://github.com/greenmail-mail-test/greenmail)
 REST Documentation | [SpringFox Swagger2](https://github.com/springfox/springfox/releases)
 MS Excel export    | [Apache POI](http://poi.apache.org/)
+Prod packaging     | Docker Engine Container, Alpine Linux, OpenJDK, SpringBoot JAR
 
 ## API specification
 

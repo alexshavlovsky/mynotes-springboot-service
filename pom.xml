@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.ctzn</groupId>
     <artifactId>mynotes-service</artifactId>
-    <version>v3.1-SNAPSHOT</version>
+    <version>v3.2</version>
     <name>mynotes-service</name>
     <description>MyNotes SpringBoot service</description>
 
