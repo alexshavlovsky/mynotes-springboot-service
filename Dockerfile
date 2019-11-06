@@ -3,7 +3,7 @@ FROM openjdk:8-jdk-alpine
 # otherwise column autosize function of org.apache.poi will not work
 # when exporting notes to Excel
 ENV LANG en_GB.UTF-8
-RUN apk add --update ttf-dejavu && rm -rf /var/cache/apk/*
+RUN apk add --no-cache ttf-dejavu
 # persist data in H2 database in folder /.h2
 ENV SPRING_PROFILES_ACTIVE h2file
 ENV SPRING_DATASOURCE_URL "jdbc:h2:file:./.h2/mynotes"
