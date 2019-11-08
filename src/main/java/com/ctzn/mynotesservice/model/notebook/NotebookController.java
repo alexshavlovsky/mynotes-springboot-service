@@ -16,10 +16,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(NotebookController.BASE_PATH)
+@RequestMapping("${app.api.url.notebooks}")
 public class NotebookController {
-
-    public static final String BASE_PATH = "/api/notebooks";
 
     private UserService userService;
     private NotebookService notebookService;
@@ -37,7 +35,7 @@ public class NotebookController {
         return domainMapper.mapAll(notebookService.getAllNotebooks(user), NotebookResponse.class);
     }
 
-    @GetMapping("{id}/notes")
+    @GetMapping("{id}/${app.api.url.fragment.notes}")
     public List<NoteResponse> getAllNotesByNotebook(@PathVariable long id, Authentication auth) throws ApiException {
         UserEntity user = userService.getUserAssertRole(auth, UserRole.USER);
         NotebookEntity notebookEntity = notebookService.getNotebook(id, user);

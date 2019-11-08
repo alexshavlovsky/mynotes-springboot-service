@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = CommandController.BASE_PATH)
+@RequestMapping("${app.api.url.command}")
 @Slf4j
 public class CommandController {
-
-    public static final String BASE_PATH = "/api/command";
 
     private UserService userService;
     private ExecutionContext executionContext;

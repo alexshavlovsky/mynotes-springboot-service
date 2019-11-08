@@ -23,10 +23,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(NoteController.BASE_PATH)
+@RequestMapping("${app.api.url.notes}")
 public class NoteController {
-
-    public static final String BASE_PATH = "/api/notes";
 
     private UserService userService;
     private NotebookService notebookService;
@@ -46,7 +44,7 @@ public class NoteController {
         return domainMapper.mapAll(notebookService.getAllNotes(user), NoteResponse.class);
     }
 
-    @GetMapping(path = "export/xls", produces = {"application/vnd.ms-excel", "application/json"})
+    @GetMapping(path = "${app.api.url.fragment.export.xls}", produces = {"application/vnd.ms-excel", "application/json"})
     public ResponseEntity getAllNotesExcel(Authentication auth) throws ApiException, IOException {
         UserEntity user = userService.getUserAssertRole(auth, UserRole.USER);
         InputStreamResource resource = excelResourceFactory.fromNotes(notebookService.getAllNotes(user));

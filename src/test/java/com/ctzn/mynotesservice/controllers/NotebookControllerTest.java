@@ -37,7 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class NotebookControllerTest {
 
-    private static final String BASE_PATH = NotebookController.BASE_PATH;
+    private static final String BASE_PATH = "/api-test287/notebooks-test873";
+    private static final String NOTES_FRAGMENT = "notes-test094";
 
     @Mock
     private UserService userService;
@@ -52,6 +53,8 @@ public class NotebookControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(new NotebookController(userService, notebookService, new DomainMapper()))
+                .addPlaceholderValue("app.api.url.notebooks", BASE_PATH)
+                .addPlaceholderValue("app.api.url.fragment.notes", NOTES_FRAGMENT)
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);
@@ -92,7 +95,7 @@ public class NotebookControllerTest {
         when(notebookService.getNotebook(nbId, user)).thenReturn(notebook);
         when(notebookService.getNotesFromNotebook(notebook)).thenReturn(notes);
 
-        mockGetRequest(mockMvc, BASE_PATH + '/' + nbId + "/notes", status().isOk(),
+        mockGetRequest(mockMvc, BASE_PATH + '/' + nbId + "/" + NOTES_FRAGMENT, status().isOk(),
                 Arrays.asList(
                         new NoteResponse(3L, "Note 1.1", "Some text 1", nbId, TimeSource.now()),
                         new NoteResponse(4L, "Note 1.2", "Some text 2", nbId, TimeSource.now())

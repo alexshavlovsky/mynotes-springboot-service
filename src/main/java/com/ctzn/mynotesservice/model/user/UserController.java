@@ -16,14 +16,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(UserController.BASE_PATH)
+@RequestMapping("${app.api.url.users}")
 public class UserController {
-
-    public static final String BASE_PATH = "/api/users";
-    public static final String LOGIN_RES = "login";
-    public static final String CURRENT_RES = "current";
-    public static final String LOGIN_PATH = BASE_PATH + '/' + LOGIN_RES;
-    public static final String CURRENT_PATH = BASE_PATH + '/' + CURRENT_RES;
 
     private static final List<UserRole> DEFAULT_USER_ROLES = Collections.singletonList(UserRole.USER);
 
@@ -45,7 +39,7 @@ public class UserController {
         return domainMapper.map(userService.saveUser(user), UserResponse.class);
     }
 
-    @PostMapping(LOGIN_RES)
+    @PostMapping("${app.api.url.fragment.login}")
     UserLoginResponse login(@Valid @RequestBody UserLoginRequest userLoginRequest, BindingResult result) throws ApiException {
         if (result.hasErrors()) throw ApiException.getInvalidEmailPassword();
         UserEntity user = userService.getUserByEmail(userLoginRequest.getEmail());
@@ -57,7 +51,7 @@ public class UserController {
         return response;
     }
 
-    @GetMapping(CURRENT_RES)
+    @GetMapping("${app.api.url.fragment.current}")
     public UserResponse getCurrentUser(Authentication auth) throws ApiException {
         UserEntity user = userService.getUser(auth);
         UserResponse response = domainMapper.map(user, UserResponse.class);

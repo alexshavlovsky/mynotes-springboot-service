@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class CommandControllerTest {
 
-    private static final String BASE_PATH = CommandController.BASE_PATH;
+    private static final String BASE_PATH = "/api-test278/command-test438";
 
     @Mock
     private UserService userService;
@@ -45,6 +45,7 @@ public class CommandControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(new CommandController(userService, new ExecutionContext(dbSeeder, shutdownManager)))
+                .addPlaceholderValue("app.api.url.command", BASE_PATH)
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);

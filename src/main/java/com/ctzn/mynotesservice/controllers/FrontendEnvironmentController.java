@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FrontendEnvironmentController {
 
-    @Value("${app.api.base-url}")
+    @Value("${app.api.url.base}")
     private String apiBaseUrl;
 
     // this controller will override default frontend client

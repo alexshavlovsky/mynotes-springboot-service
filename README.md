@@ -38,7 +38,7 @@ java -jar mynotes-service.jar
 firefox https://localhost:8443
 ```
 
-In Windows create a .cmd file and execute it from any folder:
+On Windows create a `.cmd` file and execute it from any folder:
 ```
 git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
 call mvn package -f mynotes-springboot-service\pom.xml --log-file maven.log
@@ -49,16 +49,12 @@ start firefox https://localhost:8443
 
 With Docker:
 ```
-git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
-cd mynotes-springboot-service
-mvn clean package
+git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git \
+  && cd mynotes-springboot-service \
+  && mvn clean package
 
-docker build -t mynotes-service .
-&& docker run -d
--p 8080:8080 -p 8443:8443
--v /.h2:/.h2
---name mynotes_service
-mynotes-service
+docker build -t mynotes-service . \
+  && docker run -d -p 8080:8080 -p 8443:8443 -v /.h2:/.h2 --name mynotes_service mynotes-service
 ```
 
 To deploy both API and frontend on the same host run:
@@ -70,9 +66,11 @@ docker pull docker.pkg.github.com/alexshavlovsky/mynotes-material-client/mynotes
   && docker run -d -p 80:80 -p 443:443 --name mynotes_front \
     docker.pkg.github.com/alexshavlovsky/mynotes-material-client/mynotes-front:v1.0
 ``` 
-Backend API will be accessible on port 8443.
-Tomcat hosted Bootstrap client will be accessible on port 8080.
-Nginx hosted Angular Material client will be accessible on ports 80 and 443.
+A backend API will be accessible on port `8443`.
+<br>
+A Tomcat hosted Bootstrap client will be accessible on port `8080`.
+<br>
+An Nginx hosted Angular Material client will be accessible on ports `80` and `443`.
 
 ## Screenshot
 
@@ -101,7 +99,7 @@ Prod packaging     | Docker Engine Container, Alpine Linux, OpenJDK, SpringBoot 
 
 ## API specification
 
-Default base API URL: https://localhost:8443/api/
+Default base API URL: `https://localhost:8443/api/`
 
 User endpoint:
                        

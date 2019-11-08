@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class FeedbackControllerTest {
 
-    private static final String BASE_PATH = FeedbackController.BASE_PATH;
+    private static final String BASE_PATH = "/api-test681/feedback-test309";
 
     @Mock
     private UserService userService;
@@ -42,6 +42,7 @@ public class FeedbackControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(new FeedbackController(userService, feedbackSender))
+                .addPlaceholderValue("app.api.url.feedback", BASE_PATH)
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);

@@ -37,7 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class NoteControllerTest {
 
-    private static final String BASE_PATH = NoteController.BASE_PATH;
+    private static final String BASE_PATH = "/api-test233/notes-test479";
+    private static final String EXPORT_XLS_FRAGMENT = "export-test235/xls-test989";
 
     @Mock
     private UserService userService;
@@ -52,6 +53,8 @@ public class NoteControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(new NoteController(userService, notebookService, new DomainMapper(), new ExcelXlsResourceFactory()))
+                .addPlaceholderValue("app.api.url.notes", BASE_PATH)
+                .addPlaceholderValue("app.api.url.fragment.export.xls", EXPORT_XLS_FRAGMENT)
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
         TimeSource.setFixed(true);

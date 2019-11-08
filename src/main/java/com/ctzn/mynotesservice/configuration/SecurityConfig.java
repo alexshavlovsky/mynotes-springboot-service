@@ -1,11 +1,7 @@
 package com.ctzn.mynotesservice.configuration;
 
-import com.ctzn.mynotesservice.model.command.CommandController;
-import com.ctzn.mynotesservice.model.feedback.FeedbackController;
-import com.ctzn.mynotesservice.model.note.NoteController;
-import com.ctzn.mynotesservice.model.notebook.NotebookController;
-import com.ctzn.mynotesservice.model.user.UserController;
 import com.ctzn.mynotesservice.security.JwtTokenFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +13,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${app.api.url.users}")
+    private String apiUrlUsers;
+
+    @Value("${app.api.url.users.login}")
+    private String apiUrlUsersLogin;
+
+    @Value("${app.api.url.users.current}")
+    private String apiUrlUsersCurrent;
+
+    @Value("${app.api.url.command}")
+    private String apiUrlCommand;
+
+    @Value("${app.api.url.feedback}")
+    private String apiUrlFeedback;
+
+    @Value("${app.api.url.notes}")
+    private String apiUrlNotes;
+
+    @Value("${app.api.url.notebooks}")
+    private String apiUrlNotebooks;
+
 
     private JwtTokenFilter jwtTokenFilter;
 
@@ -48,19 +66,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // public frontend app
                 .antMatchers("/*").permitAll()
                 // admin endpoints
-                .antMatchers(HttpMethod.GET, UserController.BASE_PATH).hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, UserController.BASE_PATH + "/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, UserController.BASE_PATH + "/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, CommandController.BASE_PATH).hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, apiUrlUsers).hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, apiUrlUsers + "/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, apiUrlUsers + "/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, apiUrlCommand).hasRole("ADMIN")
                 // public authentication api
-                .antMatchers(HttpMethod.POST, UserController.BASE_PATH).permitAll()
-                .antMatchers(HttpMethod.POST, UserController.LOGIN_PATH).permitAll()
+                .antMatchers(HttpMethod.POST, apiUrlUsers).permitAll()
+                .antMatchers(HttpMethod.POST, apiUrlUsersLogin).permitAll()
                 // resolve user by token
-                .antMatchers(HttpMethod.GET, UserController.CURRENT_PATH).authenticated()
+                .antMatchers(HttpMethod.GET, apiUrlUsersCurrent).authenticated()
                 // user endpoints
-                .antMatchers(NoteController.BASE_PATH + "/**").hasRole("USER")
-                .antMatchers(NotebookController.BASE_PATH + "/**").hasRole("USER")
-                .antMatchers(FeedbackController.BASE_PATH + "/**").hasRole("USER")
+                .antMatchers(apiUrlNotes + "/**").hasRole("USER")
+                .antMatchers(apiUrlNotebooks + "/**").hasRole("USER")
+                .antMatchers(apiUrlFeedback + "/*").hasRole("USER")
                 .anyRequest().denyAll();
     }
 

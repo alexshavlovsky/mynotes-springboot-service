@@ -15,11 +15,9 @@ import javax.validation.Valid;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = FeedbackController.BASE_PATH)
+@RequestMapping("${app.api.url.feedback}")
 @Slf4j
 public class FeedbackController {
-
-    public static final String BASE_PATH = "/api/feedback";
 
     private UserService userService;
     private FeedbackSender feedbackSender;
