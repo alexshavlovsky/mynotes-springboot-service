@@ -35,6 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${app.api.url.notebooks}")
     private String apiUrlNotebooks;
 
+    @Value("${app.static.server.enabled}")
+    private boolean isStaticServerEnabled;
+
 
     private JwtTokenFilter jwtTokenFilter;
 
@@ -64,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // public swagger endpoints
                 .antMatchers("/swagger-resources/**", "/webjars/**", "/v2/api-docs").permitAll()
                 // public frontend app
-                .antMatchers("/*").permitAll()
+                .antMatchers("/*").access(isStaticServerEnabled ? "permitAll()" : "denyAll()")
                 // admin endpoints
                 .antMatchers(HttpMethod.GET, apiUrlUsers).hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, apiUrlUsers + "/*").hasRole("ADMIN")
