@@ -10,6 +10,7 @@ ENV SPRING_PROFILES_ACTIVE h2file
 ENV SPRING_DATASOURCE_URL "jdbc:h2:file:./.h2/mynotes"
 ENV SPRING_H2_CONSOLE_ENABLED false
 ENV APP_API_URL_BASE "/$api_uri/"
+ENV APP_STATIC_SERVER_ENABLED true
 VOLUME /.h2
 EXPOSE 8080 8443
 COPY target/mynotes-service.jar mynotes-service.jar

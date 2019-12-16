@@ -81,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // user endpoints
                 .antMatchers(apiUrlNotes + "/**").hasRole("USER")
                 .antMatchers(apiUrlNotebooks + "/**").hasRole("USER")
-                .antMatchers(apiUrlFeedback + "/*").hasRole("USER")
+                .antMatchers(apiUrlFeedback).hasRole("USER")
                 .anyRequest().denyAll();
     }
 
