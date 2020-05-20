@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "h2mem"})
 @RunWith(SpringRunner.class)
 public class FeedbackSenderImplIntegrationTest {
     @Rule

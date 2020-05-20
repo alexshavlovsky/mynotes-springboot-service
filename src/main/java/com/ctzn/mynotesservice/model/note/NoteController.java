@@ -68,6 +68,8 @@ public class NoteController {
     }
 
     @PutMapping("{id}")
+    // TODO: explore this annotation
+    // @PreAuthorize("hasRole('ROLE_USER')")
     public NoteResponse updateNote(@RequestBody NoteRequest noteRequest,
                                    @PathVariable("id") long id, Authentication auth) throws ApiException {
         UserEntity user = userService.getUserAssertRole(auth, UserRole.USER);

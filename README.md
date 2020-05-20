@@ -8,6 +8,10 @@ Frontend clients for this project:
 <br>
 [Angular Material NgRx  REST Client](https://github.com/alexshavlovsky/mynotes-material-client.git).
 
+Build scripts for docker-compose (backend + double-frontend nginx):
+<br>
+[MyNotes App build scripts](https://github.com/alexshavlovsky/mynotes-ci-template.git). 
+
 ## Embedded frontend client
 
 Prebuilt Angular client is included and served at `https://localhost:8443`
@@ -28,16 +32,6 @@ USER can create, edit, delete notebooks and notes and send a feedback
 
 ## Build and run instructions
 
-Tested on Maven 3.0.5 and Java 1.8.0_212:
-```
-git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
-cd mynotes-springboot-service
-mvn package
-cd target
-java -jar mynotes-service.jar
-firefox https://localhost:8443
-```
-
 On Windows create a `.cmd` file and execute it from any folder:
 ```
 git clone https://github.com/alexshavlovsky/mynotes-springboot-service.git
@@ -57,20 +51,8 @@ docker build -t mynotes-service . \
   && docker run -d -p 8080:8080 -p 8443:8443 -v /.h2:/.h2 --name mynotes_service mynotes-service
 ```
 
-To deploy both API and frontend on the same host run:
-```
-docker pull docker.pkg.github.com/alexshavlovsky/mynotes-material-client/mynotes-front:v1.0 \
-  && docker pull docker.pkg.github.com/alexshavlovsky/mynotes-springboot-service/mynotes-service:v3.2 \
-  && docker run -d -p 8080:8080 -p 8443:8443 -v /.h2:/.h2 --name mynotes_service \
-    docker.pkg.github.com/alexshavlovsky/mynotes-springboot-service/mynotes-service:v3.2 \
-  && docker run -d -p 80:80 -p 443:443 --name mynotes_front \
-    docker.pkg.github.com/alexshavlovsky/mynotes-material-client/mynotes-front:v1.0
-``` 
-A backend API will be accessible on port `8443`.
-<br>
-A Tomcat hosted Bootstrap client will be accessible on port `8080`.
-<br>
-An Nginx hosted Angular Material client will be accessible on ports `80` and `443`.
+To deploy both API and frontend on the same host see: [MyNotes App build scripts](https://github.com/alexshavlovsky/mynotes-ci-template.git).
+
 
 ## Screenshot
 
